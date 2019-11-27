@@ -13,4 +13,5 @@ class ColorUtil {
 
   static const textColor_888888 = 0xFF888888;
   static const textColor_333333 = 0xFF333333;
+  static const textColor_1396DA = 0xFF1396DA;
 }

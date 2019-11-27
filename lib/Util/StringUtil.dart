@@ -32,4 +32,13 @@ class StringUtil {
   static const transferAccounts = "转账";
   static const transferAccountsOut = "转出账户";
 
+  /// 个人中心
+  static const personalCenter = "个人中心";
+  static const personalChangeLoginPassword = "修改登录密码";
+  static const personalChangeCashPassword = "修改资金密码";
+  static const personalBank = "我的银行卡";
+  static const personalLotteryReport = "彩票报表";
+  static const personalBettingRecord = "投注记录";
+  static const personalAccountChangeRecord = "账变记录";
+
 }

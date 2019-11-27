@@ -326,24 +326,39 @@ class _HomeControllerView extends State<HomeControllerView> {
 //  }
 
   //操作 的 item
-  Widget _gridClassificationItem(String icon, String title) {
+  Widget _gridClassificationItem(String icon, String title, int index) {
 
     return new Container(
       height: 60.0,
-      child: new Column(
-        children: <Widget>[
-          
-          new Image.asset(icon, width: 40.0, height: 40.0,),
-          SpaceViewUtil.pading_Top_10(),
+      child: new GestureDetector(
+        onTap: () {
+          //点击个人中心
+          switch(index) {
+            case 0:
+              break;
+            case 1:
+              break;
+            case 2:
+              //个人中心
+              Navigator.pushNamed(context, RouteUtil.personalController);
+              break;
+          }
+        },
+        child: new Column(
+          children: <Widget>[
 
-          new Text(title,
-            style: new TextStyle(
-              fontSize: 14.0,
-              color: Color(ColorUtil.textColor_888888)
+            new Image.asset(icon, width: 40.0, height: 40.0,),
+            SpaceViewUtil.pading_Top_10(),
+
+            new Text(title,
+              style: new TextStyle(
+                  fontSize: 14.0,
+                  color: Color(ColorUtil.textColor_888888)
+              ),
             ),
-          ),
-          
-        ],
+
+          ],
+        ),
       ),
     );
   }
@@ -351,7 +366,7 @@ class _HomeControllerView extends State<HomeControllerView> {
   List<Widget> _gridListItemView() {
     List<Widget> gridListItem = new List();
     for (int i = 0; i<classificationTitle.length; i++) {
-      gridListItem.add(_gridClassificationItem(classificationIcon[i], classificationTitle[i]));
+      gridListItem.add(_gridClassificationItem(classificationIcon[i], classificationTitle[i], i));
     }
     return gridListItem;
   }

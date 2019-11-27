@@ -7,6 +7,7 @@ import 'package:flutter_lisheng_entertainment/Util/ColorUtil.dart';
 import 'package:flutter_lisheng_entertainment/Util/RouteUtil.dart';
 import 'package:flutter_lisheng_entertainment/user/LoginActivity.dart';
 import 'package:flutter_lisheng_entertainment/SplashController.dart';
+import 'package:flutter_lisheng_entertainment/user/PersonalController.dart';
 import 'package:flutter_lisheng_entertainment/user/RechargeController.dart';
 import 'package:flutter_lisheng_entertainment/user/SetController.dart';
 import 'package:flutter_lisheng_entertainment/user/TransferAccountsController.dart';
@@ -52,6 +53,7 @@ class MyApp extends StatelessWidget {
         RouteUtil.rechargeController: (BuildContext context) => RechargeController(),
         RouteUtil.withdrawalController: (BuildContext context) => WithdrawalController(),
         RouteUtil.transferAccountsController: (BuildContext context) => TransferAccountsController(),
+        RouteUtil.personalController: (BuildContext context) => PersonalController(),
       },
     );
   }
