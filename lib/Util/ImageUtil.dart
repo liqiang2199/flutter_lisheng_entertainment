@@ -36,6 +36,13 @@ class ImageUtil {
   /// 提现界面
   static const imgWithdrawalMoney = "${imgBaseUrl}icon_withdrawal_money.png";
 
+  /// 个人中心
+  static const imgLotteryReport = "${imgBaseUrl}icon_lottery_report.png";
+  static const imgModifyPassWord = "${imgBaseUrl}icon_modify_pass.png";
+  static const imgBettingRecord = "${imgBaseUrl}icon_betting_record.png";
+  static const imgBank = "${imgBaseUrl}icon_bank.png";
+  static const imgAccountChangeRecord = "${imgBaseUrl}icon_account_change_record.png";
+  static const imgCashPassword = "${imgBaseUrl}icon_cash_password.png";
 
 
 }

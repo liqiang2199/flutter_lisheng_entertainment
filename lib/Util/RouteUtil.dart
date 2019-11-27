@@ -9,4 +9,6 @@ class RouteUtil {
   static const withdrawalController = "/WithdrawalController";
   //转账
   static const transferAccountsController = "/TransferAccountsController";
+  //个人中心
+  static const personalController = "/PersonalController";
 }

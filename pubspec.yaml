@@ -82,6 +82,12 @@ flutter:
     - resource/imgs/icon_set_switch.png
     - resource/imgs/icon_set_fingerprint.png
     - resource/imgs/icon_withdrawal_money.png
+    - resource/imgs/icon_lottery_report.png
+    - resource/imgs/icon_modify_pass.png
+    - resource/imgs/icon_betting_record.png
+    - resource/imgs/icon_bank.png
+    - resource/imgs/icon_account_change_record.png
+    - resource/imgs/icon_cash_password.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
