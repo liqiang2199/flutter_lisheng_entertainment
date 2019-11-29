@@ -28,8 +28,9 @@ class _HomeControllerView extends State<HomeControllerView> {
       body: new Column(
         children: <Widget>[
           _topView(),
-          new Expanded(child: _gridOperationClassification(), flex: 1,),
+          new Expanded(child: _gridOperationClassification(),),
           _bannerHome(),
+          
 
         ],
       ),
@@ -288,7 +289,6 @@ class _HomeControllerView extends State<HomeControllerView> {
   Widget _gridOperationClassification() {
 
     return new Container(
-      height: 177.5,
       child: _gridClassification(),
     );
   }
@@ -300,8 +300,9 @@ class _HomeControllerView extends State<HomeControllerView> {
       primary: false,
       mainAxisSpacing: 0.0,//竖向间距
       crossAxisSpacing: 8.0,//横向间距
+      childAspectRatio: 1.4,
       children: _gridListItemView(),
-      shrinkWrap: true,
+      shrinkWrap: false,
 
     );
   }
@@ -342,6 +343,18 @@ class _HomeControllerView extends State<HomeControllerView> {
             case 2:
               //个人中心
               Navigator.pushNamed(context, RouteUtil.personalController);
+              break;
+            case 3:
+              //代理中心
+              Navigator.pushNamed(context, RouteUtil.agentCenterController);
+              break;
+            case 4:
+              //活动中心
+              Navigator.pushNamed(context, RouteUtil.activePageController);
+              break;
+            case 5:
+              //公告
+              Navigator.pushNamed(context, RouteUtil.systemNoticeController);
               break;
           }
         },

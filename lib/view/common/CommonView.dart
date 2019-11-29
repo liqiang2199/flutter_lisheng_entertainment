@@ -16,6 +16,25 @@ class CommonView {
     );
   }
 
+  Widget commonLine_L_R_10() {
+
+    return new Container(
+      width: ScreenUtil.screenWidth,
+      height: 1.0,
+      margin: EdgeInsets.only(left: 10.0, right: 10.0),
+      color: Color(ColorUtil.lineColor),
+    );
+  }
+
+  Widget commonLine_NoMargin() {
+
+    return new Container(
+      width: ScreenUtil.screenWidth,
+      height: 1.0,
+      color: Color(ColorUtil.lineColor),
+    );
+  }
+
   ///  返回 统一 AppBar （设置 ）
   AppBar commonAppBar(BuildContext context, String title) {
 

@@ -7,28 +7,28 @@ import 'package:flutter_lisheng_entertainment/Util/StringUtil.dart';
 import 'package:flutter_lisheng_entertainment/view/ListStateItemView.dart';
 import 'package:flutter_lisheng_entertainment/view/common/CommonView.dart';
 
-/// 个人中心
-class PersonalController extends StatefulWidget{
+/// 代理中心
+class AgentCenterController extends StatefulWidget{
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
-    return _PersonalController();
+    return _AgentCenterController();
   }
 
 }
 
-class _PersonalController extends State<PersonalController> {
+class _AgentCenterController extends State<AgentCenterController> {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
     return new Scaffold(
       backgroundColor: Color(ColorUtil.lineColor),
-      appBar: CommonView().commonAppBar(context, StringUtil.personalCenter),
+      appBar: CommonView().commonAppBar(context, StringUtil.agentCenter),
       body: new ListView(
         children: <Widget>[
 
           _topHead(),
-          _rightModifyArrowView(),
+          _listAgentOperation(),
           _rightRecordArrowView(),
 
         ],
@@ -170,27 +170,6 @@ class _PersonalController extends State<PersonalController> {
     );
   }
 
-  /// 密码修改
-  Widget _rightModifyArrowView() {
-
-    return new Container(
-      margin: EdgeInsets.only(left: 15.0, right: 15.0, ),
-      child: new Card(
-        color: Colors.white,
-        //z轴的高度，设置card的阴影
-        elevation: 5.0,
-        child: new Column(
-          children: <Widget>[
-            _getRightArrowView(StringUtil.personalChangeLoginPassword, ImageUtil.imgModifyPassWord),
-            CommonView().commonLine(),
-            _getRightArrowView(StringUtil.personalChangeCashPassword, ImageUtil.imgCashPassword),
-
-          ],
-        ),
-      ),
-    );
-  }
-
   /// 用户操作记录
   Widget _rightRecordArrowView() {
 
@@ -202,13 +181,15 @@ class _PersonalController extends State<PersonalController> {
         elevation: 5.0,
         child: new Column(
           children: <Widget>[
-            _getRightArrowView(StringUtil.personalBank, ImageUtil.imgBank),
+            _getRightArrowView(StringUtil.agentOpenAccount, ImageUtil.imgAgentOpenAccount),
             CommonView().commonLine(),
-            _getRightArrowView(StringUtil.personalLotteryReport, ImageUtil.imgLotteryReport),
+            _getRightArrowView(StringUtil.agentVipManage, ImageUtil.imgAgentVip),
             CommonView().commonLine(),
-            _getRightArrowView(StringUtil.personalBettingRecord, ImageUtil.imgBettingRecord),
+            _getRightArrowView(StringUtil.agentAgencyBonus, ImageUtil.imgAgentAgencyBonus),
             CommonView().commonLine(),
-            _getRightArrowView(StringUtil.personalAccountChangeRecord, ImageUtil.imgAccountChangeRecord),
+            _getRightArrowView(StringUtil.agentRechargeRecord, ImageUtil.imgAgentRechargeRecord),
+            CommonView().commonLine(),
+            _getRightArrowView(StringUtil.agentWithdrawalRecord, ImageUtil.imgAgentWithdrawalRecord),
 
           ],
         ),
@@ -218,37 +199,65 @@ class _PersonalController extends State<PersonalController> {
 
   _getRightArrowView(String title, String icon) {
 
-    return new GestureDetector(
-      onTap: () {
-        //点击
-        switch(title) {
-          case StringUtil.personalChangeLoginPassword:
-            //修改登录密码
-            Navigator.pushNamed(context, RouteUtil.modifyLoginPasswordController);
-            break;
-          case StringUtil.personalChangeCashPassword:
-            //修改资金密码
-            Navigator.pushNamed(context, RouteUtil.modifyCapitalPasswordController);
-            break;
-          case StringUtil.personalBettingRecord:
-            //修改资金密码
-            Navigator.pushNamed(context, RouteUtil.bettingRecordController);
-            break;
-          case StringUtil.personalLotteryReport:
-            //修改资金密码
-            Navigator.pushNamed(context, RouteUtil.lotteryReportController);
-            break;
-          case StringUtil.personalAccountChangeRecord:
-            //账变记录
-            Navigator.pushNamed(context, RouteUtil.accountChangeRecordController);
-            break;
-        }
-      },
-      child: new ListStateItemView(
-        title,
-        isSwitch: false,
-        isRightArrow: true,
-        leftIcon: icon,
+    return new ListStateItemView(
+      title,
+      isSwitch: false,
+      isRightArrow: true,
+      leftIcon: icon,
+    );
+  }
+
+  /// 代理中心 团队操作
+  Widget _listAgentOperation() {
+
+    return new Container(
+      margin: EdgeInsets.only(left: 15.0,right: 15.0),
+      child: new Card(
+        child: new Row(
+          children: <Widget>[
+            new Expanded(child: _gridAgentItem(agentOperationIcon[0], agentOperationStr[0], 0)),
+            new Expanded(child: _gridAgentItem(agentOperationIcon[1], agentOperationStr[1], 1)),
+            new Expanded(child: _gridAgentItem(agentOperationIcon[2], agentOperationStr[2], 2)),
+            new Expanded(child: _gridAgentItem(agentOperationIcon[3], agentOperationStr[3], 3)),
+          ],
+        ),
+      ),
+    );
+  }
+
+  List<String> agentOperationStr = ["团队总览", "团队报表", "团队账变", "团队投注"];
+  List<String> agentOperationIcon = [ImageUtil.imgAgentTeamOverview, ImageUtil.imgAgentTeamReport
+    , ImageUtil.imgAgentTeamAccountChange, ImageUtil.imgAgentTeamBet];
+  //操作 的 item
+  Widget _gridAgentItem(String icon, String title, int index) {
+
+    return new Container(
+      padding: EdgeInsets.only(top: 15.0,),
+      height: 99.0,
+      child: new GestureDetector(
+        onTap: () {
+          switch(index) {
+            case 0:
+              //团队总览
+              Navigator.pushNamed(context, RouteUtil.teamOverviewController);
+              break;
+          }
+        },
+        child: new Column(
+          children: <Widget>[
+
+            new Image.asset(icon, width: 40.0, height: 40.0,),
+            SpaceViewUtil.pading_Top_10(),
+
+            new Text(title,
+              style: new TextStyle(
+                  fontSize: 12.0,
+                  color: Color(ColorUtil.textColor_888888)
+              ),
+            ),
+
+          ],
+        ),
       ),
     );
   }

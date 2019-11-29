@@ -41,4 +41,34 @@ class StringUtil {
   static const personalBettingRecord = "投注记录";
   static const personalAccountChangeRecord = "账变记录";
 
+  //代理中心
+  static const agentCenter = "代理中心";
+  static const agentOpenAccount = "开户中心";
+  static const agentVipManage = "会员管理";
+  static const agentAgencyBonus = "代理分红";
+  static const agentRechargeRecord = "充值记录";
+  static const agentWithdrawalRecord = "提款记录";
+
+  //修改登录密码
+  static const modifyLoginPasswordTitle = "修改登录密码";
+  static const currentLoginPassword = "请输入当前密码";
+  static const loginNewPassword = "请输入新密码";
+  static const loginAgainEditNewPassword = "请再次输入新密码";
+  static const loginModifyTip = "建议您使用字母和数字组合，混合大小写";
+
+  // 修改资金密码
+  static const modifyCapitalPasswordTitle = "修改资金密码";
+  static const currentCapitalPassword = "请输入原密码";
+  static const capitalNewPassword = "请输入新密码";
+  static const capitalAgainEditNewPassword = "请确认新密码";
+  static const modify = "修改";
+
+  // 活动
+  static const activePage = "活动";
+  static const systemNotice = "公告";
+  static const systemNoticeDetail = "公告详情";
+
+  //投注记录
+  static const searchButText = "搜索";
+
 }
