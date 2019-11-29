@@ -5,13 +5,24 @@ import 'package:flutter/services.dart';
 import 'package:flutter_lisheng_entertainment/HomeController.dart';
 import 'package:flutter_lisheng_entertainment/Util/ColorUtil.dart';
 import 'package:flutter_lisheng_entertainment/Util/RouteUtil.dart';
+import 'package:flutter_lisheng_entertainment/user/personal_center/AccountChangeRecordController.dart';
+import 'package:flutter_lisheng_entertainment/user/personal_center/BettingRecordController.dart';
 import 'package:flutter_lisheng_entertainment/user/LoginActivity.dart';
 import 'package:flutter_lisheng_entertainment/SplashController.dart';
+import 'package:flutter_lisheng_entertainment/user/personal_center/LotteryReportController.dart';
+import 'package:flutter_lisheng_entertainment/user/personal_center/ModifyCapitalPasswordController.dart';
 import 'package:flutter_lisheng_entertainment/user/PersonalController.dart';
 import 'package:flutter_lisheng_entertainment/user/RechargeController.dart';
 import 'package:flutter_lisheng_entertainment/user/SetController.dart';
 import 'package:flutter_lisheng_entertainment/user/TransferAccountsController.dart';
 import 'package:flutter_lisheng_entertainment/user/WithdrawalController.dart';
+import 'package:flutter_lisheng_entertainment/user/personal_center/ModifyLoginPasswordController.dart';
+
+import 'agent/AgentCenterController.dart';
+import 'agent/team_controller/TeamOverviewController.dart';
+import 'home/ActivePageController.dart';
+import 'home/SystemNoticeController.dart';
+import 'home/SystemNoticeDetailController.dart';
 
 void main() {
   runApp(MyApp());
@@ -54,6 +65,16 @@ class MyApp extends StatelessWidget {
         RouteUtil.withdrawalController: (BuildContext context) => WithdrawalController(),
         RouteUtil.transferAccountsController: (BuildContext context) => TransferAccountsController(),
         RouteUtil.personalController: (BuildContext context) => PersonalController(),
+        RouteUtil.agentCenterController: (BuildContext context) => AgentCenterController(),
+        RouteUtil.modifyLoginPasswordController: (BuildContext context) => ModifyLoginPasswordController(),
+        RouteUtil.modifyCapitalPasswordController: (BuildContext context) => ModifyCapitalPasswordController(),
+        RouteUtil.activePageController: (BuildContext context) => ActivePageController(),
+        RouteUtil.systemNoticeController: (BuildContext context) => SystemNoticeController(),
+        RouteUtil.systemNoticeDetailController: (BuildContext context) => SystemNoticeDetailController(),
+        RouteUtil.bettingRecordController: (BuildContext context) => BettingRecordController(),
+        RouteUtil.lotteryReportController: (BuildContext context) => LotteryReportController(),
+        RouteUtil.accountChangeRecordController: (BuildContext context) => AccountChangeRecordController(),
+        RouteUtil.teamOverviewController: (BuildContext context) => TeamOverviewController(),
       },
     );
   }

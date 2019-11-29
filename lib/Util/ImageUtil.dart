@@ -44,5 +44,22 @@ class ImageUtil {
   static const imgAccountChangeRecord = "${imgBaseUrl}icon_account_change_record.png";
   static const imgCashPassword = "${imgBaseUrl}icon_cash_password.png";
 
+  /// 代理中心
+  static const imgAgentTeamReport = "${imgBaseUrl}icon_team_report.png";
+  static const imgAgentTeamBet = "${imgBaseUrl}icon_team_bet.png";
+  static const imgAgentTeamAccountChange = "${imgBaseUrl}icon_team_account_change.png";
+  static const imgAgentTeamOverview = "${imgBaseUrl}icon_team_overview.png";
+  static const imgAgentRechargeRecord = "${imgBaseUrl}icon_recharge_record.png";
+  static const imgAgentAgencyBonus = "${imgBaseUrl}icon_agency_bonus.png";
+  static const imgAgentWithdrawalRecord = "${imgBaseUrl}icon_withdrawal_record.png";
+  static const imgAgentVip = "${imgBaseUrl}icon_agent_vip.png";
+  static const imgAgentOpenAccount = "${imgBaseUrl}icon_agent_open_account.png";
+
+  ///  修改密码
+  static const imgModify = "${imgBaseUrl}icon_modify_password.png";
+  //广告测试图
+  static const activePageBanner = "${imgBaseUrl}icon_msg_banner.png";
+  /// 投注记录
+  static const imgChoiceUp = "${imgBaseUrl}icon_choice_up.png";
 
 }

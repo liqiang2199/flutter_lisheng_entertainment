@@ -31,6 +31,8 @@ dependencies:
   flutter_picker: ^1.1.0
   #轮播组件
   carousel_pro: ^1.0.0
+  #刷新控件（上拉 下拉刷新）
+  pull_to_refresh: ^1.5.7
 
 dev_dependencies:
   flutter_test:
@@ -88,6 +90,19 @@ flutter:
     - resource/imgs/icon_bank.png
     - resource/imgs/icon_account_change_record.png
     - resource/imgs/icon_cash_password.png
+    - resource/imgs/icon_team_report.png
+    - resource/imgs/icon_team_bet.png
+    - resource/imgs/icon_team_account_change.png
+    - resource/imgs/icon_team_overview.png
+    - resource/imgs/icon_recharge_record.png
+    - resource/imgs/icon_agency_bonus.png
+    - resource/imgs/icon_withdrawal_record.png
+    - resource/imgs/icon_agent_vip.png
+    - resource/imgs/icon_agent_open_account.png
+    - resource/imgs/icon_modify_password.png
+    - resource/imgs/icon_msg_banner.png
+    - resource/imgs/icon_choice_up.png
+
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
