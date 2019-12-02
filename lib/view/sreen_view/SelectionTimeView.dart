@@ -5,6 +5,7 @@ import 'package:flutter_lisheng_entertainment/Util/SpaceViewUtil.dart';
 import 'package:flutter_lisheng_entertainment/Util/StringUtil.dart';
 import 'package:flutter_lisheng_entertainment/view/view_interface/SelectionTimeCallBack.dart';
 
+/// 选择时间
 class SelectionTimeView extends StatelessWidget {
 
 
@@ -23,7 +24,10 @@ class SelectionTimeView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return _screenFindAndAccount();
+    return new Container(
+      padding: EdgeInsets.only(bottom: 15.0),
+      child: _screenFindAndAccount(),
+    );
   }
 
 

@@ -48,6 +48,11 @@ class StringUtil {
   static const agentAgencyBonus = "代理分红";
   static const agentRechargeRecord = "充值记录";
   static const agentWithdrawalRecord = "提款记录";
+  //代理中心
+  static const teamReportFrom = "团队报表";
+  static const teamAccountChangeRecord = "团队账变记录";
+  static const teamBettingRecord = "团队投注记录";
+  static const agentMemberManager = "会员管理";
 
   //修改登录密码
   static const modifyLoginPasswordTitle = "修改登录密码";
@@ -70,5 +75,17 @@ class StringUtil {
 
   //投注记录
   static const searchButText = "搜索";
+
+  //开奖中心
+  static const homeLotteryCenter = "开奖中心";
+
+  //开户中心
+  static const openAccountCenterEditTip = "格式：6-10位字母和数字组成，不支持特殊字符！";
+  static const openAccountCenterEditReturnTip = "开户区间：0.0-9.5";
+
+  //我的银行卡
+  static const myBankList = "我的银行卡";
+  static const addBank = "添加银行卡";
+
 
 }

@@ -8,6 +8,7 @@ class ImageUtil {
   /// 公用
   static const imgRightArrow = "${imgBaseUrl}icon_right_arrow.png";
   static const imgBack = "${imgBaseUrl}icon_back.png";
+  static const imgRightAllowWhite = "${imgBaseUrl}icon_right_allow_white.png";
 
   /// home  页面图片
   static const imgHomeTopBg = "${imgBaseUrl}icon_home_top_bg.png";
@@ -61,5 +62,14 @@ class ImageUtil {
   static const activePageBanner = "${imgBaseUrl}icon_msg_banner.png";
   /// 投注记录
   static const imgChoiceUp = "${imgBaseUrl}icon_choice_up.png";
+  /// 开奖中心Banner
+  static const imgLotteryCenterBanner = "${imgBaseUrl}icon_lottery_center_banner.png";
+  //重庆时时彩
+  static const imgLotteryCenterCqSSC = "${imgBaseUrl}icon_cp_cq_ssc.png";
+  /// 开户中心
+  static const imgReturnPoint = "${imgBaseUrl}icon_return_point.png";
+  static const imgOpenAccountEdit = "${imgBaseUrl}icon_open_accout.png";
+  static const imgRadioBgSelection = "${imgBaseUrl}icon_radio_bg_selection.png";
+  static const imgRadioBg = "${imgBaseUrl}icon_radio_bg.png";
 
 }

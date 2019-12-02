@@ -338,6 +338,8 @@ class _HomeControllerView extends State<HomeControllerView> {
             case 0:
               break;
             case 1:
+              //开奖中心
+              Navigator.pushNamed(context, RouteUtil.lotteryCenterController);
               break;
             case 2:
               //个人中心

@@ -242,6 +242,10 @@ class _PersonalController extends State<PersonalController> {
             //账变记录
             Navigator.pushNamed(context, RouteUtil.accountChangeRecordController);
             break;
+          case StringUtil.personalBank:
+            //我的银行卡
+            Navigator.pushNamed(context, RouteUtil.bankListController);
+            break;
         }
       },
       child: new ListStateItemView(

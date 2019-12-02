@@ -181,15 +181,15 @@ class _AgentCenterController extends State<AgentCenterController> {
         elevation: 5.0,
         child: new Column(
           children: <Widget>[
-            _getRightArrowView(StringUtil.agentOpenAccount, ImageUtil.imgAgentOpenAccount),
+            _getRightArrowView(StringUtil.agentOpenAccount, ImageUtil.imgAgentOpenAccount, 0),
             CommonView().commonLine(),
-            _getRightArrowView(StringUtil.agentVipManage, ImageUtil.imgAgentVip),
+            _getRightArrowView(StringUtil.agentVipManage, ImageUtil.imgAgentVip, 1),
             CommonView().commonLine(),
-            _getRightArrowView(StringUtil.agentAgencyBonus, ImageUtil.imgAgentAgencyBonus),
+            _getRightArrowView(StringUtil.agentAgencyBonus, ImageUtil.imgAgentAgencyBonus, 2),
             CommonView().commonLine(),
-            _getRightArrowView(StringUtil.agentRechargeRecord, ImageUtil.imgAgentRechargeRecord),
+            _getRightArrowView(StringUtil.agentRechargeRecord, ImageUtil.imgAgentRechargeRecord, 3),
             CommonView().commonLine(),
-            _getRightArrowView(StringUtil.agentWithdrawalRecord, ImageUtil.imgAgentWithdrawalRecord),
+            _getRightArrowView(StringUtil.agentWithdrawalRecord, ImageUtil.imgAgentWithdrawalRecord, 4),
 
           ],
         ),
@@ -197,13 +197,39 @@ class _AgentCenterController extends State<AgentCenterController> {
     );
   }
 
-  _getRightArrowView(String title, String icon) {
+  _getRightArrowView(String title, String icon, int index) {
 
-    return new ListStateItemView(
-      title,
-      isSwitch: false,
-      isRightArrow: true,
-      leftIcon: icon,
+    return new GestureDetector(
+      onTap: () {
+        switch(index) {
+          case 0:
+            //开户中心
+            Navigator.pushNamed(context, RouteUtil.openAccountCenterController);
+            break;
+          case 1:
+            //会员管理
+            Navigator.pushNamed(context, RouteUtil.memberManagerController);
+            break;
+          case 2:
+            //代理分红
+            //Navigator.pushNamed(context, RouteUtil.memberManagerController);
+            break;
+          case 3:
+            //充值记录
+            Navigator.pushNamed(context, RouteUtil.rechargeRecordController);
+            break;
+          case 4:
+            //提款记录
+            Navigator.pushNamed(context, RouteUtil.withdrawalRecordController);
+            break;
+        }
+      },
+      child: new ListStateItemView(
+        title,
+        isSwitch: false,
+        isRightArrow: true,
+        leftIcon: icon,
+      ),
     );
   }
 
@@ -240,6 +266,18 @@ class _AgentCenterController extends State<AgentCenterController> {
             case 0:
               //团队总览
               Navigator.pushNamed(context, RouteUtil.teamOverviewController);
+              break;
+            case 1:
+              //团队报表
+              Navigator.pushNamed(context, RouteUtil.teamReportFormController);
+              break;
+            case 2:
+              //团队账变
+              Navigator.pushNamed(context, RouteUtil.teamAccountChangeController);
+              break;
+            case 3:
+              //团队投注
+              Navigator.pushNamed(context, RouteUtil.teamBettingController);
               break;
           }
         },

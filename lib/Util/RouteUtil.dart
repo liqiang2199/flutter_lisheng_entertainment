@@ -31,5 +31,27 @@ class RouteUtil {
   static const accountChangeRecordController = "/AccountChangeRecordController";
   //团队总览
   static const teamOverviewController = "/TeamOverviewController";
+  //团队报表
+  static const teamReportFormController = "/TeamReportFormController";
+  //团队账变记录
+  static const teamAccountChangeController = "/TeamAccountChangeController";
+  //团队投注
+  static const teamBettingController = "/TeamBettingController";
+  //会员管理
+  static const memberManagerController = "/MemberManagerController";
+  //充值记录
+  static const rechargeRecordController = "/RechargeRecordController";
+  //提款记录
+  static const withdrawalRecordController = "/WithdrawalRecordController";
+  //开奖中心
+  static const lotteryCenterController = "/LotteryCenterController";
+  //投注记录详情
+  static const bettingRecordDetailController = "/BettingRecordDetailController";
+  //开户中心
+  static const openAccountCenterController = "/OpenAccountCenterController";
+  //我的银行卡
+  static const bankListController = "/BankListController";
+  //绑定银行卡
+  static const bindBankController = "/BindBankController";
 
 }
