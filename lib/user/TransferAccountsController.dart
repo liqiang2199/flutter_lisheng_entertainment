@@ -5,7 +5,6 @@ import 'package:flutter_lisheng_entertainment/Util/SpaceViewUtil.dart';
 import 'package:flutter_lisheng_entertainment/Util/StringUtil.dart';
 import 'package:flutter_lisheng_entertainment/view/common/CommonView.dart';
 import 'package:flutter_picker/Picker.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 /// 转账
 class TransferAccountsController extends StatefulWidget {

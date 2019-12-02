@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_lisheng_entertainment/Util/ColorUtil.dart';
 import 'package:flutter_lisheng_entertainment/Util/ImageUtil.dart';
+import 'package:flutter_lisheng_entertainment/Util/RouteUtil.dart';
 import 'package:flutter_lisheng_entertainment/Util/SpaceViewUtil.dart';
 import 'package:flutter_lisheng_entertainment/Util/StringUtil.dart';
 import 'package:flutter_lisheng_entertainment/base/BaseRefreshTabController.dart';
@@ -99,6 +100,7 @@ class _BettingRecordController extends BaseRefreshTabController<BettingRecordCon
   /// 筛选 根据种类和账户
   Widget _screenFindAndAccount() {
     return new Container(
+      color: Colors.white,
       child: new Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
@@ -276,19 +278,26 @@ class _BettingRecordController extends BaseRefreshTabController<BettingRecordCon
     return new Offstage(
       /// 控制列表数据是否显示
       offstage: false,
-      child: new Container(
-        padding: EdgeInsets.only(left: 15.0, bottom: 15.0, right: 15.0,),
-        child: new Column(
-          children: <Widget>[
-            CommonView().commonLine_NoMargin(),
-            _recordBottomList("订单编号：", "11111"),
-            _recordBottomList("彩种/玩法：", "11111"),
-            _recordBottomList("期号：", "11111"),
-            _recordBottomList("下单时间：", "11111"),
-            _recordBottomList("注数/倍数：", "11111"),
-            _recordBottomList("金额：", "11111"),
-            _recordBottomList("奖金：", "11111"),
-          ],
+      child: new GestureDetector(
+        onTap: () {
+          // 数据显示 投注记录详情
+          Navigator.pushNamed(context, RouteUtil.bettingRecordDetailController);
+        },
+        child: new Container(
+          color: Colors.white,
+          padding: EdgeInsets.only(left: 15.0, bottom: 15.0, right: 15.0,),
+          child: new Column(
+            children: <Widget>[
+              CommonView().commonLine_NoMargin(),
+              _recordBottomList("订单编号：", "11111"),
+              _recordBottomList("彩种/玩法：", "11111"),
+              _recordBottomList("期号：", "11111"),
+              _recordBottomList("下单时间：", "11111"),
+              _recordBottomList("注数/倍数：", "11111"),
+              _recordBottomList("金额：", "11111"),
+              _recordBottomList("奖金：", "11111"),
+            ],
+          ),
         ),
       ),
     );

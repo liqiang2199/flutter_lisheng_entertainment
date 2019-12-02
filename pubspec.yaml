@@ -102,6 +102,13 @@ flutter:
     - resource/imgs/icon_modify_password.png
     - resource/imgs/icon_msg_banner.png
     - resource/imgs/icon_choice_up.png
+    - resource/imgs/icon_lottery_center_banner.png
+    - resource/imgs/icon_cp_cq_ssc.png
+    - resource/imgs/icon_return_point.png
+    - resource/imgs/icon_open_accout.png
+    - resource/imgs/icon_radio_bg_selection.png
+    - resource/imgs/icon_radio_bg.png
+    - resource/imgs/icon_right_allow_white.png
 
 
   # An image asset can refer to one or more resolution-specific "variants", see

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_lisheng_entertainment/Util/ColorUtil.dart';
 import 'package:flutter_lisheng_entertainment/Util/StringUtil.dart';
 import 'package:flutter_lisheng_entertainment/base/BaseController.dart';
-import 'package:flutter_lisheng_entertainment/view/SelectionTimeView.dart';
+import 'package:flutter_lisheng_entertainment/view/sreen_view/SelectionTimeView.dart';
 import 'package:flutter_lisheng_entertainment/view/common/CommonView.dart';
 import 'package:flutter_lisheng_entertainment/view/view_interface/SelectionTimeCallBack.dart';
 

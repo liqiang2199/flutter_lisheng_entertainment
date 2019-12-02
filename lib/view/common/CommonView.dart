@@ -8,9 +8,14 @@ class CommonView {
   ///  1.0  分割线
   Widget commonLine() {
 
+    return commonLineChange(1.0);
+  }
+
+  Widget commonLineChange(double h) {
+
     return new Container(
       width: ScreenUtil.screenWidth,
-      height: 1.0,
+      height: h,
       margin: EdgeInsets.only(left: 15.0, right: 15.0),
       color: Color(ColorUtil.lineColor),
     );
@@ -28,9 +33,14 @@ class CommonView {
 
   Widget commonLine_NoMargin() {
 
+    return commonLine_NoMarginChange(1.0);
+  }
+
+  Widget commonLine_NoMarginChange(double h) {
+
     return new Container(
       width: ScreenUtil.screenWidth,
-      height: 1.0,
+      height: h,
       color: Color(ColorUtil.lineColor),
     );
   }
