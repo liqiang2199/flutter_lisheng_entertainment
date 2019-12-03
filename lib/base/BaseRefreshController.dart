@@ -35,7 +35,7 @@ abstract class BaseRefreshController<T extends StatefulWidget> extends State<T> 
 
   Widget smartRefreshBase(Widget child) {
     return new SmartRefresher(
-      enablePullDown: true,
+      enablePullDown: isCanRefresh(),
       enablePullUp: true,
       header: ClassicHeader(),
       footer: CustomFooter(
@@ -68,5 +68,10 @@ abstract class BaseRefreshController<T extends StatefulWidget> extends State<T> 
       child: child,
 
     );
+  }
+
+  bool isCanRefresh() {
+
+    return true;
   }
 }

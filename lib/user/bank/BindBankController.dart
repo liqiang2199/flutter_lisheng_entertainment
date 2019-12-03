@@ -34,7 +34,8 @@ class _BindBankController extends State<BindBankController> {
           CommonView().commonLine_NoMargin(),
           _withdrawalEditMoney("资金密码", "大小写字母开头的8-24个字符"),
           CommonView().commonLine_NoMargin(),
-
+          _addBankTip(),
+          _butAddBankView(),
 
         ],
       ),
@@ -114,6 +115,40 @@ class _BindBankController extends State<BindBankController> {
           ),
 
         ],
+      ),
+    );
+  }
+
+  Widget _addBankTip() {
+
+    return new Container(
+      padding: EdgeInsets.all(15.0),
+      child: new Text(
+        "操作提示：为了保障您的账户安全，请认真填写您的银行信息，资料一经绑定无法修改。",
+        style: new TextStyle(
+          color: Color(ColorUtil.textColor_333333),
+          fontSize: 12.0,
+        ),
+      ),
+    );
+  }
+
+  Widget _butAddBankView() {
+    return new Container(
+      width: 300.0,
+      height: 45.0  ,
+      margin: EdgeInsets.all(30.0),
+      child: new RaisedButton(onPressed: (){
+        //
+      },color: Color(ColorUtil.butColor),
+        child: new Text(StringUtil.submitBindBank
+          , style: TextStyle(fontSize: 16.0,color: Color(ColorUtil.whiteColor)),),
+        //shape:new RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)) ,
+        shape: new StadiumBorder(side: new BorderSide(
+          //设置 界面效果
+          color: Color(ColorUtil.butColor),
+          style: BorderStyle.none,
+        ),),
       ),
     );
   }

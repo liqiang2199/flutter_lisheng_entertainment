@@ -29,7 +29,7 @@ class ListStateItemView extends StatelessWidget {
     this.isRightArrow = false,
     this.isRightText = false,
     this.leftIcon,
-    this.isLeftIcon,
+    this.isLeftIcon = false,
     this.rightIcon,
     this.onChanged,
     this.isCupertino,
@@ -49,7 +49,7 @@ class ListStateItemView extends StatelessWidget {
 
   Widget _stateView() {
 
-    if (this.isSwitch && !this.isRightArrow && !this.isRightText) {
+    if (this.isSwitch && !this.isRightArrow && !this.isRightText && this.isLeftIcon) {
       //含有switch 开关
       return _haveSwitch();
 
@@ -60,6 +60,10 @@ class ListStateItemView extends StatelessWidget {
 
     } else if (!this.isSwitch && this.isRightArrow && this.isRightText) {
       return _haveRightArrowAndRightText();
+    } else if (this.isSwitch && !this.isRightArrow && !this.isRightText && !this.isLeftIcon) {
+      //含有switch 开关
+      return _haveSwitchNoLeft();
+
     }
 
     if (this.isLeftIcon) {
@@ -78,6 +82,37 @@ class ListStateItemView extends StatelessWidget {
         children: <Widget>[
           SpaceViewUtil.pading_Left(10.0),
           Image.asset(this.leftIcon, width: 20.0, height: 20.0,),
+          SpaceViewUtil.pading_Left(10.0),
+          new Expanded(
+            child: new Text(
+              this.title,
+              style: const TextStyle(
+                fontSize: 14.0,
+                color: Color(ColorUtil.textColor_333333),
+              ),
+            ),
+          ),
+
+          new CupertinoSwitch(
+              value: this.isCupertino,
+              //setState(() { _lights = value; });
+              onChanged: (bool value) {
+                onChanged(value);
+              }
+          ),
+          SpaceViewUtil.pading_Right_10(),
+
+        ],
+      ),
+    );
+  }
+
+  Widget _haveSwitchNoLeft() {
+
+    return new Container(
+      height: 53.0,
+      child: new Row(
+        children: <Widget>[
           SpaceViewUtil.pading_Left(10.0),
           new Expanded(
             child: new Text(

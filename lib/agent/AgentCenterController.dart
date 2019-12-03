@@ -212,7 +212,7 @@ class _AgentCenterController extends State<AgentCenterController> {
             break;
           case 2:
             //代理分红
-            //Navigator.pushNamed(context, RouteUtil.memberManagerController);
+            Navigator.pushNamed(context, RouteUtil.agencyBonusController);
             break;
           case 3:
             //充值记录

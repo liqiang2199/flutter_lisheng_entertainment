@@ -53,5 +53,7 @@ class RouteUtil {
   static const bankListController = "/BankListController";
   //绑定银行卡
   static const bindBankController = "/BindBankController";
+  //代理分红
+  static const agencyBonusController = "/AgencyBonusController";
 
 }

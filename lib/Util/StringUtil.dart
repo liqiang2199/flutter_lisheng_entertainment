@@ -86,6 +86,7 @@ class StringUtil {
   //我的银行卡
   static const myBankList = "我的银行卡";
   static const addBank = "添加银行卡";
+  static const submitBindBank = "提交绑定";
 
 
 }

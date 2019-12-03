@@ -21,6 +21,7 @@ import 'package:flutter_lisheng_entertainment/user/TransferAccountsController.da
 import 'package:flutter_lisheng_entertainment/user/WithdrawalController.dart';
 import 'package:flutter_lisheng_entertainment/user/personal_center/ModifyLoginPasswordController.dart';
 
+import 'agent/AgencyBonusController.dart';
 import 'agent/AgentCenterController.dart';
 import 'agent/OpenAccountCenterController.dart';
 import 'agent/RechargeRecordController.dart';
@@ -97,6 +98,7 @@ class MyApp extends StatelessWidget {
         RouteUtil.openAccountCenterController: (BuildContext context) => OpenAccountCenterController(),
         RouteUtil.bankListController: (BuildContext context) => BankListController(),
         RouteUtil.bindBankController: (BuildContext context) => BindBankController(),
+        RouteUtil.agencyBonusController: (BuildContext context) => AgencyBonusController(),
       },
     );
   }
