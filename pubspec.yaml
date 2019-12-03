@@ -33,6 +33,8 @@ dependencies:
   carousel_pro: ^1.0.0
   #刷新控件（上拉 下拉刷新）
   pull_to_refresh: ^1.5.7
+  retrofit: any
+  logger: any  #for logging purpose
 
 dev_dependencies:
   flutter_test:
