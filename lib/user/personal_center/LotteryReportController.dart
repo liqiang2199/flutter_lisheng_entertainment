@@ -56,7 +56,7 @@ class _LotteryReportController extends BaseController<LotteryReportController> i
             //纵轴间距
             mainAxisSpacing: 0.0,
             //横轴间距
-            //crossAxisSpacing: 10.0,
+            crossAxisSpacing: 0.0,
             //子组件宽高长度比例
             childAspectRatio: 2.94),
         itemBuilder: (c, i) => Container(

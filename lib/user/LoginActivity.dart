@@ -4,6 +4,7 @@ import 'package:flutter_lisheng_entertainment/Util/ImageUtil.dart';
 import 'package:flutter_lisheng_entertainment/Util/RouteUtil.dart';
 import 'package:flutter_lisheng_entertainment/Util/SpaceViewUtil.dart';
 import 'package:flutter_lisheng_entertainment/Util/StringUtil.dart';
+import 'package:flutter_lisheng_entertainment/dialog/LineSwitchingDialog.dart';
 import 'package:video_player/video_player.dart';
 import 'package:chewie/chewie.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -85,7 +86,31 @@ class _LoginActivity extends State<LoginActivity> {
               ],
             ),
 
+            _lineChage(),
+
           ],
+        ),
+      ),
+    );
+  }
+
+  /// 线路切换
+  Widget _lineChage() {
+
+    return new GestureDetector(
+      onTap: () {
+        //线路切换
+        showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (_) => new LineSwitchingDialog()
+        );
+      },
+      child: new Align(
+        alignment: Alignment.topRight,
+        child: new Container(
+          margin: EdgeInsets.only(top: 200.0),
+          child: new Image.asset(ImageUtil.imgLoginChangeGroup, width: 61.0, height: 68.0, ),
         ),
       ),
     );
