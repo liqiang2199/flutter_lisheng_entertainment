@@ -5,6 +5,7 @@ import 'package:flutter_lisheng_entertainment/Util/StringUtil.dart';
 import 'package:flutter_lisheng_entertainment/view/ListStateItemView.dart';
 import 'package:flutter_lisheng_entertainment/view/common/CommonView.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:share/share.dart';
 
 /// 设置
 class SetController extends StatefulWidget {
@@ -105,11 +106,11 @@ class _SetController extends State<SetController> {
         elevation: 5.0,
         child: new Column(
           children: <Widget>[
-            _getRightArrowView(StringUtil.setShareAPP, ImageUtil.imgShare),
+            _getRightArrowView(StringUtil.setShareAPP, ImageUtil.imgShare, 1),
             _line(),
-            _getRightArrowView(StringUtil.setHelpCenter, ImageUtil.imgHelp),
+            _getRightArrowView(StringUtil.setHelpCenter, ImageUtil.imgHelp, 2),
             _line(),
-            _getRightArrowView(StringUtil.setAbout, ImageUtil.imgAbout),
+            _getRightArrowView(StringUtil.setAbout, ImageUtil.imgAbout, 3),
             _line(),
             _getRightArrowViewAndRightText(StringUtil.setUpdateVersion, ImageUtil.imgUpdateVersion),
           ],
@@ -118,13 +119,24 @@ class _SetController extends State<SetController> {
     );
   }
 
-  _getRightArrowView(String title, String icon) {
+  /// Share.share('check out my website https://example.com');
+  _getRightArrowView(String title, String icon, int index) {
 
-    return new ListStateItemView(
-      title,
-      isSwitch: false,
-      isRightArrow: true,
-      leftIcon: icon,
+    return new GestureDetector(
+      onTap: () {
+        switch(index) {
+          case 1:
+            //分享
+            Share.share('check out my website https://example.com');
+            break;
+        }
+      },
+      child: new ListStateItemView(
+        title,
+        isSwitch: false,
+        isRightArrow: true,
+        leftIcon: icon,
+      ),
     );
   }
 

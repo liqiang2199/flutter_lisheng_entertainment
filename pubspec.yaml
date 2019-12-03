@@ -35,6 +35,8 @@ dependencies:
   pull_to_refresh: ^1.5.7
   retrofit: any
   logger: any  #for logging purpose
+  #分享
+  share: ^0.6.3+3
 
 dev_dependencies:
   flutter_test:
