@@ -48,7 +48,7 @@ class ScreenTwoEditView extends StatelessWidget {
     return new Container(
       height: 30.0,
       margin: EdgeInsets.only(top: 15.0, left: 15.0, right: 5.0,),
-      padding: EdgeInsets.only(right: 10.0,left: 10.0,),
+      padding: EdgeInsets.only(right: 10.0,left: 5.0,),
       decoration: new BoxDecoration(
         border: new Border.all(color: Color(ColorUtil.lineColor), width: 1), // 边色与边宽度
         borderRadius: new BorderRadius.circular((5.0)), // 圆角度
@@ -61,6 +61,7 @@ class ScreenTwoEditView extends StatelessWidget {
               style: TextStyle(fontSize: 12, color: Color(ColorUtil.textColor_333333)),
               decoration: InputDecoration(
                 hintText: hintText,
+                contentPadding: const EdgeInsets.only(top: 0.0, bottom: 13.5),
                 border: InputBorder.none,
                 hoverColor: Color(ColorUtil.whiteColor),
                 hintStyle: TextStyle(fontSize: 12.0, color: Color(ColorUtil.textColor_888888)),
@@ -80,8 +81,8 @@ class ScreenTwoEditView extends StatelessWidget {
 
     return new Container(
       height: 30.0,
-      margin: EdgeInsets.only(top: 15.0, left: 15.0, right: 5.0,),
-      padding: EdgeInsets.only(right: 10.0,left: 10.0,),
+      margin: EdgeInsets.only(top: 15.0, left: 10.0, right: 5.0,),
+      padding: EdgeInsets.only(right: 10.0,),
       decoration: new BoxDecoration(
         border: new Border.all(color: Color(ColorUtil.lineColor), width: 1), // 边色与边宽度
         borderRadius: new BorderRadius.circular((5.0)), // 圆角度
@@ -92,6 +93,7 @@ class ScreenTwoEditView extends StatelessWidget {
           style: TextStyle(fontSize: 12, color: Color(ColorUtil.textColor_333333)),
           decoration: InputDecoration(
             hintText: hintText,
+            contentPadding: const EdgeInsets.only(top: 0.0, bottom: 13.5),
             border: InputBorder.none,
             hoverColor: Color(ColorUtil.whiteColor),
             hintStyle: TextStyle(fontSize: 12.0, color: Color(ColorUtil.textColor_888888)),

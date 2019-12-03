@@ -67,6 +67,7 @@ class TimeAndEditAndFindChoiceView extends StatelessWidget {
                 style: TextStyle(fontSize: 14, color: Color(ColorUtil.textColor_333333)),
                 decoration: InputDecoration(
                   hintText: "请输入用户名",
+                  contentPadding: const EdgeInsets.only(top: 0.0, bottom: 11.0),
                   border: InputBorder.none,
                   hoverColor: Color(ColorUtil.whiteColor),
                   hintStyle: TextStyle(fontSize: 14, color: Color(ColorUtil.textColor_888888)),
@@ -212,6 +213,7 @@ class TimeAndEditAndFindChoiceView extends StatelessWidget {
               style: TextStyle(fontSize: 12, color: Color(ColorUtil.textColor_333333)),
               decoration: InputDecoration(
                 hintText: hintText,
+                contentPadding: const EdgeInsets.only(top: 0.0, bottom: 13.5),
                 border: InputBorder.none,
                 hoverColor: Color(ColorUtil.whiteColor),
                 hintStyle: TextStyle(fontSize: 12.0, color: Color(ColorUtil.textColor_888888)),

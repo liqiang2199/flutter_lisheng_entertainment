@@ -37,8 +37,11 @@ dependencies:
   logger: any  #for logging purpose
   #分享
   share: ^0.6.3+3
+  json_serializable: any
 
 dev_dependencies:
+  retrofit_generator: any
+  build_runner: any
   flutter_test:
     sdk: flutter
 

@@ -25,57 +25,44 @@ class _HomeControllerView extends State<HomeControllerView> {
     // TODO: implement build
     
     return new Scaffold(
-      body: new Column(
+      body: new SingleChildScrollView(
+        physics: BouncingScrollPhysics(),
+        child: new Center(
+          child: new Column(
+            children: <Widget>[
+              _topView(),
+              _gridOperationClassification(),
+              //new Expanded(child: _gridOperationClassification(),),
+              _bannerHome(),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+
+  Widget _topView() {
+
+    return new Container(
+      height: 220.0,
+      child: new Stack(
+        fit: StackFit.expand,
         children: <Widget>[
-          _topView(),
-          new Expanded(child: _gridOperationClassification(),),
-          _bannerHome(),
-          
+          _topBgImg(),
+          _topTitleAndSet(),
+          _topUserInfoView(),
+          _topButView(),
 
         ],
       ),
     );
   }
 
-  Widget _scrollview() {
-    return new CustomScrollView(
-      shrinkWrap: true,
-      // 内容
-      slivers: <Widget>[
-        new SliverPadding(
-          //padding: const EdgeInsets.all(20.0),
-          sliver: new SliverList(
-            delegate: new SliverChildListDelegate(
-              <Widget>[
-                _topView(),
-//                new Expanded(child: _gridOperationClassification(), flex: 1,),
-//                _bannerHome(),
-              ],
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _topView() {
-
-    return new Stack(
-      children: <Widget>[
-        _topBgImg(),
-        _topTitleAndSet(),
-        _topUserInfoView(),
-        _topButView(),
-
-      ],
-    );
-  }
-
   /// 顶部背景图片
   Widget _topBgImg() {
     return Image.asset(ImageUtil.imgHomeTopBg,
-      width: ScreenUtil.screenWidth,
-      height: 219.0,
+      height: 220.0,
       repeat: ImageRepeat.repeat,
     );
   }
@@ -288,22 +275,23 @@ class _HomeControllerView extends State<HomeControllerView> {
   /// 操作
   Widget _gridOperationClassification() {
 
-    return new Container(
-      child: _gridClassification(),
-    );
+    return _gridClassification();
   }
 
   Widget _gridClassification() {
-    return  new GridView.count(
-      crossAxisCount: 3,
-      //padding: const EdgeInsets.all(8.0),
-      primary: false,
-      mainAxisSpacing: 0.0,//竖向间距
-      crossAxisSpacing: 8.0,//横向间距
-      childAspectRatio: 1.4,
-      children: _gridListItemView(),
-      shrinkWrap: false,
+    return  new Container(
+      child: new GridView.count(
+        physics: new NeverScrollableScrollPhysics(),
+        crossAxisCount: 3,
+        //padding: const EdgeInsets.all(8.0),
+        primary: false,
+        mainAxisSpacing: 0.0,//竖向间距
+        crossAxisSpacing: 0.0,//横向间距
+        childAspectRatio: 1.5,
+        children: _gridListItemView(),
+        shrinkWrap: true,
 
+      ),
     );
   }
 

@@ -4,6 +4,7 @@ import 'package:flutter_lisheng_entertainment/Util/ImageUtil.dart';
 import 'package:flutter_lisheng_entertainment/Util/SpaceViewUtil.dart';
 import 'package:flutter_lisheng_entertainment/Util/StringUtil.dart';
 import 'package:flutter_lisheng_entertainment/view/view_interface/SelectionTimeCallBack.dart';
+import 'package:flutter_picker/Picker.dart';
 
 ///  选择时间 和 输入用户名
 class SelectionTimeAndEditNameView extends StatelessWidget {
@@ -21,6 +22,7 @@ class SelectionTimeAndEditNameView extends StatelessWidget {
    timeCallBack != null
   ),super(key: key);
 
+
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
@@ -29,7 +31,7 @@ class SelectionTimeAndEditNameView extends StatelessWidget {
       child: new Column(
         children: <Widget>[
           _editAccountName(),
-          _screenFindAndAccount(),
+          _screenFindAndAccount(context),
         ],
       ),
       color: Color(ColorUtil.whiteColor),
@@ -65,6 +67,8 @@ class SelectionTimeAndEditNameView extends StatelessWidget {
                 style: TextStyle(fontSize: 14, color: Color(ColorUtil.textColor_333333)),
                 decoration: InputDecoration(
                   hintText: "请输入用户名",
+                  //contentPadding: const EdgeInsets.symmetric(vertical: 0.0),
+                  contentPadding: const EdgeInsets.only(top: 0.0, bottom: 11.0),
                   border: InputBorder.none,
                   hoverColor: Color(ColorUtil.whiteColor),
                   hintStyle: TextStyle(fontSize: 14, color: Color(ColorUtil.textColor_888888)),
@@ -79,13 +83,13 @@ class SelectionTimeAndEditNameView extends StatelessWidget {
 
 
   /// 筛选 根据种类和账户
-  Widget _screenFindAndAccount() {
+  Widget _screenFindAndAccount(BuildContext context) {
     return new Container(
       child: new Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
 
-          new Expanded(child: _choiceStarTime()),
+          new Expanded(child: _choiceStarTime(context)),
           new Container(
             margin: EdgeInsets.only(top: 15.0, ),
             child: new Text("至",
@@ -95,7 +99,7 @@ class SelectionTimeAndEditNameView extends StatelessWidget {
               ),
             ),
           ),
-          new Expanded(child: _choiceEndTime()),
+          new Expanded(child: _choiceEndTime(context)),
           new Expanded(child: _butSearch(), flex: 0,),
 
         ],
@@ -104,7 +108,7 @@ class SelectionTimeAndEditNameView extends StatelessWidget {
   }
 
   /// 选择开始时间
-  Widget _choiceStarTime() {
+  Widget _choiceStarTime(BuildContext context) {
 
     return new Container(
       height: 30.0,
@@ -114,33 +118,39 @@ class SelectionTimeAndEditNameView extends StatelessWidget {
         border: new Border.all(color: Color(ColorUtil.lineColor), width: 1), // 边色与边宽度
         borderRadius: new BorderRadius.circular((5.0)), // 圆角度
       ),
-      child: new Row(
+      child: new GestureDetector(
+        onTap: () {
+          // 选择时间
+          showPickerDateTime(context);
+        },
+        child: new Row(
 
-        children: <Widget>[
+          children: <Widget>[
 
-          new Expanded(
-            child: new Text(
-              "选择时间",
-              style: new TextStyle(
-                fontSize: 12.0,
-                color: Color(ColorUtil.textColor_888888),
+            new Expanded(
+              child: new Text(
+                "选择时间",
+                style: new TextStyle(
+                  fontSize: 12.0,
+                  color: Color(ColorUtil.textColor_888888),
+                ),
+                maxLines: 1,
               ),
-              maxLines: 1,
             ),
-          ),
 
-          new Image.asset(ImageUtil.imgChoiceUp, width: 12.0, height: 12.0,),
-          SpaceViewUtil.pading_Left(5.0),
+            new Image.asset(ImageUtil.imgChoiceUp, width: 12.0, height: 12.0,),
+            SpaceViewUtil.pading_Left(5.0),
 
-        ],
+          ],
 
+        ),
       ),
     );
   }
 
 
   /// 选择选择结束时间
-  Widget _choiceEndTime() {
+  Widget _choiceEndTime(BuildContext context) {
 
     return new Container(
       height: 30.0,
@@ -150,26 +160,32 @@ class SelectionTimeAndEditNameView extends StatelessWidget {
         border: new Border.all(color: Color(ColorUtil.lineColor), width: 1), // 边色与边宽度
         borderRadius: new BorderRadius.circular((5.0)), // 圆角度
       ),
-      child: new Row(
+      child: new GestureDetector(
+        onTap: () {
+          //选择时间
+          showPickerDateTime(context);
+        },
+        child: new Row(
 
-        children: <Widget>[
+          children: <Widget>[
 
-          new Expanded(
-            child: new Text(
-              "选择时间",
-              style: new TextStyle(
-                fontSize: 12.0,
-                color: Color(ColorUtil.textColor_888888),
+            new Expanded(
+              child: new Text(
+                "选择时间",
+                style: new TextStyle(
+                  fontSize: 12.0,
+                  color: Color(ColorUtil.textColor_888888),
+                ),
+                maxLines: 1,
               ),
-              maxLines: 1,
             ),
-          ),
 
-          new Image.asset(ImageUtil.imgChoiceUp, width: 12.0, height: 12.0,),
-          SpaceViewUtil.pading_Left(5.0),
+            new Image.asset(ImageUtil.imgChoiceUp, width: 12.0, height: 12.0,),
+            SpaceViewUtil.pading_Left(5.0),
 
-        ],
+          ],
 
+        ),
       ),
     );
   }
@@ -200,6 +216,58 @@ class SelectionTimeAndEditNameView extends StatelessWidget {
         ),
       ),
     );
+  }
+
+
+
+  showPickerDateTime(BuildContext context) {
+    new Picker(
+        adapter: new DateTimePickerAdapter(
+          type: PickerDateTimeType.kYMD,
+          isNumberMonth: true,
+          //strAMPM: const["上午", "下午"],
+          yearSuffix: "年",
+          monthSuffix: "月",
+          daySuffix: "日",
+          //minValue: DateTime.now(),
+          // twoDigitYear: true,
+        ),
+        //title: new Text("Select DateTime"),
+        textAlign: TextAlign.right,
+        selectedTextStyle: TextStyle(color: Color(ColorUtil.textColor_333333)),
+//        delimiter: [
+//          PickerDelimiter(column: 3, child: Container(
+//            width: 16.0,
+//            alignment: Alignment.center,
+//            //child: Text(':', style: TextStyle(fontWeight: FontWeight.bold)),
+//            color: Colors.white,
+//          ))
+//        ],
+//        footer: Container(
+//          height: 50.0,
+//          alignment: Alignment.center,
+//          child: Text('Footer'),
+//        ),
+        onConfirm: (Picker picker, List value) {
+          print(picker.adapter.text);
+        },
+        textStyle: TextStyle(color: Color(ColorUtil.textColor_888888)),
+        cancelText: "取消",
+        cancelTextStyle: new TextStyle(
+          fontSize: 16.0,
+          color: Color(ColorUtil.textColor_333333),
+        ),
+        confirmText: "确定",
+        confirmTextStyle: new TextStyle(
+          fontSize: 16.0,
+          color: Color(ColorUtil.textColor_333333),
+        ),
+        onSelect: (Picker picker, int index, List<int> selecteds) {
+//          this.setState(() {
+//            stateText = picker.adapter.toString();
+//          });
+        }
+    ).showModal(context);
   }
 
 
