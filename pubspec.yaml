@@ -37,11 +37,33 @@ dependencies:
   logger: any  #for logging purpose
   #分享
   share: ^0.6.3+3
-  json_serializable: any
+  #flutter packages pub run build_runner build //使用 build_runner 生成 .g.dart 文件
+    #
+    #flutter packages pub run build_runner wacth //监控生成文件，如果有改动时自动生成/更新 .g.dart 文件
+    #
+    #就ok了
+    #
+    #还没有生成.g.dart文件或者报错的运行下面的命令
+    #
+    #cd 你的工程目录
+    #
+    #flutter packages pub run build_runner build --delete-conflicting-outputs  //删除并重新创建.g.dart文件
+    #
+    #没有生成的再运行一下
+    #
+    #flutter packages pub run build_runner build
+    #————————————————
+  #版权声明：本文为CSDN博主「辰辰远」的原创文章，遵循 CC 4.0 BY-SA 版权协议，转载请附上原文出处链接及本声明。
+  #原文链接：https://blog.csdn.net/worship_Kill/article/details/102892349
+  #flutter packages pub run build_runner build 自动生成 Author.g.dart
+  json_annotation: any
+  dio: ^3.0.7
+  shared_preferences: ^0.5.4+8
 
 dev_dependencies:
   retrofit_generator: any
   build_runner: any
+  json_serializable: any
   flutter_test:
     sdk: flutter
 
