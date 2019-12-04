@@ -5,6 +5,7 @@ import 'package:flutter_lisheng_entertainment/Util/RouteUtil.dart';
 import 'package:flutter_lisheng_entertainment/Util/SpaceViewUtil.dart';
 import 'package:flutter_lisheng_entertainment/Util/StringUtil.dart';
 import 'package:flutter_lisheng_entertainment/dialog/LineSwitchingDialog.dart';
+import 'package:flutter_lisheng_entertainment/net/RetrofitManager.dart';
 import 'package:video_player/video_player.dart';
 import 'package:chewie/chewie.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -267,14 +268,16 @@ class _LoginActivity extends State<LoginActivity> {
       child: new RaisedButton(onPressed: (){
         //跳转首页
         //Navigator.pushNamedAndRemoveUntil(context, RouteUtil.homeController);
-        try {
-          Navigator.of(context).pushAndRemoveUntil(new MaterialPageRoute(
-              builder: (BuildContext context) => HomeController()), (//跳转到主页
-              // ignore: unrelated_type_equality_checks
-              Route route) => route == RouteUtil.homeController);
-        } catch (e) {
+        RetrofitManager.instance.login();
 
-        }
+//        try {
+//          Navigator.of(context).pushAndRemoveUntil(new MaterialPageRoute(
+//              builder: (BuildContext context) => HomeController()), (//跳转到主页
+//              // ignore: unrelated_type_equality_checks
+//              Route route) => route == RouteUtil.homeController);
+//        } catch (e) {
+//
+//        }
       },color: Color(ColorUtil.butColor),
         child: new Text(StringUtil.login
           , style: TextStyle(fontSize: 16.0,color: Color(ColorUtil.whiteColor)),),
