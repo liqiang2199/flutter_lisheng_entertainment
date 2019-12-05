@@ -35,9 +35,11 @@ import 'home/ActivePageController.dart';
 import 'home/LotteryCenterController.dart';
 import 'home/SystemNoticeController.dart';
 import 'home/SystemNoticeDetailController.dart';
+//import 'package:flutter_native_splash/flutter_native_splash.dart' as flutter_native_splash;
 
 void main() {
   runApp(MyApp());
+//  flutter_native_splash.createSplash();
   if (Platform.isAndroid) {
     // 以下两行 设置android状态栏为透明的沉浸。写在组件渲染之后，是为了在渲染后进行set赋值，覆盖状态栏，写在渲染之前MaterialApp组件会覆盖掉这个值。
     SystemUiOverlayStyle systemUiOverlayStyle =
@@ -52,7 +54,8 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: '',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         // This is the theme of your application.
         //
@@ -63,9 +66,11 @@ class MyApp extends StatelessWidget {
         // or simply save your changes to "hot reload" in a Flutter IDE).
         // Notice that the counter didn't reset back to zero; the application
         // is not restarted.
-        //primarySwatch: Colors.blue,
+        primarySwatch: Colors.blue,
 //        primarySwatch: Color(mainColor[""]),
-      primaryColor: Color(ColorUtil.butColor)
+      primaryColor: Color(ColorUtil.butColor),
+          brightness: Brightness.light
+
       ),
       //home: MyHomePage(title: 'Flutter Demo Home Page'),
       //home: LoginActivity(),

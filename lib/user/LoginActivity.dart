@@ -268,16 +268,16 @@ class _LoginActivity extends State<LoginActivity> {
       child: new RaisedButton(onPressed: (){
         //跳转首页
         //Navigator.pushNamedAndRemoveUntil(context, RouteUtil.homeController);
-        RetrofitManager.instance.login();
+//        RetrofitManager.instance.login();
 
-//        try {
-//          Navigator.of(context).pushAndRemoveUntil(new MaterialPageRoute(
-//              builder: (BuildContext context) => HomeController()), (//跳转到主页
-//              // ignore: unrelated_type_equality_checks
-//              Route route) => route == RouteUtil.homeController);
-//        } catch (e) {
-//
-//        }
+        try {
+          Navigator.of(context).pushAndRemoveUntil(new MaterialPageRoute(
+              builder: (BuildContext context) => HomeController()), (//跳转到主页
+              // ignore: unrelated_type_equality_checks
+              Route route) => route == RouteUtil.homeController);
+        } catch (e) {
+
+        }
       },color: Color(ColorUtil.butColor),
         child: new Text(StringUtil.login
           , style: TextStyle(fontSize: 16.0,color: Color(ColorUtil.whiteColor)),),
