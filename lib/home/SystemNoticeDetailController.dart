@@ -20,54 +20,53 @@ class SystemNoticeDetailController extends StatefulWidget {
 
 class _SystemNoticeDetailController extends State<SystemNoticeDetailController> {
 
-  List<String> items = ["1", "2", "3", "4", "5", "6", "7", "8"];
-  RefreshController _refreshController = RefreshController(initialRefresh: false);
-
-  void _onRefresh() async{
-    // monitor network fetch
-    await Future.delayed(Duration(milliseconds: 1000));
-    // if failed,use refreshFailed()
-    _refreshController.refreshCompleted();
-  }
-
-  void _onLoading() async{
-    // monitor network fetch
-    await Future.delayed(Duration(milliseconds: 1000));
-    // if failed,use loadFailed(),if no data return,use LoadNodata()
-    items.add((items.length+1).toString());
-    if(mounted)
-      setState(() {
-
-      });
-    _refreshController.loadComplete();
-  }
-
 
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
+
+    Map args = ModalRoute.of(context).settings.arguments;
+    print("arg= $args");
+    String title = "";
+    String time = "";
+    String content = "";
+    if (args.containsKey("title")) {
+
+      args.forEach((k,v){
+        if (k.toString() == "title") {
+          title = v as String;
+        }
+        if (k.toString() == "content") {
+          content = v as String;
+        }
+        if (k.toString() == "creatTime") {
+          time = v as String;
+        }
+      });
+    }
+
     return new Scaffold(
       appBar: CommonView().commonAppBar(context, StringUtil.systemNoticeDetail),
       body: new ListView(
         children: <Widget>[
-          _activePageItem(),
+          _activePageItem(title, content, time),
         ],
       ),
     );
   }
 
-  Widget _activePageItem() {
+  Widget _activePageItem(String title, String content, String time) {
 
     return new Column(
       children: <Widget>[
-        _noticeOne(),
-        _noticeContent(),
+        _noticeOne(title, time),
+        _noticeContent(content),
 
       ],
     );
   }
 
-  Widget _noticeOne() {
+  Widget _noticeOne(String title, String time) {
 
     return new Container(
       padding: EdgeInsets.only(left: 10.0, right: 10.0, top: 15.0,),
@@ -79,7 +78,7 @@ class _SystemNoticeDetailController extends State<SystemNoticeDetailController> 
             child: new Align(
               alignment: Alignment.centerLeft,
               child: new Text(
-                "平台最新网址平台最新网址平台最新网址平台最新网址",
+                title,
                 style: TextStyle(
                   fontSize: 18.0,
                   color: Color(ColorUtil.textColor_333333),
@@ -93,7 +92,7 @@ class _SystemNoticeDetailController extends State<SystemNoticeDetailController> 
             child: new Align(
               alignment: Alignment.centerLeft,
               child: new Text(
-                "2019-09-09 23:01:06",
+                time,
                 style: TextStyle(
                   fontSize: 12.0,
                   color: Color(ColorUtil.textColor_888888),
@@ -107,28 +106,13 @@ class _SystemNoticeDetailController extends State<SystemNoticeDetailController> 
     );
   }
 
-  Widget _noticeContent() {
+  Widget _noticeContent(String content) {
 
     return new Container(
       padding: EdgeInsets.only(left: 10.0, right: 10.0, bottom: 15.0, top: 15.0,),
       child: new Align(
         child: new Text(
-          "尊敬的会员您好！以下为平台最新登陆网址，请各位会员及时保存并更换，谢谢...尊敬的会员您好！以下为平台最新登陆网址，请各位会员及时保存并更换，谢谢...尊敬的会员您好！以下为平台最新登陆网址，请各位会员及时保存并更换，谢谢..."
-              "尊敬的会员您好！以下为平台最新登陆网址，请各位会员及时保存并更换，谢谢...尊敬的会员您好！以下为平台最新登陆网址，请各位会员及时保存并更换，谢谢...尊敬的会员您好！以下为平台最新登陆网址，请各位会员及时保存并更换，谢谢..."
-              "尊敬的会员您好！以下为平台最新登陆网址，请各位会员及时保存并更换，谢谢...尊敬的会员您好！以下为平台最新登陆网址，请各位会员及时保存并更换，谢谢...尊敬的会员您好！以下为平台最新登陆网址，请各位会员及时保存并更换，谢谢..."
-              "尊敬的会员您好！以下为平台最新登陆网址，请各位会员及时保存并更换，谢谢...尊敬的会员您好！以下为平台最新登陆网址，请各位会员及时保存并更换，谢谢...尊敬的会员您好！以下为平台最新登陆网址，请各位会员及时保存并更换，谢谢..."
-              "尊敬的会员您好！以下为平台最新登陆网址，请各位会员及时保存并更换，谢谢...尊敬的会员您好！以下为平台最新登陆网址，请各位会员及时保存并更换，谢谢...尊敬的会员您好！以下为平台最新登陆网址，请各位会员及时保存并更换，谢谢..."
-              "尊敬的会员您好！以下为平台最新登陆网址，请各位会员及时保存并更换，谢谢...尊敬的会员您好！以下为平台最新登陆网址，请各位会员及时保存并更换，谢谢..."
-              "尊敬的会员您好！以下为平台最新登陆网址，请各位会员及时保存并更换，谢谢...尊敬的会员您好！以下为平台最新登陆网址，请各位会员及时保存并更换，谢谢..."
-              "尊敬的会员您好！以下为平台最新登陆网址，请各位会员及时保存并更换，谢谢...尊敬的会员您好！以下为平台最新登陆网址，请各位会员及时保存并更换，谢谢..."
-              "尊敬的会员您好！以下为平台最新登陆网址，请各位会员及时保存并更换，谢谢...尊敬的会员您好！以下为平台最新登陆网址，请各位会员及时保存并更换，谢谢..."
-              "尊敬的会员您好！以下为平台最新登陆网址，请各位会员及时保存并更换，谢谢...尊敬的会员您好！以下为平台最新登陆网址，请各位会员及时保存并更换，谢谢..."
-              "尊敬的会员您好！以下为平台最新登陆网址，请各位会员及时保存并更换，谢谢...尊敬的会员您好！以下为平台最新登陆网址，请各位会员及时保存并更换，谢谢..."
-              "尊敬的会员您好！以下为平台最新登陆网址，请各位会员及时保存并更换，谢谢...尊敬的会员您好！以下为平台最新登陆网址，请各位会员及时保存并更换，谢谢..."
-              "尊敬的会员您好！以下为平台最新登陆网址，请各位会员及时保存并更换，谢谢...尊敬的会员您好！以下为平台最新登陆网址，请各位会员及时保存并更换，谢谢..."
-              "尊敬的会员您好！以下为平台最新登陆网址，请各位会员及时保存并更换，谢谢...尊敬的会员您好！以下为平台最新登陆网址，请各位会员及时保存并更换，谢谢..."
-              "尊敬的会员您好！以下为平台最新登陆网址，请各位会员及时保存并更换，谢谢...尊敬的会员您好！以下为平台最新登陆网址，请各位会员及时保存并更换，谢谢..."
-              "尊敬的会员您好！以下为平台最新登陆网址，请各位会员及时保存并更换，谢谢...尊敬的会员您好！以下为平台最新登陆网址，请各位会员及时保存并更换，谢谢...",
+          content,
           style: TextStyle(
             fontSize: 14.0,
             color: Color(ColorUtil.textColor_333333),

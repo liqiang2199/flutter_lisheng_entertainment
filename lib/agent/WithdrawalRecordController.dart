@@ -80,7 +80,7 @@ class _WithdrawalRecordController extends BaseRefreshController<WithdrawalRecord
         children: <Widget>[
 
           _recordBottomList(),
-          CommonView().commonLine_NoMargin(),
+          CommonView().commonLine_NoMargin(context),
 
         ],
       );

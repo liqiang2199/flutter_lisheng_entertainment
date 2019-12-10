@@ -23,6 +23,7 @@ class RouteUtil {
   static const modifyLoginPasswordController = "/ModifyLoginPasswordController";
   //修改资金密码
   static const modifyCapitalPasswordController = "/ModifyCapitalPasswordController";
+  static const setCapitalPasswordController = "/SetCapitalPasswordController";
   //个人投注记录
   static const bettingRecordController = "/BettingRecordController";
   //彩票报表
@@ -55,5 +56,7 @@ class RouteUtil {
   static const bindBankController = "/BindBankController";
   //代理分红
   static const agencyBonusController = "/AgencyBonusController";
+  //游戏大厅
+  static const gameHallController = "/GameHallController";
 
 }

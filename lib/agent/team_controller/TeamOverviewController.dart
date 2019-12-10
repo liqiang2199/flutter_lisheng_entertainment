@@ -65,7 +65,7 @@ class _TeamOverviewController extends BaseController<TeamOverviewController> {
         child: new Column(
           children: <Widget>[
             _headView(),
-            CommonView().commonLine_NoMargin(),
+            CommonView().commonLine_NoMargin(context),
             new Expanded(
                 child: new Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -248,13 +248,13 @@ class _TeamOverviewController extends BaseController<TeamOverviewController> {
               ),
               height: 48.0,
             ),
-            CommonView().commonLine_NoMargin(),
+            CommonView().commonLine_NoMargin(context),
             _teamDetailListItem("充值金额"),
-            CommonView().commonLine_NoMargin(),
+            CommonView().commonLine_NoMargin(context),
             _teamDetailListItem("取款金额"),
-            CommonView().commonLine_NoMargin(),
+            CommonView().commonLine_NoMargin(context),
             _teamDetailListItem("消费金额"),
-            CommonView().commonLine_NoMargin(),
+            CommonView().commonLine_NoMargin(context),
             _teamDetailListItem("派奖金额"),
 
           ],

@@ -1,11 +1,16 @@
+import 'package:flustars/flustars.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_lisheng_entertainment/Util/ColorUtil.dart';
 import 'package:flutter_lisheng_entertainment/Util/ImageUtil.dart';
 import 'package:flutter_lisheng_entertainment/Util/SpaceViewUtil.dart';
 import 'package:flutter_lisheng_entertainment/Util/StringUtil.dart';
+import 'package:flutter_lisheng_entertainment/base/BaseController.dart';
+import 'package:flutter_lisheng_entertainment/model/json/recharge/RechargeTypeListBeen.dart';
+import 'package:flutter_lisheng_entertainment/user/net/UserService.dart';
 import 'package:flutter_lisheng_entertainment/view/common/CommonView.dart';
 import 'package:flutter_picker/Picker.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+
+import 'net/RechargeHandler.dart';
 
 /// 充值界面
 class RechargeController extends StatefulWidget {
@@ -17,7 +22,15 @@ class RechargeController extends StatefulWidget {
 
 }
 
-class _RechargeController extends State<RechargeController> {
+class _RechargeController extends BaseController<RechargeController> implements RechargeHandler{
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+//    UserService.instance.getPaytypeList(this);
+  }
+
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
@@ -28,9 +41,9 @@ class _RechargeController extends State<RechargeController> {
         children: <Widget>[
           
           _changeRechargeType("请选择支付方式"),
-          CommonView().commonLine(),
+          CommonView().commonLine(context),
           _rechargeEditMoney(StringUtil.rechargeMoneyHint),
-          CommonView().commonLine(),
+          CommonView().commonLine(context),
           _rechargeTipText(),
           _butSubmitRecharge(),
 
@@ -47,7 +60,8 @@ class _RechargeController extends State<RechargeController> {
       height: 53.0,
       child: new GestureDetector(
       onTap: () {
-        showPickerIcons(context);
+        //选择方式
+        UserService.instance.getPaytypeList(this);
       },
         child: new Row(
           children: <Widget>[
@@ -117,7 +131,7 @@ class _RechargeController extends State<RechargeController> {
   Widget _rechargeTipText() {
     
     return new Container(
-      width: ScreenUtil.screenWidth,
+      width: ScreenUtil.getScreenW(context),
       padding: EdgeInsets.only(left: 15.0,top: 15.0),
       child: new Text(
         "充值金额最少为100元",
@@ -157,14 +171,7 @@ class _RechargeController extends State<RechargeController> {
   /// 选择支付方式
   showPickerIcons(BuildContext context) {
     Picker(
-      adapter: PickerDataAdapter(data: [
-
-        PickerItem(text: new Text("支付宝", style: new TextStyle(fontSize: 16.0),), value: "支付宝"),
-        PickerItem(text: new Text("微信", style: new TextStyle(fontSize: 16.0)), value: "微信"),
-        PickerItem(text: new Text("银行", style: new TextStyle(fontSize: 16.0)), value: "银行"),
-        PickerItem(text: new Text("银联", style: new TextStyle(fontSize: 16.0)), value: "银联"),
-
-      ]),
+      adapter: PickerDataAdapter(data: pickerItemList),
       selectedTextStyle: TextStyle(color: Color(ColorUtil.textColor_333333)),
       textStyle: new TextStyle(
         fontSize: 14.0,
@@ -188,6 +195,19 @@ class _RechargeController extends State<RechargeController> {
 //    ).show(_scaffoldKey.currentState);
     ).showModal(context);
 //    ).showDialog(context);
+  }
+
+  List<PickerItem> pickerItemList = new List();
+
+  @override
+  void setRechargeTypeList(RechargeTypeListBeen data) {
+    pickerItemList.clear();
+    if (data.data != null && data.data.length > 0) {
+      data.data.forEach((rechargeTypeData) {
+        pickerItemList.add( PickerItem(text: new Text(rechargeTypeData.name, style: new TextStyle(fontSize: 16.0),), value: rechargeTypeData.id));
+      });
+    }
+    showPickerIcons(context);
   }
 
 }

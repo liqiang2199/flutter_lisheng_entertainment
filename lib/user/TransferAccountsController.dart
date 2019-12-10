@@ -28,13 +28,13 @@ class _TransferAccountsController extends State<TransferAccountsController> {
         children: <Widget>[
 
           _changeRechargeType("转入账户","请选择转入账户"),
-          CommonView().commonLine(),
+          CommonView().commonLine(context),
           _changeRechargeType("转出账户","请选择转出账户"),
-          CommonView().commonLine(),
+          CommonView().commonLine(context),
           _withdrawalEditMoney("转账金额","请输入转账金额"),
-          CommonView().commonLine(),
+          CommonView().commonLine(context),
           _withdrawalEditMoney("资金密码","请输入资金密码"),
-          CommonView().commonLine(),
+          CommonView().commonLine(context),
           SpaceViewUtil.pading_Top_10(),
           _butSubmitWithdrawal(),
 
@@ -142,6 +142,7 @@ class _TransferAccountsController extends State<TransferAccountsController> {
       ),
     );
   }
+
 
   /// 选择支付方式
   showPickerIcons(BuildContext context) {

@@ -1,8 +1,8 @@
 import 'package:dio/dio.dart';
-import 'package:flutter_lisheng_entertainment/model/http/LoginHttpBeen.dart';
 import 'package:flutter_lisheng_entertainment/net/ApiService.dart';
 import 'package:flutter_lisheng_entertainment/net/UrlUtil.dart';
 import 'package:retrofit/retrofit.dart';
+
 
 /**
  * 网络请求工具
@@ -46,6 +46,9 @@ class RetrofitManager {
     };
   }
 
+  /**
+   * 创建 ApiService
+   */
   ApiService createApiService() {
     if(_instance == null) {
       _instance = new RetrofitManager._internal();
@@ -55,13 +58,6 @@ class RetrofitManager {
     }
     ApiService apiService = new ApiService(_clientDio);
     return apiService;
-  }
-
-  void login() {
-    ApiService apiService = new ApiService(_clientDio);
-    LoginHttpBeen loginHttpBeen = new LoginHttpBeen(account: "cesi", pwd: "123456");
-    var createTask = apiService.login(loginHttpBeen);
-    print(createTask.toString());
   }
 
 }

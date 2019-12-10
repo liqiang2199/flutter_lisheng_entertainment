@@ -50,7 +50,7 @@ class _TeamAccountChangeController extends BaseRefreshTabController<TeamAccountC
       body: new Column(
         children: <Widget>[
           _tabPage(),
-          CommonView().commonLineChange(10.0),
+          CommonView().commonLineChange(context,10.0),
           SelectionTimeAndEditNameView(this),
           new Expanded(child: _pageView(),),
         ],
@@ -172,7 +172,7 @@ class _TeamAccountChangeController extends BaseRefreshTabController<TeamAccountC
         padding: EdgeInsets.only(bottom: 15.0,),
         child: new Column(
           children: <Widget>[
-            CommonView().commonLine_NoMargin(),
+            CommonView().commonLine_NoMargin(context),
 
             new Container(
               padding: EdgeInsets.only(left: 15.0,right: 15.0,),

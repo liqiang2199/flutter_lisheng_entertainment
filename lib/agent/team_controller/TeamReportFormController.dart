@@ -101,7 +101,7 @@ class _TeamReportFormController extends BaseRefreshController<TeamReportFormCont
     return new Column(
       children: <Widget>[
 
-        CommonView().commonLine_NoMargin(),
+        CommonView().commonLine_NoMargin(context),
         new Container(
           padding: EdgeInsets.all(15.0,),
           child: new Column(

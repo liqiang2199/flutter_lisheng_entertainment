@@ -50,7 +50,7 @@ class _TeamBettingController extends BaseRefreshTabController<TeamBettingControl
       body: new Column(
         children: <Widget>[
           _tabPage(),
-          CommonView().commonLineChange(10.0),
+          CommonView().commonLineChange(context,10.0),
           TimeAndEditAndFindChoiceView(this),
           new Expanded(child: _pageView(),),
         ],
@@ -147,7 +147,7 @@ class _TeamBettingController extends BaseRefreshTabController<TeamBettingControl
         children: <Widget>[
 
           _recordBottomList(),
-          CommonView().commonLine_NoMargin(),
+          CommonView().commonLine_NoMargin(context)
 
         ],
       );

@@ -80,7 +80,7 @@ class _RechargeRecordController extends BaseRefreshController<RechargeRecordCont
         children: <Widget>[
 
           _recordBottomList(),
-          CommonView().commonLine_NoMargin(),
+          CommonView().commonLine_NoMargin(context),
 
         ],
       );

@@ -5,10 +5,14 @@ import 'package:flutter_lisheng_entertainment/Util/ImageUtil.dart';
 import 'package:flutter_lisheng_entertainment/Util/RouteUtil.dart';
 import 'package:flutter_lisheng_entertainment/Util/SpaceViewUtil.dart';
 import 'package:flutter_lisheng_entertainment/Util/StringUtil.dart';
+import 'package:flutter_lisheng_entertainment/base/BaseRefreshController.dart';
+import 'package:flutter_lisheng_entertainment/home/net/HomeService.dart';
+import 'package:flutter_lisheng_entertainment/home/net/SystemNoticeHandler.dart';
+import 'package:flutter_lisheng_entertainment/model/json/system_notice/SystemNoticeDataBeen.dart';
 import 'package:flutter_lisheng_entertainment/view/common/CommonView.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
-/// 活动页面
+/// 公告页面
 class SystemNoticeController extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
@@ -18,103 +22,63 @@ class SystemNoticeController extends StatefulWidget {
 
 }
 
-class _SystemNoticeController extends State<SystemNoticeController> {
+class _SystemNoticeController extends BaseRefreshController<SystemNoticeController> implements SystemNoticeHandler{
 
-  List<String> items = ["1", "2", "3", "4", "5", "6", "7", "8"];
-  RefreshController _refreshController = RefreshController(initialRefresh: false);
+  List<SystemNoticeDataBeen> systemData = new List();
 
-  void _onRefresh() async{
-    // monitor network fetch
-    await Future.delayed(Duration(milliseconds: 1000));
-    // if failed,use refreshFailed()
-    _refreshController.refreshCompleted();
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    HomeService.instance.getSystemNoticeList(this);
   }
-
-  void _onLoading() async{
-    // monitor network fetch
-    await Future.delayed(Duration(milliseconds: 1000));
-    // if failed,use loadFailed(),if no data return,use LoadNodata()
-    items.add((items.length+1).toString());
-    if(mounted)
-      setState(() {
-
-      });
-    _refreshController.loadComplete();
-  }
-
 
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
     return new Scaffold(
       appBar: CommonView().commonAppBar(context, StringUtil.systemNotice),
-      body: new SmartRefresher(
-        enablePullDown: true,
-        enablePullUp: true,
-        header: ClassicHeader(),
-        footer: CustomFooter(
-          builder: (BuildContext context,LoadStatus mode){
-            Widget body ;
-            if(mode==LoadStatus.idle){
-              body =  Text("上拉加载");
-            }
-            else if(mode==LoadStatus.loading){
-              body =  CupertinoActivityIndicator();
-            }
-            else if(mode == LoadStatus.failed){
-              body = Text("加载失败！点击重试！");
-            }
-            else if(mode == LoadStatus.canLoading){
-              body = Text("松手,加载更多!");
-            }
-            else{
-              body = Text("没有更多数据了!");
-            }
-            return Container(
-              height: 55.0,
-              child: Center(child:body),
-            );
-          },
-        ),
-        controller: _refreshController,
-        onRefresh: _onRefresh,
-        onLoading: _onLoading,
-        child: ListView.builder(
-          itemBuilder: (c, i) => Container(
-            //height: 223.0,
-            margin: EdgeInsets.only(left: 15.0, right: 15.0, top: 10.0,),
-            child: Card(
+      body: smartRefreshBase(
+          ListView.builder(
+            itemBuilder: (c, i) => Container(
+              //height: 223.0,
+              margin: EdgeInsets.only(left: 15.0, right: 15.0, top: 10.0,),
+              child: Card(
                 child: new GestureDetector(
                   onTap: () {
                     //公告详情
-                    Navigator.pushNamed(context, RouteUtil.systemNoticeDetailController);
+                    //Navigator.pushNamed(context, RouteUtil.systemNoticeDetailController);
+                    Navigator.pushNamed(context, RouteUtil.systemNoticeDetailController, arguments: <String, String> {
+                      "title" : systemData[i].title,
+                      "content" : systemData[i].content,
+                      "creatTime" : systemData[i].createtime,
+                    });
                   },
-                  child: Center(child: _activePageItem()),
+                  child: Center(child: _activePageItem(i)),
                 ),
+              ),
             ),
+            //itemExtent: 200.0,
+            itemCount: items.length,
           ),
-          //itemExtent: 200.0,
-          itemCount: items.length,
-        ),
-
       ),
     );
   }
 
-  Widget _activePageItem() {
+  Widget _activePageItem(int index) {
 
     return new Column(
       children: <Widget>[
-        _noticeOne(),
-        _noticeTwo(),
-        CommonView().commonLine_L_R_10(),
+        _noticeOne(systemData[index].title, systemData[index].createtime),
+        _noticeTwo(systemData[index].content),
+        CommonView().commonLine_L_R_10(context),
         _noticeLookDetail(),
 
       ],
     );
   }
 
-  Widget _noticeOne() {
+  Widget _noticeOne(String title, String time) {
 
     return new Container(
       padding: EdgeInsets.only(left: 10.0, right: 10.0, top: 15.0,),
@@ -126,7 +90,7 @@ class _SystemNoticeController extends State<SystemNoticeController> {
             child: new Align(
               alignment: Alignment.centerLeft,
               child: new Text(
-                "平台最新网址平台最新网址平台最新网址平台最新网址",
+                title,
                 style: TextStyle(
                   fontSize: 14.0,
                   color: Color(ColorUtil.textColor_333333),
@@ -138,7 +102,7 @@ class _SystemNoticeController extends State<SystemNoticeController> {
           ),),
 
           new Text(
-            "2019-09-09 23:01:06",
+            time,
             style: TextStyle(
               fontSize: 12.0,
               color: Color(ColorUtil.textColor_888888),
@@ -150,13 +114,13 @@ class _SystemNoticeController extends State<SystemNoticeController> {
     );
   }
 
-  Widget _noticeTwo() {
+  Widget _noticeTwo(String content) {
 
     return new Container(
       padding: EdgeInsets.only(left: 10.0, right: 10.0, bottom: 15.0, top: 15.0,),
       child: new Align(
         child: new Text(
-          "尊敬的会员您好！以下为平台最新登陆网址，请各位会员及时保存并更换，谢谢...",
+          content,
           style: TextStyle(
             fontSize: 12.0,
             color: Color(ColorUtil.textColor_888888),
@@ -192,6 +156,16 @@ class _SystemNoticeController extends State<SystemNoticeController> {
         ],
       ),
     );
+  }
+
+  @override
+  void setSystemListData(List<SystemNoticeDataBeen> data) {
+    systemData.clear();
+    items.clear();
+    systemData = data;
+    setState(() {
+      items = systemData;
+    });
   }
 
 }
