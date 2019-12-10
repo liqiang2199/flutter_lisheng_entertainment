@@ -55,7 +55,7 @@ class _MemberManagerController extends BaseRefreshController<MemberManagerContro
 
                 _recordTopView(),
                 _listReportListDetail(),
-                CommonView().commonLine_NoMargin(),
+                CommonView().commonLine_NoMargin(context),
                 _listDetailBottom("最后登陆时间：","2019-11-29 12:00:00"),
 
               ],
@@ -94,7 +94,7 @@ class _MemberManagerController extends BaseRefreshController<MemberManagerContro
     return new Column(
       children: <Widget>[
 
-        CommonView().commonLine_NoMargin(),
+        CommonView().commonLine_NoMargin(context),
         new Container(
           padding: EdgeInsets.all(15.0,),
           child: new Column(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_lisheng_entertainment/model/json/login/LoginUserInfoBeen.dart';
 import 'package:flutter_lisheng_entertainment/view/HomeControllerView.dart';
 
 class HomeController extends StatefulWidget {

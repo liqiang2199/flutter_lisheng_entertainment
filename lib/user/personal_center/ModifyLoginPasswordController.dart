@@ -1,8 +1,12 @@
+import 'package:flustars/flustars.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_lisheng_entertainment/Util/ColorUtil.dart';
 import 'package:flutter_lisheng_entertainment/Util/ImageUtil.dart';
 import 'package:flutter_lisheng_entertainment/Util/SpaceViewUtil.dart';
 import 'package:flutter_lisheng_entertainment/Util/StringUtil.dart';
+import 'package:flutter_lisheng_entertainment/base/BaseController.dart';
+import 'package:flutter_lisheng_entertainment/user/net/ModifyLoginPasswordHandler.dart';
+import 'package:flutter_lisheng_entertainment/user/net/UserService.dart';
 import 'package:flutter_lisheng_entertainment/view/common/CommonView.dart';
 
 /// 修改登录密码
@@ -15,7 +19,20 @@ class ModifyLoginPasswordController extends StatefulWidget {
 
 }
 
-class _ModifyLoginPasswordController extends State<ModifyLoginPasswordController> {
+class _ModifyLoginPasswordController extends BaseController<ModifyLoginPasswordController> implements ModifyLoginPasswordHandler{
+
+  //再次输入密码的控制器
+  TextEditingController rePassController = TextEditingController();
+
+  //密码的控制器
+  TextEditingController passController = TextEditingController();
+
+  TextEditingController oldPassController = TextEditingController();
+
+  String _loginPassWord = "";
+  String _loginRePassWord = "";
+  String _loginOldPassWord = "";
+
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
@@ -29,9 +46,9 @@ class _ModifyLoginPasswordController extends State<ModifyLoginPasswordController
           child: new Column(
             children: <Widget>[
 
-              _modifyEdit(StringUtil.currentLoginPassword),
-              _modifyEdit(StringUtil.loginNewPassword),
-              _modifyEdit(StringUtil.loginAgainEditNewPassword),
+              _modifyEdit(StringUtil.currentLoginPassword, _getOldPass, oldPassController),
+              _modifyEdit(StringUtil.loginNewPassword, _getNewPass, passController),
+              _modifyEdit(StringUtil.loginAgainEditNewPassword, _getReNewPass, rePassController),
               _modifyLoginPasswordTip(),
               _butModifyView(),
 
@@ -43,7 +60,7 @@ class _ModifyLoginPasswordController extends State<ModifyLoginPasswordController
   }
 
   /// 修改密码 输入框
-  Widget _modifyEdit(String hintText) {
+  Widget _modifyEdit(String hintText, ValueChanged<String> onChanged, TextEditingController controller) {
 
     return new Container(
       margin: EdgeInsets.only(top: 15.0, left: 15.0, right: 15.0,),
@@ -60,6 +77,7 @@ class _ModifyLoginPasswordController extends State<ModifyLoginPasswordController
           SpaceViewUtil.pading_Left(10.0),
           new Expanded(
             child: new TextField(
+              controller: controller,
               style: TextStyle(fontSize: 14, color: Color(ColorUtil.textColor_333333)),
               decoration: InputDecoration(
                 hintText: hintText,
@@ -67,12 +85,26 @@ class _ModifyLoginPasswordController extends State<ModifyLoginPasswordController
                 hoverColor: Color(ColorUtil.whiteColor),
                 hintStyle: TextStyle(fontSize: 14, color: Color(ColorUtil.textColor_888888)),
               ),
+              onChanged: onChanged,
+              obscureText: true,
             ),
           )
         ],
 
       ),
     );
+  }
+
+  _getNewPass(String str) {
+    _loginPassWord = str;
+  }
+
+  _getReNewPass(String str) {
+    _loginRePassWord = str;
+  }
+
+  _getOldPass(String str) {
+    _loginOldPassWord = str;
   }
 
   Widget _modifyLoginPasswordTip() {
@@ -103,6 +135,7 @@ class _ModifyLoginPasswordController extends State<ModifyLoginPasswordController
       child: new RaisedButton(onPressed: (){
         //
 
+        UserService.instance.modifyLoginPassword(_loginPassWord, _loginRePassWord, _loginOldPassWord, this);
       },color: Color(ColorUtil.butColor),
         child: new Text(StringUtil.modify
           , style: TextStyle(fontSize: 16.0,color: Color(ColorUtil.whiteColor)),),
@@ -114,6 +147,12 @@ class _ModifyLoginPasswordController extends State<ModifyLoginPasswordController
         ),),
       ),
     );
+  }
+
+  @override
+  void setPayPasswordResult(bool result) {
+    showToast("修改登录密码成功");
+    Navigator.pop(context);
   }
 
 }

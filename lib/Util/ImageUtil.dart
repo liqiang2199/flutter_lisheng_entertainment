@@ -29,6 +29,10 @@ class ImageUtil {
   static const imgGame= "${imgBaseUrl}icon_game.png";
   static const imgBanner= "${imgBaseUrl}banner.png";
 
+  /// 游戏中心
+  static const imgGameTitleIcon= "${imgBaseUrl}icon_game_title.png";
+
+
   ///  设置界面图片
   static const imgUpdateVersion= "${imgBaseUrl}icon_set_update_version.png";
   static const imgHelp = "${imgBaseUrl}icon_set_help.png";

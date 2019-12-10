@@ -143,7 +143,7 @@ class _AccountChangeRecordController extends BaseRefreshTabController<AccountCha
         children: <Widget>[
 
           _recordBottomList(),
-          CommonView().commonLine_NoMargin(),
+          CommonView().commonLine_NoMargin(context),
 
         ],
       );

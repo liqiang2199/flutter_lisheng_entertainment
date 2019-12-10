@@ -3,6 +3,8 @@ import 'package:flutter_lisheng_entertainment/Util/ColorUtil.dart';
 import 'package:flutter_lisheng_entertainment/Util/ImageUtil.dart';
 import 'package:flutter_lisheng_entertainment/Util/SpaceViewUtil.dart';
 import 'package:flutter_lisheng_entertainment/Util/StringUtil.dart';
+import 'package:flutter_lisheng_entertainment/agent/net/AgentService.dart';
+import 'package:flutter_lisheng_entertainment/agent/net/LinkOpenAccountHandler.dart';
 import 'package:flutter_lisheng_entertainment/base/BaseController.dart';
 import 'package:flutter_lisheng_entertainment/view/SemicircleButView.dart';
 import 'package:flutter_lisheng_entertainment/view/view_interface/SemicircleButCallBack.dart';
@@ -17,11 +19,16 @@ class LinkOpenAccountCenterView extends StatefulWidget {
 
 }
 
-class _LinkOpenAccountCenterView extends BaseController<LinkOpenAccountCenterView> with SemicircleButCallBack{
+class _LinkOpenAccountCenterView extends BaseController<LinkOpenAccountCenterView> with SemicircleButCallBack implements LinkOpenAccountHandler{
 
   int groupValue = 1;
   //有效期选择
   List<bool> validityPeriodFlag = [true, false, false, false];
+  TextEditingController _editingController = new TextEditingController();
+
+  String ratio;
+  String accountType = "1";
+  String day = "1";
 
   @override
   Widget build(BuildContext context) {
@@ -78,7 +85,9 @@ class _LinkOpenAccountCenterView extends BaseController<LinkOpenAccountCenterVie
   Widget _radioChoice(bool isSelection, String title, int index) {
     return new GestureDetector(
       onTap: () {
+        accountType = "$index";
         setUpdateTypeChoice(index);
+
       },
       child: new Container(
         padding: EdgeInsets.only(left: 15.0,),
@@ -98,6 +107,10 @@ class _LinkOpenAccountCenterView extends BaseController<LinkOpenAccountCenterVie
         ),
       ),
     );
+  }
+
+  _getRatio(String str) {
+    ratio = str;
   }
 
 
@@ -153,6 +166,20 @@ class _LinkOpenAccountCenterView extends BaseController<LinkOpenAccountCenterVie
             setState(() {
               validityPeriodFlag[index] = true;
             });
+            switch(index) {
+              case 0:
+                day = "1";
+                break;
+              case 1:
+                day = "7";
+                break;
+              case 2:
+                day = "30";
+                break;
+              case 3:
+                day = "0";
+                break;
+            }
 
           },color: Color( validityPeriodFlag[index]? ColorUtil.butColor: ColorUtil.whiteColor),
             child: new Text(name
@@ -200,6 +227,8 @@ class _LinkOpenAccountCenterView extends BaseController<LinkOpenAccountCenterVie
                 hoverColor: Color(ColorUtil.whiteColor),
                 hintStyle: TextStyle(fontSize: 14, color: Color(ColorUtil.textColor_888888)),
               ),
+              onChanged: _getRatio,
+              controller: _editingController,
             ),
           )
         ],
@@ -225,7 +254,18 @@ class _LinkOpenAccountCenterView extends BaseController<LinkOpenAccountCenterVie
 
   @override
   void onPressedBut() {
-    // TODO: implement onPressedBut
+    AgentService.instance.postLinkOpenAccount(accountType, day, ratio, this);
+  }
+
+  @override
+  void setLinkOpenAccountResult(bool result) {
+    if (result) {
+      accountType = "1";
+      setUpdateTypeChoice(1);
+      day = "1";
+      ratio = "";
+      _editingController.clear();
+    }
   }
 
 }

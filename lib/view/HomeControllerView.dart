@@ -1,16 +1,25 @@
 
 import 'package:carousel_pro/carousel_pro.dart';
+import 'package:flustars/flustars.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_lisheng_entertainment/Util/ColorUtil.dart';
+import 'package:flutter_lisheng_entertainment/Util/Constant.dart';
 import 'package:flutter_lisheng_entertainment/Util/ImageUtil.dart';
 import 'package:flutter_lisheng_entertainment/Util/RouteUtil.dart';
 import 'package:flutter_lisheng_entertainment/Util/SpaceViewUtil.dart';
 import 'package:flutter_lisheng_entertainment/Util/StringUtil.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_lisheng_entertainment/base/BaseController.dart';
+import 'package:flutter_lisheng_entertainment/home/net/HomeHandler.dart';
+import 'package:flutter_lisheng_entertainment/home/net/HomeService.dart';
+import 'package:flutter_lisheng_entertainment/model/json/home_json/GetBannerListDataBeen.dart';
+import 'package:flutter_lisheng_entertainment/model/json/login/LoginUserInfoBeen.dart';
+import 'package:flutter_lisheng_entertainment/net/UrlUtil.dart';
 import 'package:flutter_banner_swiper/flutter_banner_swiper.dart';
+import 'package:flutter_lisheng_entertainment/view/common/CommonView.dart';
 
 class HomeControllerView extends StatefulWidget {
+  
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
@@ -19,11 +28,32 @@ class HomeControllerView extends StatefulWidget {
 
 }
 
-class _HomeControllerView extends State<HomeControllerView> {
+class _HomeControllerView extends BaseController<HomeControllerView> implements HomeHandler{
+
+  LoginUserInfoBeen userInfoBeen;
+
+  @override
+  void initState() {
+    super.initState();
+    /// 获取banner
+//    HomeService.instance.getBannerList(SpUtil.getString(Constant.TOKEN), this);
+  }
+  
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    
+    Map args = ModalRoute.of(context).settings.arguments;
+    print("arg= $args");
+    if (args.containsKey(Constant.INTENT_VALUE_USER_INFO)) {
+
+      args.forEach((k,v){
+        if (k.toString() == Constant.INTENT_VALUE_USER_INFO) {
+          userInfoBeen = v as LoginUserInfoBeen;
+        }
+
+      });
+    }
+
     return new Scaffold(
       body: new SingleChildScrollView(
         physics: BouncingScrollPhysics(),
@@ -72,7 +102,7 @@ class _HomeControllerView extends State<HomeControllerView> {
     return new Padding(
         padding: EdgeInsets.only(top: 40.0),
       child: new Stack(
-        alignment: AlignmentDirectional.center,
+//        alignment: AlignmentDirectional.center,
         children: <Widget>[
           _topTitle(),
           new Row(
@@ -91,11 +121,14 @@ class _HomeControllerView extends State<HomeControllerView> {
   //标题
   Widget _topTitle() {
 
-    return new Text(
-      StringUtil.appName,
-      style: new TextStyle(
-        fontSize: 16.0,
-        color: Color(ColorUtil.whiteColor),
+    return new Align(
+      alignment: Alignment.topCenter,
+      child: new Text(
+        StringUtil.appName,
+        style: new TextStyle(
+          fontSize: 18.0,
+          color: Color(ColorUtil.whiteColor),
+        ),
       ),
     );
   }
@@ -144,8 +177,9 @@ class _HomeControllerView extends State<HomeControllerView> {
 
   //用户头像
   Widget _topUserHeadImg() {
-
-    return new Image.asset(ImageUtil.imgHead, width: 70.0, height: 70.0,);
+    //ImageUtil.imgHead
+    return CommonView().clipHeadImg();
+//    return new Image.network(UrlUtil.BaseUrl + userInfoBeen.avatar, width: 70.0, height: 70.0,);
   }
 
   // 用户姓名
@@ -157,16 +191,16 @@ class _HomeControllerView extends State<HomeControllerView> {
       children: <Widget>[
 
         SpaceViewUtil.pading_Top_10(),
-        new Text(StringUtil.appName,
+        new Text(userInfoBeen.account,
           style: const TextStyle(
-            fontSize: 14.0,
+            fontSize: 16.0,
             color: Color(ColorUtil.whiteColor),
           ),
         ),
 
         SpaceViewUtil.pading_Top_10(),
 
-        new Text(StringUtil.appName,
+        new Text("返点：${userInfoBeen.ratio}",
           style: const TextStyle(
             fontSize: 12.0,
             color: Color(ColorUtil.whiteColor),
@@ -193,7 +227,7 @@ class _HomeControllerView extends State<HomeControllerView> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
 
-          new Text(StringUtil.appName,
+          new Text("￥${userInfoBeen.all_money}",
             style: const TextStyle(
               fontSize: 12.0,
               color: Color(ColorUtil.whiteColor),
@@ -201,7 +235,7 @@ class _HomeControllerView extends State<HomeControllerView> {
           ),
 
 
-          new Text(StringUtil.appName,
+          new Text(StringUtil.all_money,
             style: const TextStyle(
               fontSize: 12.0,
               color: Color(ColorUtil.whiteColor),
@@ -325,6 +359,8 @@ class _HomeControllerView extends State<HomeControllerView> {
           //点击个人中心
           switch(index) {
             case 0:
+              //游戏大厅
+              Navigator.pushNamed(context, RouteUtil.gameHallController);
               break;
             case 1:
               //开奖中心
@@ -378,7 +414,31 @@ class _HomeControllerView extends State<HomeControllerView> {
   List<String> bannerList = [ImageUtil.imgBanner, ImageUtil.imgBanner, ImageUtil.imgBanner];
 
   /// Banner 广告位
+  /// /**
+  //_getImageList(imgListStr)
   Widget _bannerHome() {
+    return new SizedBox(
+      height: 180.0,
+      child: new Carousel(
+        images: [
+          new NetworkImage('http://img02.tooopen.com/images/20150928/tooopen_sy_143912755726.jpg'),
+          new NetworkImage('http://img02.tooopen.com/images/20150928/tooopen_sy_143912755726.jpg'),
+          new NetworkImage('http://img02.tooopen.com/images/20150928/tooopen_sy_143912755726.jpg'),
+        ].map((netImage)=> new Image(
+          image: netImage,fit: BoxFit.fitWidth,height: 180.0,width: ScreenUtil.getScreenW(context),
+        )).toList(),
+
+        animationDuration: new Duration(
+          seconds: 5000,
+        ),
+        dotSize: 4.0,
+        dotSpacing: 15.0,
+        dotColor: Colors.white,
+        indicatorBgPadding: 5.0,
+        dotBgColor: Colors.transparent,
+        //borderRadius: true,
+      ),
+    );
 //    return BannerSwiper(
 //
 //      //width  和 height 是图片的高宽比  不用传具体的高宽   必传
@@ -398,22 +458,43 @@ class _HomeControllerView extends State<HomeControllerView> {
 //            });
 //      },
 //    );
+
+//    return new FutureBuilder(
+//      future: HomeService.instance.getBannerList(SpUtil.getString(Constant.TOKEN), this),
+//        // ignore: missing_return
+//        builder:   (BuildContext context, AsyncSnapshot<List> snapshot){
+//          switch (snapshot.connectionState) {
+//            case ConnectionState.none:
+//              return new Text('Input a URL to start');
+//            case ConnectionState.waiting:
+//              return new Center(child: new CircularProgressIndicator());
+//            case ConnectionState.active:
+//              return new Text('');
+//            case ConnectionState.done:
+//              if (snapshot.hasError) {
+////                return new Text(
+////                  '${snapshot.error}',
+////                  style: TextStyle(color: Colors.red),
+////                );
+//              } else {
+//                return _initBanner();
+//              }
+//          }
+//        }
+//    );
+  }
+
+  Widget _initBanner() {
     return new SizedBox(
       height: 180.0,
       child: new Carousel(
-        images: [
-
-          new NetworkImage('http://img02.tooopen.com/images/20150928/tooopen_sy_143912755726.jpg'),
-          new NetworkImage('http://img02.tooopen.com/images/20150928/tooopen_sy_143912755726.jpg'),
-          new NetworkImage('http://img02.tooopen.com/images/20150928/tooopen_sy_143912755726.jpg'),
-
-        ].map((netImage)=> new Image(
-          image: netImage,fit: BoxFit.fitWidth,height: 180.0,width: ScreenUtil.screenWidth,
+        images: _getImageList(imgListStr).map((netImage)=> new Image(
+          image: netImage,fit: BoxFit.fitWidth,height: 180.0,width: ScreenUtil.getScreenW(context),
         )).toList(),
 
-//        animationDuration: new Duration(
-//          seconds: 5000,
-//        ),
+        animationDuration: new Duration(
+          seconds: 5000,
+        ),
         dotSize: 4.0,
         dotSpacing: 15.0,
         dotColor: Colors.white,
@@ -424,6 +505,26 @@ class _HomeControllerView extends State<HomeControllerView> {
     );
   }
 
-  
+  List imgList = new List();
+  List _getImageList( List<String> imgListStr) {
+
+    for (int i = 0; i < imgListStr.length; i++) {
+      imgList.add(new NetworkImage(imgListStr[i]));
+    }
+    return imgList;
+  }
+
+  /// 图片路径
+  List<String> imgListStr = new List();
+  @override
+  void getBannerListBeen(GetBannerListDataBeen bannerListDataBeen) {
+    var dataList = bannerListDataBeen.data;
+
+    dataList.forEach((dataBeen) {
+      imgListStr.add(UrlUtil.BaseUrl+dataBeen.image);
+    });
+
+
+  }
 
 }

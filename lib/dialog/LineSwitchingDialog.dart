@@ -153,7 +153,7 @@ class LineSwitchingDialog extends Dialog {
           children: <Widget>[
 
             _autoLineChange("自动线路切换"),
-            CommonView().commonLine(),
+//            CommonView().commonLine(),
             _getSuspensionSwitchView("显示悬浮框（可在设置中修改）"),
 
           ],

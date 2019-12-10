@@ -1,9 +1,11 @@
+import 'package:flustars/flustars.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_lisheng_entertainment/Util/ColorUtil.dart';
+import 'package:flutter_lisheng_entertainment/Util/Constant.dart';
 import 'package:flutter_lisheng_entertainment/Util/ImageUtil.dart';
 import 'package:flutter_lisheng_entertainment/Util/RouteUtil.dart';
-import 'package:flutter_lisheng_entertainment/Util/SpaceViewUtil.dart';
 import 'package:flutter_lisheng_entertainment/Util/StringUtil.dart';
+import 'package:flutter_lisheng_entertainment/base/BaseController.dart';
 import 'package:flutter_lisheng_entertainment/view/ListStateItemView.dart';
 import 'package:flutter_lisheng_entertainment/view/common/CommonView.dart';
 
@@ -17,7 +19,7 @@ class PersonalController extends StatefulWidget{
 
 }
 
-class _PersonalController extends State<PersonalController> {
+class _PersonalController extends BaseController<PersonalController> {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
@@ -103,7 +105,7 @@ class _PersonalController extends State<PersonalController> {
           ),
 
           new Text(
-            "1000.00",
+            SpUtil.getString(Constant.ALL_MONEY),
             style: TextStyle(
               fontSize: 20.0,
               color: Color(ColorUtil.butColor_FF9728),
@@ -132,7 +134,7 @@ class _PersonalController extends State<PersonalController> {
           ),
 
           new Text(
-            "1000.0",
+            SpUtil.getString(Constant.USER_RATIO),
             style: TextStyle(
               fontSize: 20.0,
               color: Color(ColorUtil.textColor_1396DA),
@@ -154,9 +156,9 @@ class _PersonalController extends State<PersonalController> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
 
-            new Image.asset(ImageUtil.imgHead, width: 71.0, height: 71.0,),
+            CommonView().clipHeadImg(),
             new Text(
-              "用户昵称",
+              SpUtil.getString(Constant.USER_NAME),
               style: new TextStyle(
                 fontSize: 14.0,
                 color: Color(ColorUtil.textColor_333333),
@@ -182,7 +184,9 @@ class _PersonalController extends State<PersonalController> {
         child: new Column(
           children: <Widget>[
             _getRightArrowView(StringUtil.personalChangeLoginPassword, ImageUtil.imgModifyPassWord),
-            CommonView().commonLine(),
+            CommonView().commonLine(context),
+            _getRightArrowView(StringUtil.personalSetCashPassword, ImageUtil.imgCashPassword),
+            CommonView().commonLine(context),
             _getRightArrowView(StringUtil.personalChangeCashPassword, ImageUtil.imgCashPassword),
 
           ],
@@ -203,11 +207,11 @@ class _PersonalController extends State<PersonalController> {
         child: new Column(
           children: <Widget>[
             _getRightArrowView(StringUtil.personalBank, ImageUtil.imgBank),
-            CommonView().commonLine(),
+            CommonView().commonLine(context),
             _getRightArrowView(StringUtil.personalLotteryReport, ImageUtil.imgLotteryReport),
-            CommonView().commonLine(),
+            CommonView().commonLine(context),
             _getRightArrowView(StringUtil.personalBettingRecord, ImageUtil.imgBettingRecord),
-            CommonView().commonLine(),
+            CommonView().commonLine(context),
             _getRightArrowView(StringUtil.personalAccountChangeRecord, ImageUtil.imgAccountChangeRecord),
 
           ],
@@ -227,8 +231,21 @@ class _PersonalController extends State<PersonalController> {
             Navigator.pushNamed(context, RouteUtil.modifyLoginPasswordController);
             break;
           case StringUtil.personalChangeCashPassword:
+            if(!_readIsPayPassword()) {
+              showToast("请先设置资金密码");
+              Navigator.pushNamed(context, RouteUtil.setCapitalPasswordController);
+              return;
+            }
             //修改资金密码
             Navigator.pushNamed(context, RouteUtil.modifyCapitalPasswordController);
+            break;
+          case StringUtil.personalSetCashPassword:
+            if(_readIsPayPassword()) {
+              showToast("无需重复设置资金密码");
+              return;
+            }
+            //设置资金密码
+            Navigator.pushNamed(context, RouteUtil.setCapitalPasswordController);
             break;
           case StringUtil.personalBettingRecord:
             //修改资金密码
@@ -255,6 +272,12 @@ class _PersonalController extends State<PersonalController> {
         leftIcon: icon,
       ),
     );
+  }
+
+  /// 是否设置支付密码
+  bool _readIsPayPassword() {
+
+    return SpUtil.getBool(Constant.PAY_SET);
   }
 
 }

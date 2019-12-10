@@ -71,7 +71,7 @@ class _LotteryCenterController extends BaseRefreshController<LotteryCenterContro
         children: <Widget>[
 
           _listTopView(),
-          CommonView().commonLine_NoMargin(),
+          CommonView().commonLine_NoMargin(context),
           _listBottom(),
 
         ],

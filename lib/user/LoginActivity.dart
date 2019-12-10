@@ -1,18 +1,22 @@
+import 'package:flustars/flustars.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_lisheng_entertainment/Util/ColorUtil.dart';
 import 'package:flutter_lisheng_entertainment/Util/ImageUtil.dart';
 import 'package:flutter_lisheng_entertainment/Util/RouteUtil.dart';
 import 'package:flutter_lisheng_entertainment/Util/SpaceViewUtil.dart';
 import 'package:flutter_lisheng_entertainment/Util/StringUtil.dart';
+import 'package:flutter_lisheng_entertainment/base/BaseController.dart';
 import 'package:flutter_lisheng_entertainment/dialog/LineSwitchingDialog.dart';
-import 'package:flutter_lisheng_entertainment/net/RetrofitManager.dart';
+import 'package:flutter_lisheng_entertainment/model/json/login/LoginBeen.dart';
+import 'package:flutter_lisheng_entertainment/user/net/UserService.dart';
+import 'package:package_info/package_info.dart';
 import 'package:video_player/video_player.dart';
 import 'package:chewie/chewie.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:flutter_lisheng_entertainment/Util/Constant.dart';
 
 import '../HomeController.dart';
+import 'net/LoginHandler.dart';
 
 /// 登录界面
 class LoginActivity extends StatefulWidget {
@@ -25,7 +29,7 @@ class LoginActivity extends StatefulWidget {
 
 }
 
-class _LoginActivity extends State<LoginActivity> {
+class _LoginActivity extends BaseController<LoginActivity> implements LoginHandler {
 
   VideoPlayerController _videoPlayerController;
   ChewieController _chewieController;
@@ -34,6 +38,16 @@ class _LoginActivity extends State<LoginActivity> {
     , "resource/imgs/icon_password.png"];
   List<String> _loginEditHintList = ["请输入登录账号"
     , "请输入密码"];
+
+  //手机号的控制器
+  TextEditingController phoneController = TextEditingController();
+
+  //密码的控制器
+  TextEditingController passController = TextEditingController();
+
+  String phone = "";
+  String password = "";
+  String version;//保存当前版本
 
   @override
   void initState() {
@@ -64,7 +78,8 @@ class _LoginActivity extends State<LoginActivity> {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    ScreenUtil.getInstance().init(context);
+    ScreenUtil.getInstance();
+    SpUtil.getInstance();
     return new Scaffold(
       resizeToAvoidBottomPadding: false,
       body: new Center(
@@ -73,7 +88,7 @@ class _LoginActivity extends State<LoginActivity> {
           children: <Widget>[
             new Container(
               child: _videoView(),
-              height: ScreenUtil.screenHeight,
+              height: ScreenUtil.getScreenH(context),
             ),
             //_chenViewVideo(),
 
@@ -202,10 +217,11 @@ class _LoginActivity extends State<LoginActivity> {
   }
 
   //登录输入框View
-  Widget _loginEditView(String iconStr, String hintText) {
+  Widget _loginEditView(String iconStr, String hintText, ValueChanged<String> _textFieldChanged
+      , TextEditingController controller, bool isPassword) {
     return new Column(
       children: <Widget>[
-        _loginEditViewColumn(iconStr, hintText),
+        _loginEditViewColumn(iconStr, hintText, _textFieldChanged, controller, isPassword),
 //        new Expanded(child: _loginEditViewColumn(iconStr, hintText)),
         new Container(color: Color(ColorUtil.lineColor), height: 1.0,),
         
@@ -213,7 +229,8 @@ class _LoginActivity extends State<LoginActivity> {
     );
   }
 
-  Widget _loginEditViewColumn(String iconStr, String hintText) {
+  Widget _loginEditViewColumn(String iconStr, String hintText, ValueChanged<String> _textFieldChanged
+      , TextEditingController controller, bool isPassword) {
     return new Row(
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
@@ -230,12 +247,23 @@ class _LoginActivity extends State<LoginActivity> {
                   hoverColor: Color(ColorUtil.whiteColor),
                   hintStyle: TextStyle(fontSize: 14, color: Color(ColorUtil.whiteColor)),
                 ),
+                onChanged: _textFieldChanged,
+                controller: controller,
+                obscureText: isPassword,
               ),
             ),
         ),
 
       ],
     );
+  }
+
+  _phoneText(String str) {
+    phone = str;
+  }
+
+  _passwordText(String str) {
+    password = str;
   }
 
   ///返回 控件列表
@@ -247,12 +275,12 @@ class _LoginActivity extends State<LoginActivity> {
       child: new Center(
         child:  new Column(
           children: <Widget>[
-            _loginEditView(_loginIconList[0], _loginEditHintList[0]),
+            _loginEditView(_loginIconList[0], _loginEditHintList[0], _phoneText, phoneController, false),
 
             new Container(
               padding: EdgeInsets.only(top: 15.0),
             ),
-            _loginEditView(_loginIconList[1], _loginEditHintList[1]),
+            _loginEditView(_loginIconList[1], _loginEditHintList[1], _passwordText, passController,true),
 
           ],
         ),
@@ -268,16 +296,9 @@ class _LoginActivity extends State<LoginActivity> {
       child: new RaisedButton(onPressed: (){
         //跳转首页
         //Navigator.pushNamedAndRemoveUntil(context, RouteUtil.homeController);
-//        RetrofitManager.instance.login();
 
-        try {
-          Navigator.of(context).pushAndRemoveUntil(new MaterialPageRoute(
-              builder: (BuildContext context) => HomeController()), (//跳转到主页
-              // ignore: unrelated_type_equality_checks
-              Route route) => route == RouteUtil.homeController);
-        } catch (e) {
+        UserService.instance.login(phone, password, this);
 
-        }
       },color: Color(ColorUtil.butColor),
         child: new Text(StringUtil.login
           , style: TextStyle(fontSize: 16.0,color: Color(ColorUtil.whiteColor)),),
@@ -293,12 +314,25 @@ class _LoginActivity extends State<LoginActivity> {
 
   ///显示当前版本
   Widget _textVersion() {
+    _getDevInfoVersion();
     return new Container(
       padding: EdgeInsets.only(top: 15.0),
-      child: new Text("当前版本1.0.0",
+      child: new Text("当前版本$version",
         style: TextStyle(fontSize: 12.0, color: Color(ColorUtil.whiteColor)),
       ),
     );
+  }
+
+  _getDevInfoVersion() {
+    PackageInfo.fromPlatform().then((PackageInfo packageInfo) {
+      String appName = packageInfo.appName;
+      String packageName = packageInfo.packageName;
+      String version = packageInfo.version;
+      String buildNumber = packageInfo.buildNumber;
+      setState(() {
+        this.version = version;
+      });
+    });
   }
 
   /// 登录顶部图片
@@ -337,6 +371,27 @@ class _LoginActivity extends State<LoginActivity> {
         ),
       ),
     );
+  }
+
+  @override
+  void loginFail(bool result) {
+
+  }
+
+  @override
+  void loginSuccess(bool result, LoginBeen loginBeen) {
+    try {
+      Navigator.of(context).pushAndRemoveUntil(new MaterialPageRoute(
+          builder: (BuildContext context) => HomeController(),
+        settings: RouteSettings(
+          arguments: {Constant.INTENT_VALUE_USER_INFO : loginBeen.data.userInfo},
+        ),
+      ), (//跳转到主页
+          // ignore: unrelated_type_equality_checks
+          Route route) => route == RouteUtil.homeController);
+    } catch (e) {
+
+    }
   }
 
 

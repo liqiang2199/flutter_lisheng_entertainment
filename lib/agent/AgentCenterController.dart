@@ -1,5 +1,7 @@
+import 'package:flustars/flustars.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_lisheng_entertainment/Util/ColorUtil.dart';
+import 'package:flutter_lisheng_entertainment/Util/Constant.dart';
 import 'package:flutter_lisheng_entertainment/Util/ImageUtil.dart';
 import 'package:flutter_lisheng_entertainment/Util/RouteUtil.dart';
 import 'package:flutter_lisheng_entertainment/Util/SpaceViewUtil.dart';
@@ -103,7 +105,7 @@ class _AgentCenterController extends State<AgentCenterController> {
           ),
 
           new Text(
-            "1000.00",
+            SpUtil.getString(Constant.ALL_MONEY),
             style: TextStyle(
               fontSize: 20.0,
               color: Color(ColorUtil.butColor_FF9728),
@@ -132,7 +134,7 @@ class _AgentCenterController extends State<AgentCenterController> {
           ),
 
           new Text(
-            "1000.0",
+            SpUtil.getString(Constant.USER_RATIO),
             style: TextStyle(
               fontSize: 20.0,
               color: Color(ColorUtil.textColor_1396DA),
@@ -154,9 +156,9 @@ class _AgentCenterController extends State<AgentCenterController> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
 
-            new Image.asset(ImageUtil.imgHead, width: 71.0, height: 71.0,),
+            CommonView().clipHeadImg(),
             new Text(
-              "用户昵称",
+              SpUtil.getString(Constant.USER_NAME),
               style: new TextStyle(
                 fontSize: 14.0,
                 color: Color(ColorUtil.textColor_333333),
@@ -182,13 +184,13 @@ class _AgentCenterController extends State<AgentCenterController> {
         child: new Column(
           children: <Widget>[
             _getRightArrowView(StringUtil.agentOpenAccount, ImageUtil.imgAgentOpenAccount, 0),
-            CommonView().commonLine(),
+            CommonView().commonLine(context),
             _getRightArrowView(StringUtil.agentVipManage, ImageUtil.imgAgentVip, 1),
-            CommonView().commonLine(),
+            CommonView().commonLine(context),
             _getRightArrowView(StringUtil.agentAgencyBonus, ImageUtil.imgAgentAgencyBonus, 2),
-            CommonView().commonLine(),
+            CommonView().commonLine(context),
             _getRightArrowView(StringUtil.agentRechargeRecord, ImageUtil.imgAgentRechargeRecord, 3),
-            CommonView().commonLine(),
+            CommonView().commonLine(context),
             _getRightArrowView(StringUtil.agentWithdrawalRecord, ImageUtil.imgAgentWithdrawalRecord, 4),
 
           ],

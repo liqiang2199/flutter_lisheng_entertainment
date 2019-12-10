@@ -1,8 +1,12 @@
+import 'package:flustars/flustars.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_lisheng_entertainment/Util/ColorUtil.dart';
+import 'package:flutter_lisheng_entertainment/Util/Constant.dart';
 import 'package:flutter_lisheng_entertainment/Util/ImageUtil.dart';
 import 'package:flutter_lisheng_entertainment/Util/SpaceViewUtil.dart';
 import 'package:flutter_lisheng_entertainment/Util/StringUtil.dart';
+import 'package:flutter_lisheng_entertainment/agent/net/AgentService.dart';
+import 'package:flutter_lisheng_entertainment/agent/net/OrdinaryOpenAccountHandler.dart';
 import 'package:flutter_lisheng_entertainment/base/BaseController.dart';
 import 'package:flutter_lisheng_entertainment/view/SemicircleButView.dart';
 import 'package:flutter_lisheng_entertainment/view/view_interface/SemicircleButCallBack.dart';
@@ -17,9 +21,27 @@ class OrdinaryOpenAccountCenterView extends StatefulWidget {
 
 }
 
-class _OrdinaryOpenAccountCenterView extends BaseController<OrdinaryOpenAccountCenterView> with SemicircleButCallBack{
+class _OrdinaryOpenAccountCenterView extends BaseController<OrdinaryOpenAccountCenterView> with SemicircleButCallBack implements OrdinaryOpenAccountHandler{
 
   int groupValue = 1;
+
+  //请输入用户名
+  TextEditingController accountController = TextEditingController();
+  TextEditingController loginAccountController = TextEditingController();
+
+  //密码的控制器
+  TextEditingController passController = TextEditingController();
+
+  TextEditingController rePassController = TextEditingController();
+  //请输入返点
+  TextEditingController ratioController = TextEditingController();
+
+  String _loginAccount;//登录账号
+  String _accountName;
+  String _pass;
+  String _rePass;
+  String _ratio;
+  String accountType = "1";//账户类型
 
   @override
   Widget build(BuildContext context) {
@@ -28,12 +50,15 @@ class _OrdinaryOpenAccountCenterView extends BaseController<OrdinaryOpenAccountC
       children: <Widget>[
 
         _openAccountType(),
-        _editOpenAccount("请输入用户名", ImageUtil.imgOpenAccountEdit),
+
+        _editOpenAccount("请输入用户名", ImageUtil.imgOpenAccountEdit, _getAgentAccount, accountController, false),
         _editTip(StringUtil.openAccountCenterEditTip),
-        _editOpenAccount("请输入密码", ImageUtil.imgModify),
+        _editOpenAccount("请输入登录账号", ImageUtil.imgOpenAccountEdit, _getAgentLoginAccount, loginAccountController, false),
         _editTip(StringUtil.openAccountCenterEditTip),
-        _editOpenAccount("请再次输入密码", ImageUtil.imgModify),
-        _editOpenAccount("请输入返点", ImageUtil.imgReturnPoint),
+        _editOpenAccount("请输入密码", ImageUtil.imgModify, _getAgentPass, passController, true),
+        _editTip(StringUtil.openAccountCenterEditTip),
+        _editOpenAccount("请再次输入密码", ImageUtil.imgModify, _getAgentRePass, rePassController, true),
+        _editOpenAccount("请输入返点", ImageUtil.imgReturnPoint, _getAgentRatio, ratioController, false),
         _editTip(StringUtil.openAccountCenterEditReturnTip),
 
         new Container(
@@ -80,7 +105,9 @@ class _OrdinaryOpenAccountCenterView extends BaseController<OrdinaryOpenAccountC
   Widget _radioChoice(bool isSelection, String title, int index) {
     return new GestureDetector(
       onTap: () {
+        //1=用户，2=代理
         setUpdateTypeChoice(index);
+        accountType = "$index";
       },
       child: new Container(
         padding: EdgeInsets.only(left: 15.0,),
@@ -104,7 +131,7 @@ class _OrdinaryOpenAccountCenterView extends BaseController<OrdinaryOpenAccountC
 
 
   /// 编辑输入 内容
-  Widget _editOpenAccount(String hintText, String imgIcon) {
+  Widget _editOpenAccount(String hintText, String imgIcon,  ValueChanged<String> onChanged, TextEditingController controller, bool isEditPass) {
 
     return new Container(
       margin: EdgeInsets.only(top: 15.0, left: 15.0, right: 15.0,),
@@ -121,6 +148,9 @@ class _OrdinaryOpenAccountCenterView extends BaseController<OrdinaryOpenAccountC
           SpaceViewUtil.pading_Left(10.0),
           new Expanded(
             child: new TextField(
+              onChanged: onChanged,
+              controller: controller,
+              obscureText: isEditPass,
               style: TextStyle(fontSize: 14, color: Color(ColorUtil.textColor_333333)),
               decoration: InputDecoration(
                 hintText: hintText,
@@ -151,9 +181,49 @@ class _OrdinaryOpenAccountCenterView extends BaseController<OrdinaryOpenAccountC
     );
   }
 
+  _getAgentLoginAccount(String str) {
+    _loginAccount = str;
+  }
+
+
+  _getAgentAccount(String str) {
+    _accountName = str;
+  }
+
+  _getAgentPass(String str) {
+    _pass = str;
+  }
+
+  _getAgentRePass(String str) {
+    _rePass = str;
+  }
+
+  _getAgentRatio(String str) {
+    _ratio = str;
+  }
+
   @override
   void onPressedBut() {
-    // TODO: implement onPressedBut
+    AgentService.instance.postOrdinaryOpenAccount(this, accountType
+        , _loginAccount, _accountName, _pass, _rePass, _ratio);
+  }
+
+  @override
+  void setOrdinaryOpenAccountResult(bool result) {
+    if (result) {
+      accountController.clear();
+      loginAccountController.clear();
+      passController.clear();
+      rePassController.clear();
+      ratioController.clear();
+      _accountName = "";
+      _loginAccount = "";
+      _pass = "";
+      _rePass = "";
+      _ratio = "";
+      accountType = "1";
+      setUpdateTypeChoice(1);
+    }
   }
 
 }

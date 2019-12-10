@@ -289,7 +289,7 @@ class _BettingRecordController extends BaseRefreshTabController<BettingRecordCon
           padding: EdgeInsets.only(left: 15.0, bottom: 15.0, right: 15.0,),
           child: new Column(
             children: <Widget>[
-              CommonView().commonLine_NoMargin(),
+              CommonView().commonLine_NoMargin(context),
               _recordBottomList("订单编号：", "11111"),
               _recordBottomList("彩种/玩法：", "11111"),
               _recordBottomList("期号：", "11111"),

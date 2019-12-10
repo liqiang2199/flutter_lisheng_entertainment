@@ -1,12 +1,15 @@
+import 'package:flustars/flustars.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_lisheng_entertainment/Util/ColorUtil.dart';
 import 'package:flutter_lisheng_entertainment/Util/StringUtil.dart';
+import 'package:flutter_lisheng_entertainment/agent/net/AgentService.dart';
+import 'package:flutter_lisheng_entertainment/agent/net/LinkManagerHandler.dart';
 import 'package:flutter_lisheng_entertainment/base/BaseRefreshController.dart';
+import 'package:flutter_lisheng_entertainment/model/json/agent/link_list/LinkAccountListBeen.dart';
+import 'package:flutter_lisheng_entertainment/net/UrlUtil.dart';
 import 'package:flutter_lisheng_entertainment/view/common/CommonView.dart';
-import 'package:flutter_lisheng_entertainment/view/sreen_view/SelectionTimeView.dart';
 import 'package:flutter_lisheng_entertainment/view/view_interface/SelectionTimeCallBack.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 /// 提款记录
 class LinkManagerController extends StatefulWidget {
@@ -18,7 +21,17 @@ class LinkManagerController extends StatefulWidget {
 
 }
 
-class _LinkManagerController extends BaseRefreshController<LinkManagerController> with SelectionTimeCallBack{
+class _LinkManagerController extends BaseRefreshController<LinkManagerController> with SelectionTimeCallBack implements LinkManagerHandler{
+
+  int _listIndex = 1;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    AgentService.instance.getLinkAccountList(this);
+  }
+
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
@@ -35,14 +48,18 @@ class _LinkManagerController extends BaseRefreshController<LinkManagerController
 
   @override
   void selectionEndStartTime() {
-    // TODO: implement selectionEndStartTime
+
   }
 
   @override
   void selectionTimeStartTime() {
-    // TODO: implement selectionTimeStartTime
+
   }
 
+  @override
+  bool isCanLoadMore() {
+    return false;
+  }
 
   /// 链接管理 列表
   Widget _listRecordItem () {
@@ -76,8 +93,8 @@ class _LinkManagerController extends BaseRefreshController<LinkManagerController
       return new Column(
         children: <Widget>[
 
-          _recordBottomList(),
-          CommonView().commonLine_NoMargin(),
+          _recordBottomList(linkListData[index], index),
+          CommonView().commonLine_NoMargin(context),
 
         ],
       );
@@ -99,7 +116,7 @@ class _LinkManagerController extends BaseRefreshController<LinkManagerController
               alignment: Alignment.center,
               child: new Container(
 
-                width: ScreenUtil.screenWidth,
+                width: ScreenUtil.getScreenW(context),
                 padding: EdgeInsets.all(15.0),
                 child: new Text(
                   "链接",
@@ -123,7 +140,7 @@ class _LinkManagerController extends BaseRefreshController<LinkManagerController
             child: new Align(
               alignment: Alignment.center,
               child: new Container(
-                width: ScreenUtil.screenWidth,
+                width: ScreenUtil.getScreenW(context),
                 padding: EdgeInsets.all(15.0),
                 child: new Text(
                   "复制",
@@ -146,7 +163,7 @@ class _LinkManagerController extends BaseRefreshController<LinkManagerController
             child: new Align(
               alignment: Alignment.center,
               child: new Container(
-                width: ScreenUtil.screenWidth,
+                width: ScreenUtil.getScreenW(context),
                 padding: EdgeInsets.all(15.0),
                 child: new Text(
                   "删除",
@@ -168,7 +185,7 @@ class _LinkManagerController extends BaseRefreshController<LinkManagerController
   }
 
 
-  Widget _recordBottomList() {
+  Widget _recordBottomList(LinkAccountListBeen listBeen, int index) {
 
     return new Container(
       height: 50.0,
@@ -180,10 +197,10 @@ class _LinkManagerController extends BaseRefreshController<LinkManagerController
             child: new Align(
               alignment: Alignment.center,
               child: new Container(
-                width: ScreenUtil.screenWidth,
+                width: ScreenUtil.getScreenW(context),
                 padding: EdgeInsets.all(5.0),
                 child: new Text(
-                  "http://shop.bytravel.cn/produce/index538.html",
+                  listBeen.url,
                   style: TextStyle(
                     fontSize: 14.0,
                     color: Color(ColorUtil.textColor_333333),
@@ -201,15 +218,15 @@ class _LinkManagerController extends BaseRefreshController<LinkManagerController
             flex: 2,
             child: new GestureDetector(
               onTap: () {
-                ClipboardData data = new ClipboardData(text:"http://shop.bytravel.cn/produce/index538.html");
+                ClipboardData data = new ClipboardData(text: UrlUtil.BaseUrl + listBeen.url);
                 Clipboard.setData(data);
                 //复制成功
-                print("复制成功");
+                showToast("复制成功");
               },
               child: new Align(
                 alignment: Alignment.center,
                 child: new Container(
-                  width: ScreenUtil.screenWidth,
+                  width: ScreenUtil.getScreenW(context),
                   padding: EdgeInsets.all(5.0),
                   child: new Text(
                     "复制",
@@ -232,15 +249,22 @@ class _LinkManagerController extends BaseRefreshController<LinkManagerController
             child: new Align(
               alignment: Alignment.center,
               child: new Container(
-                width: ScreenUtil.screenWidth,
+                width: ScreenUtil.getScreenW(context),
                 padding: EdgeInsets.all(5.0),
-                child: new Text(
-                  "删除",
-                  style: TextStyle(
-                    fontSize: 14.0,
-                    color: Color(ColorUtil.textColor_333333),
+                child: new GestureDetector(
+                  onTap: () {
+                    //点击删除
+                    _listIndex = index;
+                    AgentService.instance.delLinkAccount(this, "${listBeen.id}");
+                  },
+                  child:  new Text(
+                    "删除",
+                    style: TextStyle(
+                      fontSize: 14.0,
+                      color: Color(ColorUtil.textColor_333333),
+                    ),
+                    textAlign: TextAlign.center,
                   ),
-                  textAlign: TextAlign.center,
                 ),
               ),
             ),
@@ -249,6 +273,31 @@ class _LinkManagerController extends BaseRefreshController<LinkManagerController
         ],
       ),
     );
+  }
+
+  List<LinkAccountListBeen> linkListData = new List();
+
+  @override
+  void setLinkAccountList(List<LinkAccountListBeen> data) {
+    LinkAccountListBeen listBeen = new LinkAccountListBeen(1, "", "", 1, "", "", "", "");
+    linkListData.add(listBeen);
+    linkListData.addAll(data);
+    setState(() {
+      items = linkListData;
+    });
+  }
+
+  @override
+  void setDelLinkAccount(bool result) {
+    if (result) {
+//      print("linkListData size 前 ${linkListData.length}");
+      linkListData.removeAt(_listIndex);
+//      print("linkListData size 中 ${linkListData.length}");
+//      items.removeAt(_listIndex);
+//      print("linkListData size 后 ${linkListData.length}");
+      setState(() {
+      });
+    }
   }
 
 }

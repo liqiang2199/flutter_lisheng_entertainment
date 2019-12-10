@@ -45,7 +45,7 @@ class _OpenAccountCenterController extends BaseRefreshTabController<OpenAccountC
       body: new Column(
         children: <Widget>[
           _tabPage(),
-          CommonView().commonLine_NoMarginChange(10.0),
+          CommonView().commonLine_NoMarginChange(context,10.0),
           new Expanded(child: _pageView(),),
         ],
       ),

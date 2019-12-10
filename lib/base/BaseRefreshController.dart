@@ -1,10 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_lisheng_entertainment/base/BaseController.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
-abstract class BaseRefreshController<T extends StatefulWidget> extends State<T> {
+abstract class BaseRefreshController<T extends StatefulWidget> extends BaseController<T> {
 
-  List<String> items = ["1", "2", "3", "4", "5", "6", "7", "8"];
+  List items = new List();
   RefreshController refreshController = RefreshController(initialRefresh: false);
 
   void _onRefresh() async{
@@ -19,7 +20,7 @@ abstract class BaseRefreshController<T extends StatefulWidget> extends State<T> 
     // monitor network fetch
     await Future.delayed(Duration(milliseconds: 1000));
     // if failed,use loadFailed(),if no data return,use LoadNodata()
-    items.add((items.length+1).toString());
+    //items.add((items.length+1).toString());
     if(mounted)
       setState(() {
         //onLoadingData();
@@ -36,7 +37,7 @@ abstract class BaseRefreshController<T extends StatefulWidget> extends State<T> 
   Widget smartRefreshBase(Widget child) {
     return new SmartRefresher(
       enablePullDown: isCanRefresh(),
-      enablePullUp: true,
+      enablePullUp: isCanLoadMore(),
       header: ClassicHeader(),
       footer: CustomFooter(
         builder: (BuildContext context,LoadStatus mode){
@@ -72,6 +73,10 @@ abstract class BaseRefreshController<T extends StatefulWidget> extends State<T> 
 
   bool isCanRefresh() {
 
+    return true;
+  }
+
+  bool isCanLoadMore() {
     return true;
   }
 }

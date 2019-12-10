@@ -64,7 +64,7 @@ class _AgencyBonusController extends BaseRefreshController<AgencyBonusController
           children: <Widget>[
             _typeTitle("我的分红"),
             _meAgencyBouns(),
-            CommonView().commonLine_NoMarginChange(10.0),
+            CommonView().commonLine_NoMarginChange(context,10.0),
             _typeTitle("历史分红"),
           ],
         ),
@@ -125,7 +125,7 @@ class _AgencyBonusController extends BaseRefreshController<AgencyBonusController
           _agentBonusRuleContent("分红规则分红规则分红规则分红规则"
               "分红规则分红规则分红规则分红规则分红规则分红规则分红规"
               "则分红规则分红规则分红规则分红规则分红规则分红规则分红规则"),
-          CommonView().commonLine_NoMarginChange(10.0),
+          CommonView().commonLine_NoMarginChange(context,10.0),
 
         ],
       ),
@@ -165,7 +165,7 @@ class _AgencyBonusController extends BaseRefreshController<AgencyBonusController
           padding: EdgeInsets.only(left: 15.0, bottom: 15.0, right: 15.0,),
           child: new Column(
             children: <Widget>[
-              CommonView().commonLine_NoMargin(),
+              CommonView().commonLine_NoMargin(context),
               _recordBottomList("团队盈亏金额：", "11111"),
               _recordBottomList("有效会员人数：", "11111"),
               _recordBottomList("应得分红：", "11111"),
@@ -267,7 +267,7 @@ class _AgencyBonusController extends BaseRefreshController<AgencyBonusController
       child: new Column(
         children: <Widget>[
 
-          CommonView().commonLine_NoMargin(),
+          CommonView().commonLine_NoMargin(context),
           _agencyBonusListBottomDetail("分红比例：", "团队盈亏："),
           _agencyBonusListBottomDetail("分红金额：", "状态："),
 

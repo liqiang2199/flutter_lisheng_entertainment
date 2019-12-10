@@ -1,13 +1,16 @@
 import 'dart:math';
 
+import 'package:flustars/flustars.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_lisheng_entertainment/Util/ColorUtil.dart';
 import 'package:flutter_lisheng_entertainment/Util/ImageUtil.dart';
 import 'package:flutter_lisheng_entertainment/Util/RouteUtil.dart';
 import 'package:flutter_lisheng_entertainment/Util/StringUtil.dart';
 import 'package:flutter_lisheng_entertainment/base/BaseRefreshController.dart';
+import 'package:flutter_lisheng_entertainment/model/json/bank/BankDataBeen.dart';
+import 'package:flutter_lisheng_entertainment/user/net/BankListHandler.dart';
+import 'package:flutter_lisheng_entertainment/user/net/UserService.dart';
 import 'package:flutter_lisheng_entertainment/view/common/CommonView.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class BankListController extends StatefulWidget {
   @override
@@ -18,10 +21,20 @@ class BankListController extends StatefulWidget {
 
 }
 
-class _BankListController extends BaseRefreshController<BankListController> {
+class _BankListController extends BaseRefreshController<BankListController> implements BankListHandler{
+
+  List<BankDataBeen> dataBank = new List();
+
+  @override
+  void initState() {
+    super.initState();
+    UserService.instance.getBankList(this);
+  }
+
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
+
     return new Scaffold(
       backgroundColor: Color(ColorUtil.lineColor),
       appBar: CommonView().commonAppBar(context, StringUtil.myBankList),
@@ -38,15 +51,10 @@ class _BankListController extends BaseRefreshController<BankListController> {
       itemBuilder: (c, i) => Container(
         //height: 223.0,
         margin: EdgeInsets.only(left: 15.0, right: 15.0),
-        child: new GestureDetector(
-          onTap: () {
-            //
-          },
-          child: new Column(
-            children: <Widget>[
-              _listBankAllView(i),
-            ],
-          ),
+        child:  new Column(
+          children: <Widget>[
+            _listBankAllView(i),
+          ],
         ),
       ),
       //itemExtent: 200.0,
@@ -55,28 +63,23 @@ class _BankListController extends BaseRefreshController<BankListController> {
   }
 
   Widget _listBankAllView(int index) {
-//    if (index == (items.length - 1)) {
-//      return _butAddBank();
-//    } else {
-//      return _listBankList();
-//    }
-    if (index == 0) {
+    if (index == (items.length - 1)) {
       return _butAddBank();
     } else {
-      return _listBankList();
+      return _listBankList(index);
     }
   }
 
   //银行卡列表
-  Widget _listBankList() {
+  Widget _listBankList(int index) {
 
     return new Container(
       height: 130.0,
       child: new Card(
         child: new Column(
           children: <Widget>[
-            _listTopView(),
-            _bankTextNum(),
+            _listTopView(dataBank[index].bank_name, dataBank[index].branch_name),
+            _bankTextNum(dataBank[index].card_number),
 
           ],
         ),
@@ -84,7 +87,7 @@ class _BankListController extends BaseRefreshController<BankListController> {
     );
   }
 
-  Widget _listTopView() {
+  Widget _listTopView(String bankName, String bankType) {
 
     return new Container(
       padding: EdgeInsets.only(left: 10.0, right: 10.0),
@@ -103,7 +106,7 @@ class _BankListController extends BaseRefreshController<BankListController> {
 
                 new Align(
                   child: new Text(
-                    "中国工商银行",
+                    bankName,
                     style: TextStyle(
                       fontSize: 14.0,
                       color: Color(ColorUtil.textColor_333333),
@@ -115,7 +118,7 @@ class _BankListController extends BaseRefreshController<BankListController> {
 
                 new Align(
                   child: new Text(
-                    "储蓄卡",
+                    bankType,
                     style: TextStyle(
                       fontSize: 14.0,
                       color: Color(ColorUtil.textColor_333333),
@@ -134,14 +137,14 @@ class _BankListController extends BaseRefreshController<BankListController> {
     );
   }
 
-  Widget _bankTextNum() {
+  Widget _bankTextNum(String bankNum) {
 
     return new Align(
       alignment: Alignment.centerLeft,
       child: new Container(
         padding: EdgeInsets.only(left: 10.0, right: 10.0),
         child: new Text(
-          "6222",
+          bankNum,
           style: TextStyle(
             fontSize: 20.0,
             color: Color(ColorUtil.textColor_888888),
@@ -156,12 +159,14 @@ class _BankListController extends BaseRefreshController<BankListController> {
     return new Align(
       alignment: Alignment.center,
       child: new Container(
-        width: ScreenUtil.screenWidth,
+        width: ScreenUtil.getScreenW(context),
         height: 46.0  ,
         margin: EdgeInsets.only(top: 15.0,),
         child: new RaisedButton(onPressed: (){
           //添加银行卡
-          Navigator.pushNamed(context, RouteUtil.bindBankController);
+          Navigator.pushNamed(context, RouteUtil.bindBankController).then((data){
+            UserService.instance.getBankList(this);
+          });
         },color: Color(ColorUtil.butColor),
           child: new Row(
             children: <Widget>[
@@ -185,6 +190,26 @@ class _BankListController extends BaseRefreshController<BankListController> {
         ),
       ),
     );
+  }
+
+  @override
+  bool isCanLoadMore() {
+    return false;
+  }
+
+  @override
+  bool isCanRefresh() {
+    return false;
+  }
+
+  @override
+  void setBankListDataBeen(List<BankDataBeen> data) {
+    this.dataBank = data;
+    BankDataBeen bankDataBeen = new BankDataBeen(0, 0, 0, "", "", "", "");
+    dataBank.add(bankDataBeen);
+    setState(() {
+      this.items = dataBank;
+    });
   }
 
 }

@@ -31,10 +31,12 @@ import 'agent/team_controller/TeamAccountChangeController.dart';
 import 'agent/team_controller/TeamBettingController.dart';
 import 'agent/team_controller/TeamOverviewController.dart';
 import 'agent/team_controller/TeamReportFormController.dart';
+import 'game_hall/GameHallController.dart';
 import 'home/ActivePageController.dart';
 import 'home/LotteryCenterController.dart';
 import 'home/SystemNoticeController.dart';
 import 'home/SystemNoticeDetailController.dart';
+import 'user/personal_center/SetCapitalPasswordController.dart';
 //import 'package:flutter_native_splash/flutter_native_splash.dart' as flutter_native_splash;
 
 void main() {
@@ -85,6 +87,7 @@ class MyApp extends StatelessWidget {
         RouteUtil.agentCenterController: (BuildContext context) => AgentCenterController(),
         RouteUtil.modifyLoginPasswordController: (BuildContext context) => ModifyLoginPasswordController(),
         RouteUtil.modifyCapitalPasswordController: (BuildContext context) => ModifyCapitalPasswordController(),
+        RouteUtil.setCapitalPasswordController: (BuildContext context) => SetCapitalPasswordController(),
         RouteUtil.activePageController: (BuildContext context) => ActivePageController(),
         RouteUtil.systemNoticeController: (BuildContext context) => SystemNoticeController(),
         RouteUtil.systemNoticeDetailController: (BuildContext context) => SystemNoticeDetailController(),
@@ -104,6 +107,7 @@ class MyApp extends StatelessWidget {
         RouteUtil.bankListController: (BuildContext context) => BankListController(),
         RouteUtil.bindBankController: (BuildContext context) => BindBankController(),
         RouteUtil.agencyBonusController: (BuildContext context) => AgencyBonusController(),
+        RouteUtil.gameHallController: (BuildContext context) => GameHallController(),
       },
     );
   }
