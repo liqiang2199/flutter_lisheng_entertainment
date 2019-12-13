@@ -295,7 +295,7 @@ class _LoginActivity extends BaseController<LoginActivity> implements LoginHandl
       height: 45.0  ,
       child: new RaisedButton(onPressed: (){
         //跳转首页
-        //Navigator.pushNamedAndRemoveUntil(context, RouteUtil.homeController);
+//        Navigator.pushNamedAndRemoveUntil(context, RouteUtil.homeController);
 
         UserService.instance.login(phone, password, this);
 

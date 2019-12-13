@@ -7,6 +7,8 @@ import 'package:flutter_lisheng_entertainment/Util/Constant.dart';
 import 'package:flutter_lisheng_entertainment/agent/net/LinkManagerHandler.dart';
 import 'package:flutter_lisheng_entertainment/agent/net/LinkOpenAccountHandler.dart';
 import 'package:flutter_lisheng_entertainment/agent/net/OrdinaryOpenAccountHandler.dart';
+import 'package:flutter_lisheng_entertainment/game_hall/net/PlayMode11Choice5Handler.dart';
+import 'package:flutter_lisheng_entertainment/game_hall/net/game_gd_11_5/CalculationBettingNumHandler.dart';
 import 'package:flutter_lisheng_entertainment/home/net/ActivePageHandler.dart';
 import 'package:flutter_lisheng_entertainment/home/net/HomeHandler.dart';
 import 'package:flutter_lisheng_entertainment/home/net/SystemNoticeHandler.dart';
@@ -16,6 +18,7 @@ import 'package:flutter_lisheng_entertainment/model/http/agent/DelLinkAccountHtt
 import 'package:flutter_lisheng_entertainment/model/http/agent/LinkOpenAccountHttpBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/http/agent/OrdinaryOpenAccountHttpBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/http/bank/BindBankHttpBeen.dart';
+import 'package:flutter_lisheng_entertainment/model/http/gd_11_5/CalculationBettingNumHttpBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/http/set_cash_pass/ModifyPaypwdHttpBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/http/set_cash_pass/SetPaypwdHttpBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/http/user_info_center/UserInfoCenterHttpBeen.dart';
@@ -27,6 +30,7 @@ import 'package:flutter_lisheng_entertainment/model/json/agent/link_list/LinkAcc
 import 'package:flutter_lisheng_entertainment/model/json/bank/BankListBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/json/bank/type/GetBankTypeListBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/json/cash_password/PayPasswordBeen.dart';
+import 'package:flutter_lisheng_entertainment/model/json/gd_11_5/CalculationBettingNumBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/json/home_json/GetBannerListDataBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/json/login/LoginBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/json/recharge/RechargeTypeListBeen.dart';
@@ -108,6 +112,21 @@ abstract class ApiService<T> {
   @POST(UrlUtil.delLinkAccount)
   void delLinkAccount(@Body() DelLinkAccountHttpBeen openAccountHttpBeen);
 
+  /**
+   * 广东11 选 5
+   */
+
+  /// 删除链接开户地址
+  @POST(UrlUtil.getPlay)
+  void getPlay(@Body() BaseTokenHttpBeen openAccountHttpBeen);
+
+  @POST(UrlUtil.getPlay)
+  void gdBets(@Body() CalculationBettingNumHttpBeen openAccountHttpBeen);
+
+  /// 广东11 选 5
+  @POST(UrlUtil.orderAdd)
+  void orderAdd(@Body() CalculationBettingNumHttpBeen openAccountHttpBeen);
+
 }
 
 class _ApiService<T> implements ApiService<T> {
@@ -151,7 +170,21 @@ class _ApiService<T> implements ApiService<T> {
             extra: _extra,
             baseUrl: UrlUtil.BaseUrl),
         data: _data);
-    print(_result.data);
+
+//    .catchError((error) {
+//    switch (error.runtimeType) {
+//    case DioError:
+//    // Here's the sample to get the failed response error code and message
+//    final res = (error as DioError).response;
+//    //print("Got error : ${res.statusCode} -> ${res.statusMessage}");
+//    break;
+//    default:
+//    }
+//    })
+
+    if (_result.data != null) {
+      print(_result.data);
+    }
 
     return _result.data;
   }
@@ -441,6 +474,53 @@ class _ApiService<T> implements ApiService<T> {
         linkManagerHandler.setDelLinkAccount(true);
       }
 
+    });
+  }
+
+  /// 广东11 选 5
+
+  /**
+   * 玩法获取
+   */
+  @override
+  void getPlay(BaseTokenHttpBeen playMode) {
+    ArgumentError.checkNotNull(playMode, '参数为空');
+    ArgumentError.checkNotNull(_baseHandler, '_baseHandler为空');
+    responseResult(playMode.toJson(), UrlUtil.getPlay).then((onValue) {
+//      var linkListBeen = LinkAccountListDataBeen.fromJson(onValue);
+      PlayMode11Choice5Handler linkManagerHandler = _baseHandler as PlayMode11Choice5Handler;
+      linkManagerHandler.playModeMapValue(onValue);
+
+    });
+  }
+
+  @override
+  void gdBets(CalculationBettingNumHttpBeen bettingNumHttpBeen) {
+    ArgumentError.checkNotNull(bettingNumHttpBeen, '参数为空');
+    ArgumentError.checkNotNull(_baseHandler, '_baseHandler为空');
+    responseResult(bettingNumHttpBeen.toJson(), UrlUtil.gdBets).then((onValue) {
+      var bettingNum = CalculationBettingNumBeen.fromJson(onValue);
+      CalculationBettingNumHandler linkManagerHandler = _baseHandler as CalculationBettingNumHandler;
+      if (bettingNum.code == 1) {
+        linkManagerHandler.getCalculationBettingNumData(bettingNum.data);
+      } else {
+        linkManagerHandler.showToast(bettingNum.msg);
+      }
+    });
+  }
+
+  /// 下注
+  @override
+  void orderAdd(CalculationBettingNumHttpBeen bettingNumHttpBeen) {
+    ArgumentError.checkNotNull(bettingNumHttpBeen, '参数为空');
+    ArgumentError.checkNotNull(_baseHandler, '_baseHandler为空');
+    responseResult(bettingNumHttpBeen.toJson(), UrlUtil.orderAdd).then((onValue) {
+      var bettingNum = CalculationBettingNumBeen.fromJson(onValue);
+      CalculationBettingNumHandler linkManagerHandler = _baseHandler as CalculationBettingNumHandler;
+      linkManagerHandler.showToast(bettingNum.msg);
+      if (bettingNum.code == 1) {
+        linkManagerHandler.multipleSuccess(true);
+      }
     });
   }
 

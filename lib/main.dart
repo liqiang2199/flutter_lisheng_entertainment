@@ -31,7 +31,9 @@ import 'agent/team_controller/TeamAccountChangeController.dart';
 import 'agent/team_controller/TeamBettingController.dart';
 import 'agent/team_controller/TeamOverviewController.dart';
 import 'agent/team_controller/TeamReportFormController.dart';
+import 'game_hall/BettingController.dart';
 import 'game_hall/GameHallController.dart';
+import 'game_hall/PlayMode11Choice5Controller.dart';
 import 'home/ActivePageController.dart';
 import 'home/LotteryCenterController.dart';
 import 'home/SystemNoticeController.dart';
@@ -108,6 +110,8 @@ class MyApp extends StatelessWidget {
         RouteUtil.bindBankController: (BuildContext context) => BindBankController(),
         RouteUtil.agencyBonusController: (BuildContext context) => AgencyBonusController(),
         RouteUtil.gameHallController: (BuildContext context) => GameHallController(),
+        RouteUtil.bettingController: (BuildContext context) => BettingController(),
+        RouteUtil.playMode11Choice5Controller: (BuildContext context) => PlayMode11Choice5Controller(),
       },
     );
   }

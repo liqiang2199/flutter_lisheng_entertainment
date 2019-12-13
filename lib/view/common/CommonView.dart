@@ -72,6 +72,33 @@ class CommonView {
   }
 
   /**
+   * 回传值
+   */
+  AppBar commonAppBarIntentData(BuildContext context, String title, dynamic data) {
+
+    return new AppBar(
+      centerTitle: true,
+      title: new Text(
+        title,
+        style: new TextStyle(
+            fontSize: 16.0,
+            color: Colors.white
+        ),
+      ),
+      leading: new GestureDetector(
+        child: new Align(
+          child: new Image.asset(ImageUtil.imgBack, height: 20.0,),
+        ),
+        onTap: () {
+          //点击返回
+          Navigator.pop(context, data);
+        },
+      ),
+    );
+  }
+
+
+  /**
    * 圆形图片（头像）
    */
   Widget clipImg(String headImgUrl) {

@@ -14,6 +14,7 @@ class ColorUtil {
   static const bgColor_F1F1F1 = 0xFFF1F1F1;
   static const bgColor_DFDFDF = 0xFFDFDFDF;
   static const bgColor_E7242C = 0xFFE7242C;
+  static const bgColor_CCCCCC = 0xFFCCCCCC;
 
   static const textColor_888888 = 0xFF888888;
   static const textColor_333333 = 0xFF333333;
