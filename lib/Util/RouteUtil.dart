@@ -58,5 +58,9 @@ class RouteUtil {
   static const agencyBonusController = "/AgencyBonusController";
   //游戏大厅
   static const gameHallController = "/GameHallController";
+  // 投注
+  static const bettingController = "/BettingController";
+  // 玩法选择
+  static const playMode11Choice5Controller = "/PlayMode11Choice5Controller";
 
 }

@@ -94,5 +94,12 @@ class StringUtil {
   static const addBank = "添加银行卡";
   static const submitBindBank = "提交绑定";
 
+  /// 投注说明文案
+  static const bettingExplainTitle = "投注说明";
+  static const bettingExplainOne = "1、单式玩法只能输入数字";
+  static const bettingExplainTwo = "2、手动输入的没注号码之间会自动生成间隔符号[,]";
+  static const bettingExplainThree = "3、粘贴或输入格式不正确的选号会自动被清除";
+
+
 
 }

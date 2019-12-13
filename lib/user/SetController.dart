@@ -1,10 +1,10 @@
+import 'package:flustars/flustars.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_lisheng_entertainment/Util/ColorUtil.dart';
 import 'package:flutter_lisheng_entertainment/Util/ImageUtil.dart';
 import 'package:flutter_lisheng_entertainment/Util/StringUtil.dart';
 import 'package:flutter_lisheng_entertainment/view/ListStateItemView.dart';
 import 'package:flutter_lisheng_entertainment/view/common/CommonView.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:share/share.dart';
 
 /// 设置
@@ -156,7 +156,7 @@ class _SetController extends State<SetController> {
   Widget _line() {
 
     return new Container(
-      width: ScreenUtil.screenWidth,
+      width: ScreenUtil.getScreenW(context),
       height: 1.0,
       margin: EdgeInsets.only(left: 15.0, right: 15.0),
       color: Color(ColorUtil.lineColor),

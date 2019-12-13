@@ -35,6 +35,7 @@ class RetrofitManager {
     options.headers = _getHeaders();
     options.receiveTimeout = 1000 * 10;
     options.sendTimeout = 1000 * 5;
+    options.responseType = ResponseType.plain;
     _clientDio = new Dio();
     _clientDio.options = options;
   }

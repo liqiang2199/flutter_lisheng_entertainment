@@ -37,4 +37,13 @@ class UrlUtil {
   /// 删除链接开户地址
   static const delLinkAccount = "api/user/delLinkAcount";
 
+  /**
+   * 广东11 选 5
+   */
+  /// 玩法获取
+  static const getPlay = "api/guangdong/getPlay";
+  static const gdBets = "api/guangdong/gdBets";
+  /// 广东 11 选 5 下注
+  static const orderAdd = "api/guangdong/orderAdd";
+
 }
