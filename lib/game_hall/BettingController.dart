@@ -21,14 +21,16 @@ class BettingController extends StatefulWidget {
 
 class _BettingController extends BaseController<BettingController>{
 
-  int _segmentedIndex = 0;//顶部菜单 切换
-
-  PageController mPageController = PageController(initialPage: 0);
+  int _segmentedIndex = 2;//顶部菜单 切换
+  // 显示那个 对应的界面 initialPage
+  PageController mPageController = PageController(initialPage: 2);
   var isPageCanChanged = true;
+
 
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
+
     return new Scaffold(
       backgroundColor: Colors.white,
       appBar: new AppBar(
@@ -61,7 +63,7 @@ class _BettingController extends BaseController<BettingController>{
 
   Widget _appBarTitle() {
 
-    return new Center(
+    return new Container(
       child: CupertinoSegmentedControl<int>(children: {
         0:Padding(padding: EdgeInsets.only(top:5.0,bottom: 5.0,left: 8.0, right: 8.0),child: _segmentedTitle("开奖"),),
         1:Padding(padding: EdgeInsets.all(5.0),child: _segmentedTitle("走势"),),
