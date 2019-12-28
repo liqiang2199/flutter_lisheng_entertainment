@@ -21,7 +21,7 @@ class GameHallController extends StatefulWidget{
 
 }
 
-class _GameHallController extends BaseRefreshTabController<GameHallController, TabTitle> with AutomaticKeepAliveClientMixin{
+class _GameHallController extends BaseRefreshTabController<GameHallController, TabTitle> with AutomaticKeepAliveClientMixin {
 
   @override
   void initState() {
@@ -41,20 +41,22 @@ class _GameHallController extends BaseRefreshTabController<GameHallController, T
         children: <Widget>[
           _tabPage(),
           CommonView().commonLine_NoMarginChange(context,10.0),
-          new Expanded(child: _pageView(),),
+//          new Expanded(child: _pageView(),),
+          new Expanded(child: _tabPageChildView(),),
         ],
       ),
     );
   }
 
+  @override
+  bool isUserTabPage() {
+
+    return false;
+  }
+
   initTabData() {
     tabList = [
       new TabTitle('游戏大厅', 11),
-      new TabTitle('游戏大厅', 12),
-      new TabTitle('游戏大厅', 12),
-      new TabTitle('游戏大厅', 12),
-      new TabTitle('游戏大厅', 12),
-      new TabTitle('游戏大厅', 12),
     ];
   }
 
@@ -85,6 +87,16 @@ class _GameHallController extends BaseRefreshTabController<GameHallController, T
     );
   }
 
+  Widget _tabPageChildView() {
+
+    return TabBarView(
+      controller: this.mTabController,
+      children: <Widget>[
+        _pageViewIndex(0),
+      ],
+    );
+  }
+
   Widget _pageView() {
 
     return PageView.builder(
@@ -102,9 +114,7 @@ class _GameHallController extends BaseRefreshTabController<GameHallController, T
   }
 
   Widget _pageViewIndex(var index) {
-    return smartRefreshBase(
-      GameHallView(),
-    );
+    return GameHallView();
   }
 
   @override

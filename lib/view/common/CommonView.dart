@@ -23,6 +23,21 @@ class CommonView {
     );
   }
 
+  Widget commonLineW(BuildContext context) {
+
+    return commonLineChangeW(context,1.0);
+  }
+
+  Widget commonLineChangeW(BuildContext context,double w) {
+
+    return new Container(
+      width: w,
+      height: ScreenUtil.getScreenH(context),
+//      margin: EdgeInsets.only(left: 15.0, right: 15.0),
+      color: Color(ColorUtil.lineColor),
+    );
+  }
+
   Widget commonLine_L_R_10(BuildContext context) {
 
     return new Container(

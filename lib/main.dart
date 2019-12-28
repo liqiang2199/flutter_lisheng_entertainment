@@ -31,10 +31,12 @@ import 'agent/team_controller/TeamAccountChangeController.dart';
 import 'agent/team_controller/TeamBettingController.dart';
 import 'agent/team_controller/TeamOverviewController.dart';
 import 'agent/team_controller/TeamReportFormController.dart';
-import 'game_hall/BettingController.dart';
+import 'game_hall/GameShoppingCartController.dart';
+import 'game_hall/cp_11_choice_5/BettingController.dart';
 import 'game_hall/GameHallController.dart';
-import 'game_hall/PlayMode11Choice5Controller.dart';
+import 'game_hall/cp_11_choice_5/PlayMode11Choice5Controller.dart';
 import 'home/ActivePageController.dart';
+import 'home/AddGameController.dart';
 import 'home/LotteryCenterController.dart';
 import 'home/SystemNoticeController.dart';
 import 'home/SystemNoticeDetailController.dart';
@@ -104,7 +106,7 @@ class MyApp extends StatelessWidget {
         RouteUtil.rechargeRecordController: (BuildContext context) => RechargeRecordController(),
         RouteUtil.withdrawalRecordController: (BuildContext context) => WithdrawalRecordController(),
         RouteUtil.lotteryCenterController: (BuildContext context) => LotteryCenterController(),
-        RouteUtil.bettingRecordDetailController: (BuildContext context) => BettingRecordDetailController(),
+//        RouteUtil.bettingRecordDetailController: (BuildContext context) => BettingRecordDetailController(),
         RouteUtil.openAccountCenterController: (BuildContext context) => OpenAccountCenterController(),
         RouteUtil.bankListController: (BuildContext context) => BankListController(),
         RouteUtil.bindBankController: (BuildContext context) => BindBankController(),
@@ -112,6 +114,8 @@ class MyApp extends StatelessWidget {
         RouteUtil.gameHallController: (BuildContext context) => GameHallController(),
         RouteUtil.bettingController: (BuildContext context) => BettingController(),
         RouteUtil.playMode11Choice5Controller: (BuildContext context) => PlayMode11Choice5Controller(),
+        RouteUtil.gameShoppingCartController: (BuildContext context) => GameShoppingCartController(),
+        RouteUtil.addGameController: (BuildContext context) => AddGameController(),
       },
     );
   }

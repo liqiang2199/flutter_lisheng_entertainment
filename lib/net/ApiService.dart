@@ -7,34 +7,56 @@ import 'package:flutter_lisheng_entertainment/Util/Constant.dart';
 import 'package:flutter_lisheng_entertainment/agent/net/LinkManagerHandler.dart';
 import 'package:flutter_lisheng_entertainment/agent/net/LinkOpenAccountHandler.dart';
 import 'package:flutter_lisheng_entertainment/agent/net/OrdinaryOpenAccountHandler.dart';
+import 'package:flutter_lisheng_entertainment/agent/net/TeamAccountChangeHandler.dart';
+import 'package:flutter_lisheng_entertainment/agent/net/TeamBettingHandler.dart';
+import 'package:flutter_lisheng_entertainment/game_hall/net/GameHallHandler.dart';
 import 'package:flutter_lisheng_entertainment/game_hall/net/PlayMode11Choice5Handler.dart';
 import 'package:flutter_lisheng_entertainment/game_hall/net/game_gd_11_5/CalculationBettingNumHandler.dart';
+import 'package:flutter_lisheng_entertainment/game_hall/net/game_gd_11_5/LotteryNum11Choice5Handler.dart';
 import 'package:flutter_lisheng_entertainment/home/net/ActivePageHandler.dart';
 import 'package:flutter_lisheng_entertainment/home/net/HomeHandler.dart';
 import 'package:flutter_lisheng_entertainment/home/net/SystemNoticeHandler.dart';
 import 'package:flutter_lisheng_entertainment/model/http/BaseTokenHttpBeen.dart';
+import 'package:flutter_lisheng_entertainment/model/http/GetBettingRecordListHttpBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/http/LoginHttpBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/http/agent/DelLinkAccountHttpBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/http/agent/LinkOpenAccountHttpBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/http/agent/OrdinaryOpenAccountHttpBeen.dart';
+import 'package:flutter_lisheng_entertainment/model/http/agent/TeamAccountChangeHttpBeen.dart';
+import 'package:flutter_lisheng_entertainment/model/http/agent/TeamBettingListHttpBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/http/bank/BindBankHttpBeen.dart';
+import 'package:flutter_lisheng_entertainment/model/http/game/OpenLotteryListHttpBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/http/gd_11_5/CalculationBettingNumHttpBeen.dart';
+import 'package:flutter_lisheng_entertainment/model/http/gd_11_5/CpOpenLotteryInfoHttp.dart';
 import 'package:flutter_lisheng_entertainment/model/http/set_cash_pass/ModifyPaypwdHttpBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/http/set_cash_pass/SetPaypwdHttpBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/http/user_info_center/UserInfoCenterHttpBeen.dart';
+import 'package:flutter_lisheng_entertainment/model/http/user_record/UserAccountChangeRecordHttpBeen.dart';
+import 'package:flutter_lisheng_entertainment/model/http/withdraw/UserWithdrawHttpBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/json/BaseJson.dart';
+import 'package:flutter_lisheng_entertainment/model/json/account_change_record/AccountChangeRecordBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/json/active_page/ActivePageListBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/json/agent/LinkOpenAccountBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/json/agent/OrdinaryOpenAccountBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/json/agent/link_list/LinkAccountListDataBeen.dart';
+import 'package:flutter_lisheng_entertainment/model/json/agent/team_account_change/TeamAccountChangeBeen.dart';
+import 'package:flutter_lisheng_entertainment/model/json/agent/team_betting/TeamBettingBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/json/bank/BankListBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/json/bank/type/GetBankTypeListBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/json/cash_password/PayPasswordBeen.dart';
+import 'package:flutter_lisheng_entertainment/model/json/game_hall/LotteryTypeDataBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/json/gd_11_5/CalculationBettingNumBeen.dart';
+import 'package:flutter_lisheng_entertainment/model/json/gd_11_5/CpOpenLotteryDataInfoBeen.dart';
+import 'package:flutter_lisheng_entertainment/model/json/gd_11_5/CpOpenLotteryInfoBeen.dart';
+import 'package:flutter_lisheng_entertainment/model/json/gd_11_5/CpOpenLotteryInfoDataBeen.dart';
+import 'package:flutter_lisheng_entertainment/model/json/gd_11_5/OpenLotteryListDataBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/json/home_json/GetBannerListDataBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/json/login/LoginBeen.dart';
+import 'package:flutter_lisheng_entertainment/model/json/lottery_record/GetBettingRecordBeen.dart';
+import 'package:flutter_lisheng_entertainment/model/json/lottery_record/GetBettingRecordDataBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/json/recharge/RechargeTypeListBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/json/system_notice/SystemNoticeListBeen.dart';
+import 'package:flutter_lisheng_entertainment/model/json/withdraw/WithdrawListDataBeen.dart';
 import 'package:flutter_lisheng_entertainment/net/BaseHandler.dart';
 import 'package:flutter_lisheng_entertainment/net/UrlUtil.dart';
 import 'package:flutter_lisheng_entertainment/user/bank/BindBankController.dart';
@@ -44,8 +66,12 @@ import 'package:flutter_lisheng_entertainment/user/net/LoginHandler.dart';
 import 'package:flutter_lisheng_entertainment/user/net/ModifyLoginPasswordHandler.dart';
 import 'package:flutter_lisheng_entertainment/user/net/RechargeHandler.dart';
 import 'package:flutter_lisheng_entertainment/user/net/SetCashPasswordHandler.dart';
+import 'package:flutter_lisheng_entertainment/user/net/WithdrawHandler.dart';
 import 'package:retrofit/retrofit.dart';
 import 'dart:convert';
+
+import 'AccountChangeRecordHandler.dart';
+import 'GetBettingRecordListHandler.dart';
 
 @RestApi(baseUrl: UrlUtil.BaseUrl)
 abstract class ApiService<T> {
@@ -96,6 +122,14 @@ abstract class ApiService<T> {
   @POST(UrlUtil.getPaytypeList)
   void getPaytypeList(@Body() BaseTokenHttpBeen tokenHttpBeen);
 
+  /// 提现时查询今日提现次数 提现中总金额
+  @POST(UrlUtil.withdrawList)
+  void withdrawList(@Body() BaseTokenHttpBeen tokenHttpBeen);
+
+  /// 提现时查询今日提现次数 提现中总金额
+  @POST(UrlUtil.userWithdraw)
+  void userWithdraw(@Body() UserWithdrawHttpBeen userWithdrawHttpBeen);
+
   /// 代理 开户
   @POST(UrlUtil.addAccount)
   void postOrdinaryOpenAccount(@Body() OrdinaryOpenAccountHttpBeen openAccountHttpBeen);
@@ -112,6 +146,14 @@ abstract class ApiService<T> {
   @POST(UrlUtil.delLinkAccount)
   void delLinkAccount(@Body() DelLinkAccountHttpBeen openAccountHttpBeen);
 
+  /// 团队投注
+  @POST(UrlUtil.teamBettingList)
+  void teamBettingList(@Body() TeamBettingListHttpBeen teamBettingListHttpBeen);
+
+  /// 团队账变
+  @POST(UrlUtil.teamMoneyLog)
+  void teamMoneyLog(@Body() TeamAccountChangeHttpBeen teamBettingListHttpBeen);
+
   /**
    * 广东11 选 5
    */
@@ -120,12 +162,31 @@ abstract class ApiService<T> {
   @POST(UrlUtil.getPlay)
   void getPlay(@Body() BaseTokenHttpBeen openAccountHttpBeen);
 
-  @POST(UrlUtil.getPlay)
+  @POST(UrlUtil.gdBets)
   void gdBets(@Body() CalculationBettingNumHttpBeen openAccountHttpBeen);
 
   /// 广东11 选 5
   @POST(UrlUtil.orderAdd)
   void orderAdd(@Body() CalculationBettingNumHttpBeen openAccountHttpBeen);
+
+  /// 彩票种类
+  @POST(UrlUtil.lotteryList)
+  void lotteryList(@Body() BaseTokenHttpBeen openAccountHttpBeen);
+
+  ///开奖记录
+  @POST(UrlUtil.kjlogList)
+  void kjlogList(@Body() OpenLotteryListHttpBeen openLotteryListHttpBeen);
+
+  ///开奖记录 (下期时间)
+  @POST(UrlUtil.getApi)
+  void getApi(@Body() CpOpenLotteryInfoHttp openLotteryListHttpBeen);
+
+  /// 个人投注记录
+  @POST(UrlUtil.bettingList)
+  void bettingList(@Body() GetBettingRecordListHttpBeen openLotteryListHttpBeen);
+
+  @POST(UrlUtil.moneyLog)
+  void moneyLog(@Body() UserAccountChangeRecordHttpBeen openLotteryListHttpBeen);
 
 }
 
@@ -398,6 +459,45 @@ class _ApiService<T> implements ApiService<T> {
   }
 
   /**
+   * 提现时查询今日提现次数 提现中总金额
+   */
+  ///
+  @override
+  void withdrawList(BaseTokenHttpBeen tokenHttpBeen) {
+    ArgumentError.checkNotNull(tokenHttpBeen, '参数为空');
+    ArgumentError.checkNotNull(_baseHandler, '_baseHandler为空');
+    responseResult(tokenHttpBeen.toJson(), UrlUtil.withdrawList).then((onValue) {
+      var rechargeTypeBeen = WithdrawListDataBeen.fromJson(onValue);
+      WithdrawHandler rechargeHandler = _baseHandler as WithdrawHandler;
+
+      if (rechargeTypeBeen.code == 1) {
+        rechargeHandler.setWithdrawListData(rechargeTypeBeen);
+      } else {
+        rechargeHandler.showToast(rechargeTypeBeen.msg);
+      }
+
+    });
+  }
+  /**
+   * 提现申请
+   */
+  ///
+  @override
+  void userWithdraw(UserWithdrawHttpBeen userWithdrawHttpBeen) {
+    ArgumentError.checkNotNull(userWithdrawHttpBeen, '参数为空');
+    ArgumentError.checkNotNull(_baseHandler, '_baseHandler为空');
+    responseResult(userWithdrawHttpBeen.toJson(), UrlUtil.userWithdraw).then((onValue) {
+      var rechargeTypeBeen = WithdrawListDataBeen.fromJson(onValue);
+      WithdrawHandler rechargeHandler = _baseHandler as WithdrawHandler;
+      rechargeHandler.showToast(rechargeTypeBeen.msg);
+      if (rechargeTypeBeen.code == 1) {
+        rechargeHandler.userWithdrawResult(true);
+      }
+
+    });
+  }
+
+  /**
    * 代理 开户
    */
   @override
@@ -477,6 +577,44 @@ class _ApiService<T> implements ApiService<T> {
     });
   }
 
+  /// 团队投注
+  @override
+  void teamBettingList(TeamBettingListHttpBeen teamBettingListHttpBeen) {
+    ArgumentError.checkNotNull(teamBettingListHttpBeen, '参数为空');
+    ArgumentError.checkNotNull(_baseHandler, '_baseHandler为空');
+
+    responseResult(teamBettingListHttpBeen.toJson(), UrlUtil.teamBettingList).then((onValue) {
+      var teamBettingBeen = TeamBettingBeen.fromJson(onValue);
+      TeamBettingHandler teamBettingHandler = _baseHandler as TeamBettingHandler;
+
+      if (teamBettingBeen.code == 1) {
+        teamBettingHandler.setTeamBettingBeen(teamBettingBeen);
+      } else {
+        teamBettingHandler.showToast(teamBettingBeen.msg);
+      }
+
+    });
+  }
+
+  /// 团队账变
+  @override
+  void teamMoneyLog(TeamAccountChangeHttpBeen teamBettingListHttpBeen) {
+    ArgumentError.checkNotNull(teamBettingListHttpBeen, '参数为空');
+    ArgumentError.checkNotNull(_baseHandler, '_baseHandler为空');
+
+    responseResult(teamBettingListHttpBeen.toJson(), UrlUtil.teamMoneyLog).then((onValue) {
+      var teamBettingBeen = TeamAccountChangeBeen.fromJson(onValue);
+      TeamAccountChangeHandler teamBettingHandler = _baseHandler as TeamAccountChangeHandler;
+
+      if (teamBettingBeen.code == 1) {
+        teamBettingHandler.setTeamAccountChangeBeen(teamBettingBeen);
+      } else {
+        teamBettingHandler.showToast(teamBettingBeen.msg);
+      }
+
+    });
+  }
+
   /// 广东11 选 5
 
   /**
@@ -487,7 +625,6 @@ class _ApiService<T> implements ApiService<T> {
     ArgumentError.checkNotNull(playMode, '参数为空');
     ArgumentError.checkNotNull(_baseHandler, '_baseHandler为空');
     responseResult(playMode.toJson(), UrlUtil.getPlay).then((onValue) {
-//      var linkListBeen = LinkAccountListDataBeen.fromJson(onValue);
       PlayMode11Choice5Handler linkManagerHandler = _baseHandler as PlayMode11Choice5Handler;
       linkManagerHandler.playModeMapValue(onValue);
 
@@ -521,6 +658,100 @@ class _ApiService<T> implements ApiService<T> {
       if (bettingNum.code == 1) {
         linkManagerHandler.multipleSuccess(true);
       }
+    });
+  }
+
+  /// 彩票种类
+  @override
+  void lotteryList(BaseTokenHttpBeen openAccountHttpBeen) {
+    ArgumentError.checkNotNull(openAccountHttpBeen, '参数为空');
+    ArgumentError.checkNotNull(_baseHandler, '_baseHandler为空');
+    responseResult(openAccountHttpBeen.toJson(), UrlUtil.lotteryList).then((onValue) {
+      var bettingNum = LotteryTypeDataBeen.fromJson(onValue);
+      GameHallHandler linkManagerHandler = _baseHandler as GameHallHandler;
+
+      if (bettingNum.code == 1) {
+        linkManagerHandler.setLotteryTypeData(bettingNum);
+      } else {
+        linkManagerHandler.showToast(bettingNum.msg);
+      }
+    });
+  }
+
+  /// 开奖列表
+  @override
+  void kjlogList(OpenLotteryListHttpBeen openLotteryListHttpBeen) {
+    ArgumentError.checkNotNull(openLotteryListHttpBeen, '参数为空');
+    ArgumentError.checkNotNull(_baseHandler, '_baseHandler为空');
+    responseResult(openLotteryListHttpBeen.toJson(), UrlUtil.kjlogList).then((onValue) {
+      var bettingNum = OpenLotteryListDataBeen.fromJson(onValue);
+      LotteryNum11Choice5Handler linkManagerHandler = _baseHandler as LotteryNum11Choice5Handler;
+
+      if (bettingNum.code == 1) {
+        linkManagerHandler.setOpenLotteryListData(bettingNum);
+      } else {
+        linkManagerHandler.showToast(bettingNum.msg);
+      }
+
+    });
+  }
+
+  /// 彩票开奖信息（下期时间）
+  @override
+  void getApi(CpOpenLotteryInfoHttp openLotteryListHttpBeen) {
+    ArgumentError.checkNotNull(openLotteryListHttpBeen, '参数为空');
+    ArgumentError.checkNotNull(_baseHandler, '_baseHandler为空');
+    responseResult(openLotteryListHttpBeen.toJson(), UrlUtil.getApi).then((onValue) {
+      var bettingNum = CpOpenLotteryDataInfoBeen.fromJson(onValue);
+      LotteryNum11Choice5Handler linkManagerHandler = _baseHandler as LotteryNum11Choice5Handler;
+
+      if (bettingNum.code == 1) {
+        linkManagerHandler.setOpenLotteryListInfoData(bettingNum);
+      } else {
+        linkManagerHandler.showToast(bettingNum.msg);
+      }
+
+    });
+  }
+
+  /**
+   * 个人投注记录
+   */
+  ///
+  @override
+  void bettingList(GetBettingRecordListHttpBeen openLotteryListHttpBeen) {
+    ArgumentError.checkNotNull(openLotteryListHttpBeen, '参数为空');
+    ArgumentError.checkNotNull(_baseHandler, '_baseHandler为空');
+    responseResult(openLotteryListHttpBeen.toJson(), UrlUtil.bettingList).then((onValue) {
+      var bettingNum = GetBettingRecordBeen.fromJson(onValue);
+      GetBettingRecordListHandler bettingRecordListHandler = _baseHandler as GetBettingRecordListHandler;
+
+      if (bettingNum.code == 1) {
+        bettingRecordListHandler.setGetBettingRecordData(bettingNum);
+      } else {
+        bettingRecordListHandler.showToast(bettingNum.msg);
+      }
+
+    });
+  }
+
+  /**
+   * 个人账变记录
+   */
+  ///
+  void moneyLog(UserAccountChangeRecordHttpBeen openLotteryListHttpBeen) {
+    ArgumentError.checkNotNull(openLotteryListHttpBeen, '参数为空');
+    ArgumentError.checkNotNull(_baseHandler, '_baseHandler为空');
+    responseResult(openLotteryListHttpBeen.toJson(), UrlUtil.moneyLog).then((onValue) {
+      var bettingNum = AccountChangeRecordBeen.fromJson(onValue);
+      AccountChangeRecordHandler bettingRecordListHandler = _baseHandler as AccountChangeRecordHandler;
+
+      if (bettingNum.code == 1) {
+        bettingRecordListHandler.setAccountChangeRecord(bettingNum);
+      } else {
+        bettingRecordListHandler.showToast(bettingNum.msg);
+      }
+
     });
   }
 

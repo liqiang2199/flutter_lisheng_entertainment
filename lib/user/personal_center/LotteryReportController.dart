@@ -33,17 +33,6 @@ class _LotteryReportController extends BaseController<LotteryReportController> i
     );
   }
 
-  @override
-  void selectionEndStartTime() {
-    // TODO: implement selectionEndStartTime
-  }
-
-  @override
-  void selectionTimeStartTime() {
-    // TODO: implement selectionTimeStartTime
-  }
-
-
   /// 彩票报表信息 列表
   Widget _listRecordItem () {
 
@@ -116,6 +105,14 @@ class _LotteryReportController extends BaseController<LotteryReportController> i
 
       ],
     );
+  }
+
+  @override
+  void selectionEndTime(String endTime) {
+  }
+
+  @override
+  void selectionStartTime(String starTime) {
   }
 
 }

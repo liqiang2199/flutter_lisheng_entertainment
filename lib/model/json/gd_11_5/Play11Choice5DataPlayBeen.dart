@@ -26,5 +26,7 @@ class Play11Choice5DataPlayBeen {
 
   factory Play11Choice5DataPlayBeen.fromJson(Map<String, dynamic> json) => _$Play11Choice5DataPlayBeenFromJson(json);
 
+  Map<String, dynamic> toJson() => _$Play11Choice5DataPlayBeenToJson(this);
+
 
 }

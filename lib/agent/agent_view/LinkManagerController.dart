@@ -47,16 +47,6 @@ class _LinkManagerController extends BaseRefreshController<LinkManagerController
   }
 
   @override
-  void selectionEndStartTime() {
-
-  }
-
-  @override
-  void selectionTimeStartTime() {
-
-  }
-
-  @override
   bool isCanLoadMore() {
     return false;
   }
@@ -298,6 +288,14 @@ class _LinkManagerController extends BaseRefreshController<LinkManagerController
       setState(() {
       });
     }
+  }
+
+  @override
+  void selectionEndTime(String endTime) {
+  }
+
+  @override
+  void selectionStartTime(String starTime) {
   }
 
 }

@@ -22,12 +22,18 @@ abstract class BaseRefreshTabController<T extends StatefulWidget, B>
     mTabController.addListener(() {//TabBar的监听
       if (mTabController.indexIsChanging) {//判断TabBar是否切换
         print(mTabController.index);
-        onPageChange(mTabController.index, p: mPageController);
+        changeTabIndex(mTabController.index);
+        if (isUserTabPage()) {
+          onPageChange(mTabController.index, p: mPageController);
+        }
       }
     });
   }
 
   onPageChange(int index, {PageController p, TabController t}) async {
+    if(mPageController == null) {
+      return;
+    }
     if (p != null) {//判断是哪一个切换
       isPageCanChanged = false;
       //等待pageview切换完毕,再释放pageivew监听
@@ -37,6 +43,15 @@ abstract class BaseRefreshTabController<T extends StatefulWidget, B>
       mTabController.animateTo(index);//切换Tabbar
     }
   }
+
+  /// 是否使用了PageView
+  bool isUserTabPage() {
+
+    return true;
+  }
+
+  /// 改变tab 下标
+  void changeTabIndex(int pos){}
 
   @override
   void dispose() {

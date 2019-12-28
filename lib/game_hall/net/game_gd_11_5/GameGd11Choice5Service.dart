@@ -37,6 +37,28 @@ class GameGd11Choice5Service {
     return numStr.toString();
   }
 
+  /**
+   * len 需要多少长度
+   */
+  String _stringAppend_List(List<String> list, int len) {
+    StringBuffer numStr = new StringBuffer();
+
+    if(list.length <= 0) {
+      return numStr.toString();
+    }
+    var listStr = list[0].replaceAll(",", "");
+    var length = listStr.length;
+    if (length >= len) {
+      for (int i = 0; i < length; i = i + 2) {
+        numStr.write(listStr.substring(i, i + 2));
+        numStr.write(",");
+      }
+    }
+    var string = numStr.toString();
+    var substring = string.substring(0, string.length - 1);
+    return "$substring;";
+  }
+
   /// 三码/前三直选/复式（计算注数）
 //  void threeYardDirectlyElectedCompound(String one_num, String two_num, String three_num, CalculationBettingNumHandler  bettingNumHandler ) {
   void threeYardDirectlyElectedCompound(List<String> one_num, List<String> two_num, List<String> three_num
@@ -87,7 +109,37 @@ class GameGd11Choice5Service {
     }
     CalculationBettingNumHttpBeen bettingNumHttpBeen = new CalculationBettingNumHttpBeen(SpUtil.getString(Constant.TOKEN),playId);
 
-    bettingNumHttpBeen.data_num = _stringAppend(numList);
+    if(playId == "5"|| playId == "23") {
+      // 三码/前三直选/单式（计算注数）任选/任选单式/三中三
+      bettingNumHttpBeen.data_num = _stringAppend_List(numList, 6);
+    } else if (playId == "40" || playId == "12" || playId == "22") {
+      // 二码/前二直选/单式（计算注数）二码/前二组合/单式（计算注数）  任选/任选单式/二中二
+      bettingNumHttpBeen.data_num = _stringAppend_List(numList, 4);
+    }else if (playId == "24") {
+      // 任选/任选单式四中四
+      bettingNumHttpBeen.data_num = _stringAppend_List(numList, 8);
+    }
+    else if (playId == "25") {
+      // 任选/任选单式五中五
+      bettingNumHttpBeen.data_num = _stringAppend_List(numList, 10);
+    }
+    else if (playId == "26") {
+      // 任选/任选单式 六中五
+      bettingNumHttpBeen.data_num = _stringAppend_List(numList, 12);
+    }
+    else if (playId == "27") {
+      // 任选/任选单式 七中五
+      bettingNumHttpBeen.data_num = _stringAppend_List(numList, 14);
+    }
+    else if (playId == "28") {
+      // 任选/任选单式 八中五
+      bettingNumHttpBeen.data_num = _stringAppend_List(numList, 16);
+    }
+    else {
+      bettingNumHttpBeen.data_num = _stringAppend(numList);
+    }
+
+
 
     ApiService apiService = RetrofitManager.instance.createApiService();
     apiService.setHandler(bettingNumHandler);
@@ -100,8 +152,9 @@ class GameGd11Choice5Service {
 
   /// 三码/前三组合/复式（计算注数）
   void threeYardCombinationCompound(List<String> numList, CalculationBettingNumHandler  bettingNumHandler,bool isAddBetting, int bettingMultiple) {
-    commonOneListDataNum(numList, bettingNumHandler, "6", isAddBetting, bettingMultiple);
+    commonOneListDataNum(numList, bettingNumHandler, "7", isAddBetting, bettingMultiple);
   }
+
 
   /**
    * 二码/前二直选/复式（计算注数）

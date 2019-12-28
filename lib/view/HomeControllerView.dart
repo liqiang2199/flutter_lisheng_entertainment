@@ -1,17 +1,25 @@
 
+import 'dart:math';
+
 import 'package:carousel_pro/carousel_pro.dart';
+import 'package:event_bus/event_bus.dart';
 import 'package:flustars/flustars.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_lisheng_entertainment/Util/ColorUtil.dart';
 import 'package:flutter_lisheng_entertainment/Util/Constant.dart';
+import 'package:flutter_lisheng_entertainment/Util/EventBusUtil.dart';
 import 'package:flutter_lisheng_entertainment/Util/ImageUtil.dart';
 import 'package:flutter_lisheng_entertainment/Util/RouteUtil.dart';
 import 'package:flutter_lisheng_entertainment/Util/SpaceViewUtil.dart';
 import 'package:flutter_lisheng_entertainment/Util/StringUtil.dart';
 import 'package:flutter_lisheng_entertainment/base/BaseController.dart';
+import 'package:flutter_lisheng_entertainment/game_hall/page_view/LotteryTicketsTypeGridItemView.dart';
 import 'package:flutter_lisheng_entertainment/home/net/HomeHandler.dart';
 import 'package:flutter_lisheng_entertainment/home/net/HomeService.dart';
+import 'package:flutter_lisheng_entertainment/model/bus/AddLotteryListBusBeen.dart';
+import 'package:flutter_lisheng_entertainment/model/json/game_hall/LotteryTypeDataListBeen.dart';
+import 'package:flutter_lisheng_entertainment/model/json/game_hall/LotteryTypeDataListLotteryBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/json/home_json/GetBannerListDataBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/json/login/LoginUserInfoBeen.dart';
 import 'package:flutter_lisheng_entertainment/net/UrlUtil.dart';
@@ -31,12 +39,85 @@ class HomeControllerView extends StatefulWidget {
 class _HomeControllerView extends BaseController<HomeControllerView> implements HomeHandler{
 
   LoginUserInfoBeen userInfoBeen;
+  LotteryTypeDataListBeen typeDataListBeen;
 
   @override
   void initState() {
     super.initState();
     /// 获取banner
 //    HomeService.instance.getBannerList(SpUtil.getString(Constant.TOKEN), this);
+
+    List<LotteryTypeDataListLotteryBeen> lottery = new List();
+    typeDataListBeen = new LotteryTypeDataListBeen(9, "常玩彩种",lottery);
+    typeDataListBeen.id = 9;
+    typeDataListBeen.name = "常玩彩种";
+    typeDataListBeen.lottery = lottery;
+    /// 读取保存 的顶部内容
+    List<Map<dynamic, dynamic>> lotteryTypeList = SpUtil.getObjectList("LotteryTypeList");
+    if(lotteryTypeList != null && lotteryTypeList.length > 0) {
+      lotteryTypeList.forEach((beenValue){
+        var listLotteryBeen = LotteryTypeDataListLotteryBeen.fromJson(beenValue);
+        lottery.add(listLotteryBeen);
+      });
+    } else {
+      _addNormolCp(lottery);
+    }
+
+    /// 响应 EventBus
+    eventBus.on<AddLotteryListBusBeen>().listen((event) {
+
+      if (event != null && event.addLotteryList.length > 0) {
+
+        List<LotteryTypeDataListLotteryBeen> lotteryNew = new List();
+
+
+
+        event.addLotteryList?.forEach((lotteryBeen){
+          bool isAddLotteryList = true;
+          typeDataListBeen.lottery?.forEach((typeListBeen){
+            if(lotteryBeen.id == typeListBeen.id) {
+              isAddLotteryList = false;
+            }
+          });
+          if (isAddLotteryList) {
+            lotteryNew.add(lotteryBeen);
+          }
+
+        });
+
+        typeDataListBeen.lottery.insertAll(0, lotteryNew);
+
+//        typeDataListBeen.lottery?.forEach((lotteryJson){
+//          print("String lotteryList =${lotteryJson.toJson()}");
+//        });
+        SpUtil.putObjectList("LotteryTypeList", typeDataListBeen.lottery);
+      }
+      if(event != null && event.addLotteryList.length > 0) {
+        setState(() {
+
+        });
+      }
+
+    });
+
+  }
+
+  _addNormolCp(List<LotteryTypeDataListLotteryBeen> lottery) {
+    //广东11选5
+    LotteryTypeDataListLotteryBeen typeDataListLotteryBeen = new LotteryTypeDataListLotteryBeen
+      (9,"11选5","");
+    //imgOftenPlayColorVariety
+    LotteryTypeDataListLotteryBeen oftenPlayColor = new LotteryTypeDataListLotteryBeen
+      (-1,"","");
+    lottery.add(typeDataListLotteryBeen);
+    lottery.add(oftenPlayColor);
+    /// 保存数据
+//    StringBuffer stringBuffer = new StringBuffer();
+//    lottery?.forEach((lotteryJson){
+//
+//    });
+    SpUtil.putObjectList("LotteryTypeList", lottery);
+
   }
   
   @override
@@ -64,6 +145,9 @@ class _HomeControllerView extends BaseController<HomeControllerView> implements 
               _gridOperationClassification(),
               //new Expanded(child: _gridOperationClassification(),),
               _bannerHome(),
+
+              LotteryTicketsTypeGridItemView(typeDataListBeen),
+
             ],
           ),
         ),
@@ -329,25 +413,6 @@ class _HomeControllerView extends BaseController<HomeControllerView> implements 
     );
   }
 
-//  Widget _gridClassification() {
-//    return new GridView.builder(
-//        itemCount: classificationTitle.length,
-////        shrinkWrap: true,
-//        //SliverGridDelegateWithFixedCrossAxisCount 构建一个横轴固定数量Widget
-//        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-//          //横轴元素个数
-//            crossAxisCount: 3,
-//            //纵轴间距
-//            mainAxisSpacing: 0.0,
-//          //宽高比
-////          childAspectRatio: 1.4,
-//            //横轴间距
-//            crossAxisSpacing: 0.0,),
-//        itemBuilder: (BuildContext context, int index) {
-//          //Widget Function(BuildContext context, int index)
-//          return _gridClassificationItem(classificationIcon[index], classificationTitle[index]);
-//        });
-//  }
 
   //操作 的 item
   Widget _gridClassificationItem(String icon, String title, int index) {

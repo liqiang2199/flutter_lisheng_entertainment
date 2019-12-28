@@ -63,6 +63,22 @@ class _LoginActivity extends BaseController<LoginActivity> implements LoginHandl
     _videoPlayerController.setLooping(true);
   }
 
+//  @override
+//  void deactivate() {
+//    // TODO: implement deactivate
+//
+//    if (_chewieController != null && _chewieController.isLive) {
+//      if (_videoPlayerController != null) {
+//        _videoPlayerController.dispose();
+//      }
+//      if (_chewieController != null) {
+//        _chewieController.dispose();
+//      }
+//    }
+//    super.deactivate();
+//
+//  }
+
   @override
   void dispose() {
     // TODO: implement dispose

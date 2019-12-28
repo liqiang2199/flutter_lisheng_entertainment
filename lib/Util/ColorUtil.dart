@@ -21,4 +21,5 @@ class ColorUtil {
   static const textColor_1396DA = 0xFF1396DA;
   static const textColor_FF5B62 = 0xFFFF5B62;
   static const textColor_FF8814 = 0xFFFF8814;
+  static const textColor_48D1CC = 0xFF48D1CC;//开奖颜色绿色
 }

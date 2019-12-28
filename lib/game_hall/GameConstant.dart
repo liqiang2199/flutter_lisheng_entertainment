@@ -216,5 +216,40 @@ class GameConstant {
     return playID;
   }
 
+  /**
+   * 获取任选 单式 随机选好数
+   */
+  int getGD11Choice5Single_Num(String title) {
+    int randomNum;
+    switch(title) {
+    /// 单式
+      case gd11_5_5_19:
+        randomNum = 1;
+        break;
+      case gd11_5_5_20:
+        randomNum = 2;
+        break;
+      case gd11_5_5_21:
+        randomNum = 3;
+        break;
+      case gd11_5_5_22:
+        randomNum = 4;
+        break;
+      case gd11_5_5_23:
+        randomNum = 5;
+        break;
+      case gd11_5_5_24:
+        randomNum = 6;
+        break;
+      case gd11_5_5_25:
+        randomNum = 7;
+        break;
+      case gd11_5_5_26:
+        randomNum = 8;
+        break;
+    }
+    return randomNum;
+  }
+
 
 }

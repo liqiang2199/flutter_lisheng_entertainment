@@ -9,10 +9,9 @@ import 'package:flutter_lisheng_entertainment/game_hall/game_bridge/Choose11And5
  */
 class BettingNumSingleFormEditView extends StatelessWidget{
 
-
-
   final int singleFormNum;//单式 判断输入多少加一个 分隔符号
   final String editContent;// 传入输入的内容
+//  final bool is11Choice5;// 是否是 11 选 5
   final Choose11And5EditContentHandle contentHandle;
 
   BettingNumSingleFormEditView(
@@ -20,7 +19,7 @@ class BettingNumSingleFormEditView extends StatelessWidget{
         Key key,
         this.singleFormNum = 3,
         this.editContent = "",
-        this.contentHandle
+        this.contentHandle,
       }
   ) : super(key: key);
 
@@ -134,9 +133,10 @@ class BettingNumSingleFormEditView extends StatelessWidget{
       return;
     }
 
+    print("输入数字： $str");
     var length = stringBuffer.toString().split(",").length;
 //    int length = (editLength~/6);
-    print("分割 长度 $length");
+//    print("分割 长度 $length");
     int le = singleFormNum * 2 * length + (length -1);
 
 
@@ -210,25 +210,41 @@ class BettingNumSingleFormEditView extends StatelessWidget{
       var strVal = str.replaceAll(",", "");
       var editLength = strVal.length;
       int b = editLength ~/ 6;
-      int yushu = editLength % 6;
-      if (yushu == 0) {
-        b = (editLength / 3 - 1).toInt();
-        yushu = 6;
-      }
-      String strAfter;
-      for (int i = 0; i < b; i++) {
-        strAfter = strAfter + str.substring(0, yushu) + "," + str.substring(yushu, 6);
-        strVal = strVal.substring(6, strVal.length);
-      }
-      strAfter = strAfter + strVal;
-//      if(editLength > 6 && editLength % 6 == 0) {
-//        var strToSix = stringBuffer.toString()+",";
-//        str = strToSix + str.substring(editLength - 1, editLength);
-//
-//      }
-      if (contentHandle != null) {
+      if (editLength >= 6) {
+        int yushu = editLength % 6;
+        if (yushu == 0) {
+          b = (editLength / 6 - 1).toInt();
+          yushu = 6;
+        }
+        print("editLength $editLength");
+        String strAfter = "";
+        String strBefore = strVal;
+        if (str.length % 7 == 0) {
+          if (editLength > 6) {
+            for (int i = 1; i <= editLength; i++) {
+              if (i != 0 && i % 6 == 0) {
+                strAfter = strAfter + strVal.substring(i - 6, i) + "," ;
+//              strAfter = strAfter + strVal.substring(i - 6, i) + "," + strVal.substring(i, editLength) ;
+//              strAfter = strAfter + strBefore.substring(0, 6) + "," ;
+//              strBefore = strVal.substring(i, editLength);
+              }
+            }
+            String strAfterReplaceAll = strAfter.replaceAll(",", "");
+
+            if ((editLength - strAfterReplaceAll.length) > 0) {
+              strAfter = strAfter + strVal.substring(strAfterReplaceAll.length, editLength);
+            }
+
+          } else {
+            strAfter = strVal;
+          }
+
+          if (contentHandle != null) {
 //        contentHandle.editContent11Choose5Handle(str);
-        contentHandle.editContent11Choose5Handle(strAfter);
+            contentHandle.editContent11Choose5Handle(strAfter);
+          }
+        }
+
       }
     }
 

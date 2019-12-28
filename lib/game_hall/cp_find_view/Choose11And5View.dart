@@ -94,9 +94,9 @@ class Choose11And5View extends StatelessWidget {
         //全 默认全部选中
         for (int i = 0; i < cpNumIndex.length; i++) {
           if(i%2 == 0) {
-            cpNumIndex[i] = isOdd ? -1 : 0;
-          } else {
             cpNumIndex[i] = isOdd ? 0 : -1;
+          } else {
+            cpNumIndex[i] = isOdd ? -1 : 0;
           }
         }
 
@@ -170,6 +170,7 @@ class Choose11And5View extends StatelessWidget {
 
     if (cpNumIndex != null && cpNumIndex.length > 0) {
       for (int num = 0; num < cpNumIndex.length; num++) {
+//        print("cpNumIndex  =$num  cpNumIndex[num] = ${cpNumIndex[num]}");
         if(cpNumIndex[num] >= 0) {
           cpNumBool[num] = !cpNumBool[num];
         } else {
@@ -180,7 +181,7 @@ class Choose11And5View extends StatelessWidget {
 
     return new Column(
       children: <Widget>[
-
+        // 45 + 24 + 40 + 40 + 15 + 1
         _chooseTypeView(),
         _chooseTitle(this.titleTip),
         _gridList(),

@@ -2,10 +2,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_lisheng_entertainment/base/BaseController.dart';
-import 'package:flutter_lisheng_entertainment/view/common/CommonView.dart';
+import 'package:flutter_lisheng_entertainment/game_hall/cp_11_choice_5/LotteryNum11Choice5Controller.dart';
 
-import 'page_view/BettingView.dart';
-import 'page_view/GameHallView.dart';
+import '../page_view/BettingView.dart';
+import '../page_view/GameHallView.dart';
+import 'Record11Choice5Controller.dart';
+import 'Trend11Choice5Controller.dart';
 
 /**
  * 投注
@@ -32,6 +34,7 @@ class _BettingController extends BaseController<BettingController>{
     // TODO: implement build
 
     return new Scaffold(
+      resizeToAvoidBottomInset: false,
       backgroundColor: Colors.white,
       appBar: new AppBar(
         centerTitle: true,
@@ -109,8 +112,18 @@ class _BettingController extends BaseController<BettingController>{
   }
 
   Widget _pageViewIndex(var index) {
+    if (index == 0) {
+      return LotteryNum11Choice5Controller();
+    }
+    if (index == 1) {
+      /// 走势图
+      return Trend11Choice5Controller();
+    }
     if (index == 2) {
       return BettingView();
+    }
+    if (index == 3) {
+      return Record11Choice5Controller();
     }
     return GameHallView();
   }

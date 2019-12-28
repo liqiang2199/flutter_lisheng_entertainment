@@ -71,12 +71,36 @@ class ImageUtil {
   static const imgChoiceUp = "${imgBaseUrl}icon_choice_up.png";
   /// 开奖中心Banner
   static const imgLotteryCenterBanner = "${imgBaseUrl}icon_lottery_center_banner.png";
+  /// 玩法说明
+  static const imgBettingCpQuestion = "${imgBaseUrl}icon_betting_cp_question.png";
+  /// 走势 选择
+  static const imgTrendSetChoice = "${imgBaseUrl}icon_trend_set_choice.png";
+  /// 商品的删除
+  static const imgShopCartDelete = "${imgBaseUrl}icon_delete_alone_shopping_cart.png";
   //重庆时时彩
   static const imgLotteryCenterCqSSC = "${imgBaseUrl}icon_cp_cq_ssc.png";
+  //广东11选5
+  static const imgLotteryCenterGD11Choice5 = "${imgBaseUrl}icon_gd_11_choice_5.png";
+  //添加常玩彩种
+  static const imgOftenPlayColorVariety = "${imgBaseUrl}icon_often_playcolor_variety.png";
+  // 添加彩种 选中状态
+  static const imgAddCpChoice = "${imgBaseUrl}icon_choice_add_cp_type.png";
   /// 开户中心
   static const imgReturnPoint = "${imgBaseUrl}icon_return_point.png";
   static const imgOpenAccountEdit = "${imgBaseUrl}icon_open_accout.png";
   static const imgRadioBgSelection = "${imgBaseUrl}icon_radio_bg_selection.png";
   static const imgRadioBg = "${imgBaseUrl}icon_radio_bg.png";
+
+  static String imgCpType(String id) {
+    String imgIcon = imgLotteryCenterCqSSC;
+    switch(id) {
+      case "9":
+        //广东11 选5
+        imgIcon = imgLotteryCenterGD11Choice5;
+        break;
+    }
+
+    return imgIcon;
+  }
 
 }

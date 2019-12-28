@@ -18,4 +18,9 @@ abstract class BettingNumAndOperationHandler {
    */
   void butImmediateBet();
 
+  /**
+   * 购物车
+   */
+  void butShopCart();
+
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/src/scheduler/ticker.dart';
 import 'package:flutter_lisheng_entertainment/Util/ColorUtil.dart';
 import 'package:flutter_lisheng_entertainment/Util/ImageUtil.dart';
 import 'package:flutter_lisheng_entertainment/Util/SpaceViewUtil.dart';
@@ -19,10 +20,11 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 //}
 
 // ignore: must_be_immutable
-class LineSwitchingDialog extends Dialog {
+class LineSwitchingDialog extends Dialog{
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
+
     return new Container(
         decoration: ShapeDecoration(
           color: Color(0xffffffff),
@@ -49,8 +51,15 @@ class LineSwitchingDialog extends Dialog {
             ],
           ),
 
-         new Container(
-           child:  new Image.asset(ImageUtil.imgCloseDialog, width: 26, height: 26,),
+         new GestureDetector(
+           onTap: () {
+             Navigator.pop(context);
+           },
+           child: new Container(
+             alignment: Alignment.topRight,
+             margin: EdgeInsets.only(bottom: 15.0),
+             child:  new Image.asset(ImageUtil.imgCloseDialog, width: 26, height: 26,),
+           ),
          ),
 
         ],

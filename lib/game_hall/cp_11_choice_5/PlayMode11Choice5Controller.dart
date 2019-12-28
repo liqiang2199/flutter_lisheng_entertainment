@@ -14,7 +14,7 @@ import 'package:flutter_lisheng_entertainment/model/json/gd_11_5/Play11Choice5Da
 import 'package:flutter_lisheng_entertainment/model/json/gd_11_5/PlayMode11Choice5Been.dart';
 import 'package:flutter_lisheng_entertainment/view/common/CommonView.dart';
 
-import 'net/PlayMode11Choice5Handler.dart';
+import '../net/PlayMode11Choice5Handler.dart';
 
 /**
  * 11 选5 玩法选择
@@ -37,7 +37,10 @@ class _PlayMode11Choice5Controller extends BaseController<PlayMode11Choice5Contr
   void initState() {
     // TODO: implement initState
     super.initState();
-    GameService.instance.getPlay(this);
+    Future.delayed(Duration(milliseconds: 1000)).then((e) {
+      GameService.instance.getPlay(this);
+    });
+
 
   }
 
@@ -118,7 +121,7 @@ class _PlayMode11Choice5Controller extends BaseController<PlayMode11Choice5Contr
         primary: false,
         mainAxisSpacing: 0.0,//竖向间距
         crossAxisSpacing: 0.0,//横向间距
-        childAspectRatio: 4.5,
+        childAspectRatio: 3.8,
         children: _gridListItemView(typeNam, playModeBeen),
         shrinkWrap: true,
 
@@ -220,7 +223,11 @@ class _PlayMode11Choice5Controller extends BaseController<PlayMode11Choice5Contr
   @override
   void playModeMapValue(Map<String, dynamic> mapStr) {
 
+
     Map<String, dynamic> data = mapStr["data"];
+    if (data == null) {
+      return;
+    }
 
     Map<String, dynamic> dataThreeYards = data["0"];//三码
     var threeYardsBeen = Play11Choice5DataThreeYardsBeen.fromJson(dataThreeYards);
