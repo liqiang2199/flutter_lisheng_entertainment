@@ -37,16 +37,6 @@ class _TeamReportFormController extends BaseRefreshController<TeamReportFormCont
     );
   }
 
-  @override
-  void selectionEndStartTime() {
-    // TODO: implement selectionEndStartTime
-  }
-
-  @override
-  void selectionTimeStartTime() {
-    // TODO: implement selectionTimeStartTime
-  }
-
   /// 团队报表 信息 列表
   Widget _listReportFromItem () {
 
@@ -157,6 +147,14 @@ class _TeamReportFormController extends BaseRefreshController<TeamReportFormCont
 
       ],
     );
+  }
+
+  @override
+  void selectionEndTime(String endTime) {
+  }
+
+  @override
+  void selectionStartTime(String starTime) {
   }
 
 }

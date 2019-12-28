@@ -1,6 +1,6 @@
 class UrlUtil {
 
-  static const BaseUrl = "http://zijqum9pqu.52http.net/";
+  static const BaseUrl = "http://i36iyi.natappfree.cc/";
 
   static const login = "api/login/login";
   /// 修改登录密码
@@ -24,6 +24,10 @@ class UrlUtil {
 
   /// 获取充值方式
   static const getPaytypeList = "api/pay/getPaytypeList";
+  /// 提现时查询今日提现次数 提现中总金额
+  static const withdrawList = "api/user/withdrawList";
+  /// 提现申请
+  static const userWithdraw = "api/user/userWithdraw";
 
   /**
    * 代理中心
@@ -36,6 +40,24 @@ class UrlUtil {
   static const getLinkAccountList = "api/user/getLinkAcountList";
   /// 删除链接开户地址
   static const delLinkAccount = "api/user/delLinkAcount";
+  /// 团队投注
+  static const teamBettingList = "api/betting/teamBettingList";
+  /// 团队账变
+  static const teamMoneyLog = "api/user/teamMoneyLog";
+
+  /**
+   * 彩票种类
+   */
+  ///
+  static const lotteryList = "api/lottery/lotteryList";
+
+  /**
+   * 开奖记录
+   */
+  ///
+  static const kjlogList = "api/Lottery/kjlogList";
+  /// 彩票开奖信息（下期时间）
+  static const getApi = "api/Lottery/getApi";
 
   /**
    * 广东11 选 5
@@ -45,5 +67,10 @@ class UrlUtil {
   static const gdBets = "api/guangdong/gdBets";
   /// 广东 11 选 5 下注
   static const orderAdd = "api/guangdong/orderAdd";
+  /// 个人投注记录
+  static const bettingList = "api/betting/bettingList";
+  /// 个人账变记录
+  static const moneyLog = "api/user/moneyLog";
+
 
 }

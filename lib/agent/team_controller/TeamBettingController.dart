@@ -1,14 +1,18 @@
+import 'package:flustars/flustars.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_lisheng_entertainment/Util/ColorUtil.dart';
-import 'package:flutter_lisheng_entertainment/Util/SpaceViewUtil.dart';
 import 'package:flutter_lisheng_entertainment/Util/StringUtil.dart';
+import 'package:flutter_lisheng_entertainment/agent/net/AgentService.dart';
+import 'package:flutter_lisheng_entertainment/agent/net/TeamBettingHandler.dart';
 import 'package:flutter_lisheng_entertainment/base/BaseRefreshTabController.dart';
 import 'package:flutter_lisheng_entertainment/model/TabTitle.dart';
+import 'package:flutter_lisheng_entertainment/model/json/agent/team_betting/TeamBettingBeen.dart';
+import 'package:flutter_lisheng_entertainment/model/json/agent/team_betting/TeamBettingDataListBeen.dart';
 import 'package:flutter_lisheng_entertainment/view/sreen_view/TimeAndEditAndFindChoiceView.dart';
 import 'package:flutter_lisheng_entertainment/view/common/CommonView.dart';
+import 'package:flutter_lisheng_entertainment/view/sreen_view/bridge/TeamBettingScreenInterface.dart';
 import 'package:flutter_lisheng_entertainment/view/view_interface/SelectionTimeCallBack.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 /// 团队投注
 class TeamBettingController extends StatefulWidget {
@@ -21,7 +25,16 @@ class TeamBettingController extends StatefulWidget {
 }
 
 class _TeamBettingController extends BaseRefreshTabController<TeamBettingController, TabTitle>
-    implements SelectionTimeCallBack{
+    implements SelectionTimeCallBack, TeamBettingHandler, TeamBettingScreenInterface{
+
+  String _userName;
+  String _time;
+  String _lotteryId;
+  String _qs;
+  int _page = 1;
+  String _status = "0";
+
+  List<TeamBettingDataListBeen> teamBettingList = new List();
 
   @override
   void initState() {
@@ -29,16 +42,8 @@ class _TeamBettingController extends BaseRefreshTabController<TeamBettingControl
     super.initState();
     initTabData();
     initTabPageController();
-  }
 
-  @override
-  void selectionEndStartTime() {
-    // TODO: implement selectionEndStartTime
-  }
-
-  @override
-  void selectionTimeStartTime() {
-    // TODO: implement selectionTimeStartTime
+    AgentService.instance.teamBettingList(this, _userName, _time, _lotteryId, _qs, "$_page", _status);
   }
 
   @override
@@ -51,27 +56,32 @@ class _TeamBettingController extends BaseRefreshTabController<TeamBettingControl
         children: <Widget>[
           _tabPage(),
           CommonView().commonLineChange(context,10.0),
-          TimeAndEditAndFindChoiceView(this),
+          TimeAndEditAndFindChoiceView(this, this),
           new Expanded(child: _pageView(),),
         ],
       ),
     );
   }
 
+  /// 0 位全部 1=待开奖,2=中奖,3=未中奖,4=结算错误
   initTabData() {
     tabList = [
-      new TabTitle('全部状态', 11),
-      new TabTitle('未开奖', 10),
-      new TabTitle('已撤销', 0),
-      new TabTitle('未中奖', 1),
-      new TabTitle('已派奖', 2),
-      new TabTitle('系统撤销', 3),
+      new TabTitle('全部状态', 0),
+      new TabTitle('待开奖', 1),
+      new TabTitle('中奖', 2),
+      new TabTitle('未中奖', 3),
+      new TabTitle('结算错误', 4),
     ];
   }
 
   @override
   void onRefreshData() {
+    _page = 1;
+  }
 
+  void changeTabIndex(int pos){
+    var tabIndexId = tabList[pos];
+    _status = "${tabIndexId.id}";
   }
 
   Widget _tabPage() {
@@ -135,7 +145,7 @@ class _TeamBettingController extends BaseRefreshTabController<TeamBettingControl
         ),
       ),
       //itemExtent: 200.0,
-      itemCount: items.length,
+      itemCount: teamBettingList.length,
     );
   }
 
@@ -146,7 +156,7 @@ class _TeamBettingController extends BaseRefreshTabController<TeamBettingControl
       return new Column(
         children: <Widget>[
 
-          _recordBottomList(),
+          _recordBottomList(teamBettingList[index]),
           CommonView().commonLine_NoMargin(context)
 
         ],
@@ -168,7 +178,7 @@ class _TeamBettingController extends BaseRefreshTabController<TeamBettingControl
               alignment: Alignment.center,
               child: new Container(
 
-                width: ScreenUtil.screenWidth,
+                width: ScreenUtil.getScreenW(context),
                 padding: EdgeInsets.all(15.0),
                 child: new Text(
                   "账户",
@@ -192,7 +202,7 @@ class _TeamBettingController extends BaseRefreshTabController<TeamBettingControl
             child: new Align(
               alignment: Alignment.center,
               child: new Container(
-                width: ScreenUtil.screenWidth,
+                width: ScreenUtil.getScreenW(context),
                 padding: EdgeInsets.all(15.0),
                 child: new Text(
                   "彩种",
@@ -214,7 +224,7 @@ class _TeamBettingController extends BaseRefreshTabController<TeamBettingControl
             child: new Align(
               alignment: Alignment.center,
               child: new Container(
-                width: ScreenUtil.screenWidth,
+                width: ScreenUtil.getScreenW(context),
                 padding: EdgeInsets.all(15.0),
                 child: new Text(
                   "投注金额",
@@ -236,7 +246,7 @@ class _TeamBettingController extends BaseRefreshTabController<TeamBettingControl
             child: new Align(
               alignment: Alignment.center,
               child: new Container(
-                width: ScreenUtil.screenWidth,
+                width: ScreenUtil.getScreenW(context),
                 padding: EdgeInsets.all(15.0),
                 child: new Text(
                   "状态",
@@ -256,7 +266,7 @@ class _TeamBettingController extends BaseRefreshTabController<TeamBettingControl
   }
 
 
-  Widget _recordBottomList() {
+  Widget _recordBottomList(TeamBettingDataListBeen listBeen) {
 
     return new Container(
       height: 50.0,
@@ -268,10 +278,10 @@ class _TeamBettingController extends BaseRefreshTabController<TeamBettingControl
             child: new Align(
               alignment: Alignment.center,
               child: new Container(
-                width: ScreenUtil.screenWidth,
+                width: ScreenUtil.getScreenW(context),
                 padding: EdgeInsets.all(5.0),
                 child: new Text(
-                  "已派奖",
+                  listBeen.username,
                   style: TextStyle(
                     fontSize: 14.0,
                     color: Color(ColorUtil.textColor_333333),
@@ -290,10 +300,10 @@ class _TeamBettingController extends BaseRefreshTabController<TeamBettingControl
             child: new Align(
               alignment: Alignment.center,
               child: new Container(
-                width: ScreenUtil.screenWidth,
+                width: ScreenUtil.getScreenW(context),
                 padding: EdgeInsets.all(5.0),
                 child: new Text(
-                  "已派奖",
+                  "${listBeen.lottery_id}",
                   style: TextStyle(
                     fontSize: 14.0,
                     color: Color(ColorUtil.textColor_333333),
@@ -310,10 +320,10 @@ class _TeamBettingController extends BaseRefreshTabController<TeamBettingControl
             child: new Align(
               alignment: Alignment.center,
               child: new Container(
-                width: ScreenUtil.screenWidth,
+                width: ScreenUtil.getScreenW(context),
                 padding: EdgeInsets.all(5.0),
                 child: new Text(
-                  "已派",
+                  listBeen.xz_money,
                   style: TextStyle(
                     fontSize: 14.0,
                     color: Color(ColorUtil.textColor_333333),
@@ -330,10 +340,10 @@ class _TeamBettingController extends BaseRefreshTabController<TeamBettingControl
             child: new Align(
               alignment: Alignment.center,
               child: new Container(
-                width: ScreenUtil.screenWidth,
+                width: ScreenUtil.getScreenW(context),
                 padding: EdgeInsets.all(5.0),
                 child: new Text(
-                  "已派",
+                  listBeen.remark,
                   style: TextStyle(
                     fontSize: 14.0,
                     color: Color(ColorUtil.textColor_333333),
@@ -347,6 +357,38 @@ class _TeamBettingController extends BaseRefreshTabController<TeamBettingControl
         ],
       ),
     );
+  }
+
+  @override
+  void selectionEndTime(String endTime) {
+
+  }
+
+  @override
+  void selectionStartTime(String starTime) {
+  }
+
+  @override
+  void setTeamBettingBeen(TeamBettingBeen dataBeen) {
+    if (_page == 1) {
+      teamBettingList.clear();
+      TeamBettingDataListBeen teamBettingDataListBeen = new TeamBettingDataListBeen();
+      teamBettingList.add(teamBettingDataListBeen);
+    }
+
+    teamBettingList.addAll(dataBeen.data.data);
+    setState(() {
+
+    });
+  }
+
+  @override
+  void setTeamBettingScreenData(String userName, String cpType, String qs) {
+
+    Future.delayed(Duration(milliseconds: 300)).then((value) {
+      AgentService.instance.teamBettingList(this, _userName, _time, _lotteryId, _qs, "$_page", _status);
+    });
+
   }
 
 }

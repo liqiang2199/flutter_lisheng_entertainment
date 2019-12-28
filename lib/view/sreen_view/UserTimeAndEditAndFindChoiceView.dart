@@ -14,52 +14,55 @@ import 'package:flutter_picker/Picker.dart';
 
 import 'ChoiceTimeResultInterface.dart';
 import 'ShowPickerDateInterface.dart';
-import 'bridge/TeamBettingScreenInterface.dart';
+import 'bridge/UserBettingRecordScreenInterface.dart';
 
 /**
- * 团队投注记录
+ * 用户投注记录
  */
-///
-class TimeAndEditAndFindChoiceView extends StatefulWidget {
+
+///  选择时间 和 输入用户名 彩种 选择
+class UserTimeAndEditAndFindChoiceView extends StatefulWidget {
+
 
   final SelectionTimeCallBack timeCallBack;
   final String startTime;
   final String endTime;
-  final TeamBettingScreenInterface bettingScreenInterface;
+  final UserBettingRecordScreenInterface recordScreenInterface;
 
-  const TimeAndEditAndFindChoiceView(this.timeCallBack,this.bettingScreenInterface,{
+  const UserTimeAndEditAndFindChoiceView(this.timeCallBack,this.recordScreenInterface,{
     Key key,
     this.startTime,
     this.endTime,
+
   }) : assert(
-  timeCallBack != null
+   timeCallBack != null
   ),super(key: key);
 
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
-    return _TimeAndEditAndFindChoiceView(this.timeCallBack,this.bettingScreenInterface);
+    return _UserTimeAndEditAndFindChoiceView(this.timeCallBack,this.recordScreenInterface);
   }
+
+
 
 }
 
-///  选择时间 和 输入用户名 彩种 选择
-class _TimeAndEditAndFindChoiceView extends BaseController<TimeAndEditAndFindChoiceView>
+class _UserTimeAndEditAndFindChoiceView extends BaseController<UserTimeAndEditAndFindChoiceView>
     with ShowPickerDateInterface,ChoiceTimeResultInterface implements GameHallHandler{
 
 
   SelectionTimeCallBack timeCallBack;
-  TeamBettingScreenInterface bettingScreenInterface;
+  UserBettingRecordScreenInterface recordScreenInterface;
   String startTime;
   String endTime;
   String cpType = "0";
   String issueNum;
   String issueNumText = "选择彩种";
-  String qs = "";
-  String userName = "";
 
-  _TimeAndEditAndFindChoiceView(this.timeCallBack,this.bettingScreenInterface,{
-    Key key,
+  TextEditingValue _issueNumValue = new TextEditingValue();
+
+  _UserTimeAndEditAndFindChoiceView(this.timeCallBack,this.recordScreenInterface,{
     this.startTime,
     this.endTime
   });
@@ -81,55 +84,11 @@ class _TimeAndEditAndFindChoiceView extends BaseController<TimeAndEditAndFindCho
       padding: EdgeInsets.only(bottom: 15.0),
       child: new Column(
         children: <Widget>[
-          _editAccountName(),
           _choiceTime(),
           _screenFindAndAccount(),
         ],
       ),
       color: Color(ColorUtil.whiteColor),
-    );
-  }
-
-  Widget _editAccountName() {
-
-    return new Row(
-      children: <Widget>[
-
-        new Container(
-          padding: EdgeInsets.only(left: 10.0,top: 15.0),
-          child: new Text(
-            "用户名：",
-            style: TextStyle(
-              fontSize: 14.0,
-              color: Color(ColorUtil.textColor_333333),
-            ),
-          ),
-        ),
-
-        new Expanded(
-            child: new Container(
-              height: 40.0,
-              margin: EdgeInsets.only(top: 15.0, left: 15.0, right: 15.0,),
-              padding: EdgeInsets.only(right: 10.0,left: 10.0),
-              decoration: new BoxDecoration(
-                border: new Border.all(color: Color(ColorUtil.lineColor), width: 1), // 边色与边宽度
-                borderRadius: new BorderRadius.circular((5.0)), // 圆角度
-              ),
-              child: new TextField(
-                style: TextStyle(fontSize: 14, color: Color(ColorUtil.textColor_333333)),
-                decoration: InputDecoration(
-                  hintText: "请输入用户名",
-                  contentPadding: const EdgeInsets.only(top: 0.0, bottom: 11.0),
-                  border: InputBorder.none,
-                  hoverColor: Color(ColorUtil.whiteColor),
-                  hintStyle: TextStyle(fontSize: 14, color: Color(ColorUtil.textColor_888888)),
-                ),
-                onChanged: _getUserName,
-              ) ,
-            ),
-        ),
-
-      ],
     );
   }
 
@@ -205,6 +164,7 @@ class _TimeAndEditAndFindChoiceView extends BaseController<TimeAndEditAndFindCho
 
     return new GestureDetector(
       onTap: () {
+        //选择结束时间
         showPickerDateTime(context, this,ShowPickerDateInterface.EndTimeType);
       },
       child: new Container(
@@ -282,7 +242,7 @@ class _TimeAndEditAndFindChoiceView extends BaseController<TimeAndEditAndFindCho
                 hintStyle: TextStyle(fontSize: 12.0, color: Color(ColorUtil.textColor_888888)),
               ),
               maxLines: 1,
-              onChanged: _getEditQs,
+              onChanged: _issueNumTextStr,
             ),
           ),
 
@@ -290,6 +250,10 @@ class _TimeAndEditAndFindChoiceView extends BaseController<TimeAndEditAndFindCho
 
       ),
     );
+  }
+
+  void _issueNumTextStr(String str) {
+    issueNum = str;
   }
 
   /// 选择彩种
@@ -332,14 +296,6 @@ class _TimeAndEditAndFindChoiceView extends BaseController<TimeAndEditAndFindCho
     );
   }
 
-  _getUserName(String str) {
-    userName = str;
-  }
-
-  _getEditQs(String str) {
-    qs = str;
-  }
-
   /// 搜索
   Widget _butSearch(var isVisibility) {
     return new Visibility(
@@ -355,10 +311,13 @@ class _TimeAndEditAndFindChoiceView extends BaseController<TimeAndEditAndFindCho
           margin: EdgeInsets.only(top: 15.0, left: 5.0, right: 15.0,),
           child: new RaisedButton(onPressed: (){
             //
-            if (timeCallBack != null && bettingScreenInterface != null) {
-              timeCallBack.selectionStartTime(startTime);
-              timeCallBack.selectionEndTime(endTime);
-              bettingScreenInterface?.setTeamBettingScreenData(userName, cpType, qs);
+            if (timeCallBack != null && recordScreenInterface != null) {
+              timeCallBack?.selectionStartTime(startTime);
+              timeCallBack?.selectionEndTime(endTime);
+              if(TextUtil.isEmpty(cpType)) {
+                cpType = "0";
+              }
+              recordScreenInterface?.setScreenData(cpType, issueNum);
             }
 
           },color: Color(ColorUtil.butColor),
@@ -431,6 +390,7 @@ class _TimeAndEditAndFindChoiceView extends BaseController<TimeAndEditAndFindCho
 
   @override
   void setLotteryTypeData(LotteryTypeDataBeen dataBeen) {
+    /// 彩种
     pickerItemList.clear();
     var dataList = dataBeen.data;
 

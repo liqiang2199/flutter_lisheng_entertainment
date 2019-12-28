@@ -64,6 +64,9 @@ dependencies:
   flustars: ^0.2.6+1
   #获取设备信息
   package_info: ^0.4.0+12
+  sqflite: ^1.2.0
+  popup_windows: ^0.0.1
+  event_bus: ^1.1.0
 
 dev_dependencies:
   retrofit_generator: any
@@ -150,6 +153,12 @@ flutter:
     - resource/imgs/icon_right_allow_white.png
     - resource/imgs/icon_close_dialog.png
     - resource/imgs/icon_game_title.png
+    - resource/imgs/icon_betting_cp_question.png
+    - resource/imgs/icon_trend_set_choice.png
+    - resource/imgs/icon_delete_alone_shopping_cart.png
+    - resource/imgs/icon_gd_11_choice_5.png
+    - resource/imgs/icon_often_playcolor_variety.png
+    - resource/imgs/icon_choice_add_cp_type.png
 
 
   # An image asset can refer to one or more resolution-specific "variants", see

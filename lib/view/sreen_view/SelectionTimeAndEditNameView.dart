@@ -6,21 +6,23 @@ import 'package:flutter_lisheng_entertainment/Util/StringUtil.dart';
 import 'package:flutter_lisheng_entertainment/view/view_interface/SelectionTimeCallBack.dart';
 import 'package:flutter_picker/Picker.dart';
 
+import 'ShowPickerDateInterface.dart';
+
 ///  选择时间 和 输入用户名
-class SelectionTimeAndEditNameView extends StatelessWidget {
+class SelectionTimeAndEditNameView extends StatelessWidget with ShowPickerDateInterface{
 
 
   final SelectionTimeCallBack timeCallBack;
   final String startTime;
   final String endTime;
 
-  const SelectionTimeAndEditNameView(this.timeCallBack,{
+  SelectionTimeAndEditNameView(this.timeCallBack,{
     Key key,
     this.startTime,
     this.endTime
   }) : assert(
    timeCallBack != null
-  ),super(key: key);
+  );
 
 
   @override
@@ -121,7 +123,7 @@ class SelectionTimeAndEditNameView extends StatelessWidget {
       child: new GestureDetector(
         onTap: () {
           // 选择时间
-          showPickerDateTime(context);
+//          showPickerDateTime(context);
         },
         child: new Row(
 
@@ -163,7 +165,7 @@ class SelectionTimeAndEditNameView extends StatelessWidget {
       child: new GestureDetector(
         onTap: () {
           //选择时间
-          showPickerDateTime(context);
+//          showPickerDateTime(context);
         },
         child: new Row(
 
@@ -216,58 +218,6 @@ class SelectionTimeAndEditNameView extends StatelessWidget {
         ),
       ),
     );
-  }
-
-
-
-  showPickerDateTime(BuildContext context) {
-    new Picker(
-        adapter: new DateTimePickerAdapter(
-          type: PickerDateTimeType.kYMD,
-          isNumberMonth: true,
-          //strAMPM: const["上午", "下午"],
-          yearSuffix: "年",
-          monthSuffix: "月",
-          daySuffix: "日",
-          //minValue: DateTime.now(),
-          // twoDigitYear: true,
-        ),
-        //title: new Text("Select DateTime"),
-        textAlign: TextAlign.right,
-        selectedTextStyle: TextStyle(color: Color(ColorUtil.textColor_333333)),
-//        delimiter: [
-//          PickerDelimiter(column: 3, child: Container(
-//            width: 16.0,
-//            alignment: Alignment.center,
-//            //child: Text(':', style: TextStyle(fontWeight: FontWeight.bold)),
-//            color: Colors.white,
-//          ))
-//        ],
-//        footer: Container(
-//          height: 50.0,
-//          alignment: Alignment.center,
-//          child: Text('Footer'),
-//        ),
-        onConfirm: (Picker picker, List value) {
-          print(picker.adapter.text);
-        },
-        textStyle: TextStyle(color: Color(ColorUtil.textColor_888888)),
-        cancelText: "取消",
-        cancelTextStyle: new TextStyle(
-          fontSize: 16.0,
-          color: Color(ColorUtil.textColor_333333),
-        ),
-        confirmText: "确定",
-        confirmTextStyle: new TextStyle(
-          fontSize: 16.0,
-          color: Color(ColorUtil.textColor_333333),
-        ),
-        onSelect: (Picker picker, int index, List<int> selecteds) {
-//          this.setState(() {
-//            stateText = picker.adapter.toString();
-//          });
-        }
-    ).showModal(context);
   }
 
 

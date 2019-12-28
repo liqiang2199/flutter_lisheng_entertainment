@@ -36,17 +36,6 @@ class _WithdrawalRecordController extends BaseRefreshController<WithdrawalRecord
     );
   }
 
-  @override
-  void selectionEndStartTime() {
-    // TODO: implement selectionEndStartTime
-  }
-
-  @override
-  void selectionTimeStartTime() {
-    // TODO: implement selectionTimeStartTime
-  }
-
-
   /// 个人投注信息 列表
   Widget _listRecordItem () {
 
@@ -198,6 +187,14 @@ class _WithdrawalRecordController extends BaseRefreshController<WithdrawalRecord
         ],
       ),
     );
+  }
+
+  @override
+  void selectionEndTime(String endTime) {
+  }
+
+  @override
+  void selectionStartTime(String starTime) {
   }
 
 }
