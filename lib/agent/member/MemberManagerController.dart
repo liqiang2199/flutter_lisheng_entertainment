@@ -1,11 +1,15 @@
+import 'package:flustars/flustars.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_lisheng_entertainment/Util/ColorUtil.dart';
 import 'package:flutter_lisheng_entertainment/Util/StringUtil.dart';
+import 'package:flutter_lisheng_entertainment/agent/net/AgentService.dart';
+import 'package:flutter_lisheng_entertainment/agent/net/MemberManagerHandler.dart';
 import 'package:flutter_lisheng_entertainment/base/BaseRefreshController.dart';
+import 'package:flutter_lisheng_entertainment/model/json/agent/team_member/MemberManagerBeen.dart';
+import 'package:flutter_lisheng_entertainment/model/json/agent/team_member/MemberManagerDataListBeen.dart';
 import 'package:flutter_lisheng_entertainment/view/sreen_view/ScreenTwoEditView.dart';
 import 'package:flutter_lisheng_entertainment/view/common/CommonView.dart';
 import 'package:flutter_lisheng_entertainment/view/view_interface/ScreenCallBack.dart';
-import 'package:flutter_lisheng_entertainment/view/view_interface/SelectionTimeCallBack.dart';
 
 /// 团队报表
 class MemberManagerController extends StatefulWidget {
@@ -17,7 +21,22 @@ class MemberManagerController extends StatefulWidget {
 
 }
 
-class _MemberManagerController extends BaseRefreshController<MemberManagerController> with ScreenCallBack{
+class _MemberManagerController extends BaseRefreshController<MemberManagerController> with ScreenCallBack implements MemberManagerHandler{
+
+  String userName;
+  int page = 1;
+
+  List<MemberManagerDataListBeen> managerList = new List();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+    AgentService.instance.userlist(this, userName, "$page");
+
+  }
+
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
@@ -38,6 +57,12 @@ class _MemberManagerController extends BaseRefreshController<MemberManagerContro
     );
   }
 
+  @override
+  void onRefreshData() {
+    page = 1;
+    AgentService.instance.userlist(this, userName, "$page");
+  }
+
   /// 团队报表 信息 列表
   Widget _listReportFromItem () {
 
@@ -53,10 +78,10 @@ class _MemberManagerController extends BaseRefreshController<MemberManagerContro
             child: new Column(
               children: <Widget>[
 
-                _recordTopView(),
-                _listReportListDetail(),
+                _recordTopView(managerList[i].username),
+                _listReportListDetail(managerList[i]),
                 CommonView().commonLine_NoMargin(context),
-                _listDetailBottom("最后登陆时间：","2019-11-29 12:00:00"),
+                _listDetailBottom("最后登陆时间：","${!TextUtil.isEmpty(managerList[i].login_time)? managerList[i].login_time : "未登录"}"),
 
               ],
             ),
@@ -64,11 +89,11 @@ class _MemberManagerController extends BaseRefreshController<MemberManagerContro
         ),
       ),
       //itemExtent: 200.0,
-      itemCount: items.length,
+      itemCount: managerList.length,
     );
   }
 
-  Widget _recordTopView() {
+  Widget _recordTopView(String name) {
 
     return new Container(
       padding: EdgeInsets.all(15.0),
@@ -76,7 +101,7 @@ class _MemberManagerController extends BaseRefreshController<MemberManagerContro
         children: <Widget>[
 
           new Text(
-            "jx5188",
+            name,
             style: TextStyle(
               fontSize: 14.0,
               color: Color(ColorUtil.textColor_FF8814),
@@ -89,7 +114,7 @@ class _MemberManagerController extends BaseRefreshController<MemberManagerContro
   }
 
   /// 报表列表详情
-  Widget _listReportListDetail() {
+  Widget _listReportListDetail(MemberManagerDataListBeen managerDataListBeen) {
 
     return new Column(
       children: <Widget>[
@@ -99,9 +124,9 @@ class _MemberManagerController extends BaseRefreshController<MemberManagerContro
           padding: EdgeInsets.all(15.0,),
           child: new Column(
             children: <Widget>[
-              _listDetail("类型：","余额：", true),
-              _listDetail("团队余额：","返点：", true),
-              _listDetail("操作：","投注额：", false),
+              _listDetail("类型：","代理","用户余额：","${managerDataListBeen.all_money}", true),
+              _listDetail("团队余额：","${managerDataListBeen.all_subsidy_money}","返点：","${managerDataListBeen.ratio}", true),
+              _listDetail("操作：","","", "",false),
             ],
           ),
         ),
@@ -110,20 +135,20 @@ class _MemberManagerController extends BaseRefreshController<MemberManagerContro
     );
   }
 
-  Widget _listDetail(String titleLeft, String rightTitle, var isVisibility) {
+  Widget _listDetail(String titleLeft, String leftContent, String rightTitle, String rightContent, var isVisibility) {
 
     return new Container(
       child: Row(
         children: <Widget>[
 
-          new Expanded(child: _listDetailItem(titleLeft,"1111"),),
+          new Expanded(child: _listDetailItem(titleLeft,leftContent),),
           new Expanded(
             child: new Visibility(
               visible: isVisibility,
                 maintainSize: true,
                 maintainAnimation: true,
                 maintainState: true,
-                child: _listDetailItem(rightTitle,"2222"),
+                child: _listDetailItem(rightTitle,rightContent),
             ),
           ),
 
@@ -175,12 +200,31 @@ class _MemberManagerController extends BaseRefreshController<MemberManagerContro
 
   @override
   void screenEdit() {
-    // TODO: implement screenEdit
+
   }
 
   @override
   void screenEditLast() {
-    // TODO: implement screenEditLast
+
+  }
+
+  @override
+  void setEditUserName(String name) {
+    userName = name;
+    onRefreshData();
+  }
+
+  @override
+  void setMemberManagerBeen(MemberManagerBeen dataBeen) {
+
+    if (page == 1) {
+      managerList.clear();
+    }
+
+    managerList?.addAll(dataBeen.data.userlist);
+    setState(() {
+
+    });
   }
 
 }

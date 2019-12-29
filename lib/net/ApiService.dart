@@ -6,22 +6,28 @@ import 'package:flustars/flustars.dart';
 import 'package:flutter_lisheng_entertainment/Util/Constant.dart';
 import 'package:flutter_lisheng_entertainment/agent/net/LinkManagerHandler.dart';
 import 'package:flutter_lisheng_entertainment/agent/net/LinkOpenAccountHandler.dart';
+import 'package:flutter_lisheng_entertainment/agent/net/MemberManagerHandler.dart';
 import 'package:flutter_lisheng_entertainment/agent/net/OrdinaryOpenAccountHandler.dart';
 import 'package:flutter_lisheng_entertainment/agent/net/TeamAccountChangeHandler.dart';
 import 'package:flutter_lisheng_entertainment/agent/net/TeamBettingHandler.dart';
+import 'package:flutter_lisheng_entertainment/agent/net/TeamOverviewHandler.dart';
+import 'package:flutter_lisheng_entertainment/agent/net/TeamRechargeRecordHandler.dart';
 import 'package:flutter_lisheng_entertainment/game_hall/net/GameHallHandler.dart';
 import 'package:flutter_lisheng_entertainment/game_hall/net/PlayMode11Choice5Handler.dart';
 import 'package:flutter_lisheng_entertainment/game_hall/net/game_gd_11_5/CalculationBettingNumHandler.dart';
 import 'package:flutter_lisheng_entertainment/game_hall/net/game_gd_11_5/LotteryNum11Choice5Handler.dart';
 import 'package:flutter_lisheng_entertainment/home/net/ActivePageHandler.dart';
 import 'package:flutter_lisheng_entertainment/home/net/HomeHandler.dart';
+import 'package:flutter_lisheng_entertainment/home/net/LotteryCenterHandler.dart';
 import 'package:flutter_lisheng_entertainment/home/net/SystemNoticeHandler.dart';
 import 'package:flutter_lisheng_entertainment/model/http/BaseTokenHttpBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/http/GetBettingRecordListHttpBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/http/LoginHttpBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/http/agent/DelLinkAccountHttpBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/http/agent/LinkOpenAccountHttpBeen.dart';
+import 'package:flutter_lisheng_entertainment/model/http/agent/MemberManagerHttpBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/http/agent/OrdinaryOpenAccountHttpBeen.dart';
+import 'package:flutter_lisheng_entertainment/model/http/agent/RechargeListHttpBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/http/agent/TeamAccountChangeHttpBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/http/agent/TeamBettingListHttpBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/http/bank/BindBankHttpBeen.dart';
@@ -33,14 +39,18 @@ import 'package:flutter_lisheng_entertainment/model/http/set_cash_pass/SetPaypwd
 import 'package:flutter_lisheng_entertainment/model/http/user_info_center/UserInfoCenterHttpBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/http/user_record/UserAccountChangeRecordHttpBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/http/withdraw/UserWithdrawHttpBeen.dart';
+import 'package:flutter_lisheng_entertainment/model/http/withdraw/record/UserWithdrawRecordHttpBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/json/BaseJson.dart';
 import 'package:flutter_lisheng_entertainment/model/json/account_change_record/AccountChangeRecordBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/json/active_page/ActivePageListBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/json/agent/LinkOpenAccountBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/json/agent/OrdinaryOpenAccountBeen.dart';
+import 'package:flutter_lisheng_entertainment/model/json/agent/TeamOverviewBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/json/agent/link_list/LinkAccountListDataBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/json/agent/team_account_change/TeamAccountChangeBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/json/agent/team_betting/TeamBettingBeen.dart';
+import 'package:flutter_lisheng_entertainment/model/json/agent/team_member/MemberManagerBeen.dart';
+import 'package:flutter_lisheng_entertainment/model/json/agent/team_recharge/TeamRechargeRecordBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/json/bank/BankListBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/json/bank/type/GetBankTypeListBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/json/cash_password/PayPasswordBeen.dart';
@@ -52,11 +62,14 @@ import 'package:flutter_lisheng_entertainment/model/json/gd_11_5/CpOpenLotteryIn
 import 'package:flutter_lisheng_entertainment/model/json/gd_11_5/OpenLotteryListDataBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/json/home_json/GetBannerListDataBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/json/login/LoginBeen.dart';
+import 'package:flutter_lisheng_entertainment/model/json/lottery_center/LotteryCenterBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/json/lottery_record/GetBettingRecordBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/json/lottery_record/GetBettingRecordDataBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/json/recharge/RechargeTypeListBeen.dart';
+import 'package:flutter_lisheng_entertainment/model/json/set/SetLoginOutBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/json/system_notice/SystemNoticeListBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/json/withdraw/WithdrawListDataBeen.dart';
+import 'package:flutter_lisheng_entertainment/model/json/withdraw/user_record/UserWithdrawRecordBeen.dart';
 import 'package:flutter_lisheng_entertainment/net/BaseHandler.dart';
 import 'package:flutter_lisheng_entertainment/net/UrlUtil.dart';
 import 'package:flutter_lisheng_entertainment/user/bank/BindBankController.dart';
@@ -66,6 +79,8 @@ import 'package:flutter_lisheng_entertainment/user/net/LoginHandler.dart';
 import 'package:flutter_lisheng_entertainment/user/net/ModifyLoginPasswordHandler.dart';
 import 'package:flutter_lisheng_entertainment/user/net/RechargeHandler.dart';
 import 'package:flutter_lisheng_entertainment/user/net/SetCashPasswordHandler.dart';
+import 'package:flutter_lisheng_entertainment/user/net/SetHandler.dart';
+import 'package:flutter_lisheng_entertainment/user/net/UserWithdrawRecordHandler.dart';
 import 'package:flutter_lisheng_entertainment/user/net/WithdrawHandler.dart';
 import 'package:retrofit/retrofit.dart';
 import 'dart:convert';
@@ -82,6 +97,10 @@ abstract class ApiService<T> {
 
   @POST(UrlUtil.login)
   void login(@Body() LoginHttpBeen task);
+
+  /// 退出登录
+  @POST(UrlUtil.loginOut)
+  void loginOut(@Body() BaseTokenHttpBeen tokenHttpBeen);
 
   /// banner列表
   @POST(UrlUtil.getBannerList)
@@ -154,6 +173,18 @@ abstract class ApiService<T> {
   @POST(UrlUtil.teamMoneyLog)
   void teamMoneyLog(@Body() TeamAccountChangeHttpBeen teamBettingListHttpBeen);
 
+  /// 团队充值记录
+  @POST(UrlUtil.rechargeList)
+  void rechargeList(@Body() RechargeListHttpBeen rechargeListHttpBeen);
+
+  /// 团队会员列表
+  @POST(UrlUtil.userlist)
+  void userlist(@Body() MemberManagerHttpBeen managerHttpBeen);
+
+  /// 团队总览
+  @POST(UrlUtil.teamAll)
+  void teamAll(@Body() BaseTokenHttpBeen openAccountHttpBeen);
+
   /**
    * 广东11 选 5
    */
@@ -181,12 +212,22 @@ abstract class ApiService<T> {
   @POST(UrlUtil.getApi)
   void getApi(@Body() CpOpenLotteryInfoHttp openLotteryListHttpBeen);
 
+  @POST(UrlUtil.getApi)
+  void getApiHome(@Body() CpOpenLotteryInfoHttp openLotteryListHttpBeen);
+
+  /**
+   * 个人中心
+   */
   /// 个人投注记录
   @POST(UrlUtil.bettingList)
   void bettingList(@Body() GetBettingRecordListHttpBeen openLotteryListHttpBeen);
 
   @POST(UrlUtil.moneyLog)
   void moneyLog(@Body() UserAccountChangeRecordHttpBeen openLotteryListHttpBeen);
+
+  /// 获取提现记录
+  @POST(UrlUtil.withdraw)
+  void withdraw(@Body() UserWithdrawRecordHttpBeen withdrawRecordHttpBeen);
 
 }
 
@@ -290,6 +331,24 @@ class _ApiService<T> implements ApiService<T> {
       }
 
       return loginDataBeen;
+    });
+  }
+
+  /// 退出登录
+  @override
+  void loginOut(BaseTokenHttpBeen tokenHttpBeen) {
+    ArgumentError.checkNotNull(tokenHttpBeen, '参数为空');
+    ArgumentError.checkNotNull(_baseHandler, '_baseHandler为空');
+    responseResult(tokenHttpBeen.toJson(), UrlUtil.loginOut).then((onValue) {
+      var bannerList = SetLoginOutBeen.fromJson(onValue);
+      var setHandler = _baseHandler as SetHandler;
+      if (bannerList.code == 1) {
+        if (setHandler != null) {
+          setHandler.loginOutResult(true);
+        }
+      } else {
+        setHandler.showToast(bannerList.msg);
+      }
     });
   }
 
@@ -615,6 +674,63 @@ class _ApiService<T> implements ApiService<T> {
     });
   }
 
+  /// 团队充值记录
+  @override
+  void rechargeList(RechargeListHttpBeen rechargeListHttpBeen) {
+    ArgumentError.checkNotNull(rechargeListHttpBeen, '参数为空');
+    ArgumentError.checkNotNull(_baseHandler, '_baseHandler为空');
+
+    responseResult(rechargeListHttpBeen.toJson(), UrlUtil.rechargeList).then((onValue) {
+      var teamBettingBeen = TeamRechargeRecordBeen.fromJson(onValue);
+      TeamRechargeRecordHandler teamRechargeRecordHandler = _baseHandler as TeamRechargeRecordHandler;
+
+      if (teamBettingBeen.code == 1) {
+        teamRechargeRecordHandler.setTeamRechargeRecordBeen(teamBettingBeen);
+      } else {
+        teamRechargeRecordHandler.showToast(teamBettingBeen.msg);
+      }
+
+    });
+  }
+
+  /// 团队会员列表
+  @override
+  void userlist(MemberManagerHttpBeen managerHttpBeen) {
+    ArgumentError.checkNotNull(managerHttpBeen, '参数为空');
+    ArgumentError.checkNotNull(_baseHandler, '_baseHandler为空');
+
+    responseResult(managerHttpBeen.toJson(), UrlUtil.userlist).then((onValue) {
+      var teamBettingBeen = MemberManagerBeen.fromJson(onValue);
+      MemberManagerHandler teamRechargeRecordHandler = _baseHandler as MemberManagerHandler;
+
+      if (teamBettingBeen.code == 1) {
+        teamRechargeRecordHandler.setMemberManagerBeen(teamBettingBeen);
+      } else {
+        teamRechargeRecordHandler.showToast(teamBettingBeen.msg);
+      }
+
+    });
+  }
+
+  /// 团队总览
+  @override
+  void teamAll(BaseTokenHttpBeen openAccountHttpBeen) {
+    ArgumentError.checkNotNull(openAccountHttpBeen, '参数为空');
+    ArgumentError.checkNotNull(_baseHandler, '_baseHandler为空');
+
+    responseResult(openAccountHttpBeen.toJson(), UrlUtil.teamAll).then((onValue) {
+      var teamOverviewBeen = TeamOverviewBeen.fromJson(onValue);
+      TeamOverviewHandler teamOverviewHandler = _baseHandler as TeamOverviewHandler;
+
+      if (teamOverviewBeen.code == 1) {
+        teamOverviewHandler.setTeamOverviewBeen(teamOverviewBeen);
+      } else {
+        teamOverviewHandler.showToast(teamOverviewBeen.msg);
+      }
+
+    });
+  }
+
   /// 广东11 选 5
 
   /**
@@ -714,6 +830,24 @@ class _ApiService<T> implements ApiService<T> {
     });
   }
 
+  /// 彩票开奖信息
+  @override
+  void getApiHome(CpOpenLotteryInfoHttp openLotteryListHttpBeen) {
+    ArgumentError.checkNotNull(openLotteryListHttpBeen, '参数为空');
+    ArgumentError.checkNotNull(_baseHandler, '_baseHandler为空');
+    responseResult(openLotteryListHttpBeen.toJson(), UrlUtil.getApi).then((onValue) {
+      var bettingNum = LotteryCenterBeen.fromJson(onValue);
+      LotteryCenterHandler linkManagerHandler = _baseHandler as LotteryCenterHandler;
+
+      if (bettingNum.code == 1) {
+        linkManagerHandler.setLotteryCenterBeen(bettingNum);
+      } else {
+        linkManagerHandler.showToast(bettingNum.msg);
+      }
+
+    });
+  }
+
   /**
    * 个人投注记录
    */
@@ -748,6 +882,27 @@ class _ApiService<T> implements ApiService<T> {
 
       if (bettingNum.code == 1) {
         bettingRecordListHandler.setAccountChangeRecord(bettingNum);
+      } else {
+        bettingRecordListHandler.showToast(bettingNum.msg);
+      }
+
+    });
+  }
+
+  /**
+   * 获取提现记录
+   */
+  ///
+  @override
+  void withdraw(UserWithdrawRecordHttpBeen withdrawRecordHttpBeen) {
+    ArgumentError.checkNotNull(withdrawRecordHttpBeen, '参数为空');
+    ArgumentError.checkNotNull(_baseHandler, '_baseHandler为空');
+    responseResult(withdrawRecordHttpBeen.toJson(), UrlUtil.moneyLog).then((onValue) {
+      var bettingNum = UserWithdrawRecordBeen.fromJson(onValue);
+      UserWithdrawRecordHandler bettingRecordListHandler = _baseHandler as UserWithdrawRecordHandler;
+
+      if (bettingNum.code == 1) {
+        bettingRecordListHandler.setUserWithdrawRecordBeen(bettingNum);
       } else {
         bettingRecordListHandler.showToast(bettingNum.msg);
       }

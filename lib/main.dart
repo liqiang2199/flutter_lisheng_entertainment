@@ -40,6 +40,7 @@ import 'home/AddGameController.dart';
 import 'home/LotteryCenterController.dart';
 import 'home/SystemNoticeController.dart';
 import 'home/SystemNoticeDetailController.dart';
+import 'user/UserWithdrawalRecordController.dart';
 import 'user/personal_center/SetCapitalPasswordController.dart';
 //import 'package:flutter_native_splash/flutter_native_splash.dart' as flutter_native_splash;
 
@@ -82,6 +83,7 @@ class MyApp extends StatelessWidget {
       //home: LoginActivity(),
       home: SplashController(),
       routes: <String, WidgetBuilder> {
+        RouteUtil.loginActivity: (BuildContext context) => LoginActivity(),
         RouteUtil.homeController: (BuildContext context) => HomeController(),
         RouteUtil.setController: (BuildContext context) => SetController(),
         RouteUtil.rechargeController: (BuildContext context) => RechargeController(),
@@ -97,6 +99,7 @@ class MyApp extends StatelessWidget {
         RouteUtil.systemNoticeDetailController: (BuildContext context) => SystemNoticeDetailController(),
         RouteUtil.bettingRecordController: (BuildContext context) => BettingRecordController(),
         RouteUtil.lotteryReportController: (BuildContext context) => LotteryReportController(),
+        RouteUtil.userWithdrawalRecordController: (BuildContext context) => UserWithdrawalRecordController(),
         RouteUtil.accountChangeRecordController: (BuildContext context) => AccountChangeRecordController(),
         RouteUtil.teamOverviewController: (BuildContext context) => TeamOverviewController(),
         RouteUtil.teamReportFormController: (BuildContext context) => TeamReportFormController(),

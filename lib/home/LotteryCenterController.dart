@@ -1,8 +1,13 @@
+import 'package:flustars/flustars.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_lisheng_entertainment/Util/ColorUtil.dart';
 import 'package:flutter_lisheng_entertainment/Util/ImageUtil.dart';
 import 'package:flutter_lisheng_entertainment/Util/StringUtil.dart';
 import 'package:flutter_lisheng_entertainment/base/BaseRefreshController.dart';
+import 'package:flutter_lisheng_entertainment/home/net/HomeService.dart';
+import 'package:flutter_lisheng_entertainment/home/net/LotteryCenterHandler.dart';
+import 'package:flutter_lisheng_entertainment/model/json/lottery_center/LotteryCenterBeen.dart';
+import 'package:flutter_lisheng_entertainment/model/json/lottery_center/LotteryCenterDataBeen.dart';
 import 'package:flutter_lisheng_entertainment/view/common/CommonView.dart';
 
 /// 开奖中心
@@ -15,7 +20,19 @@ class LotteryCenterController extends StatefulWidget {
 
 }
 
-class _LotteryCenterController extends BaseRefreshController<LotteryCenterController> {
+class _LotteryCenterController extends BaseRefreshController<LotteryCenterController> implements LotteryCenterHandler{
+
+  List<LotteryCenterDataBeen> dataLotteryCenterList = new List();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+    HomeService.instance.getApiHome(this);
+
+  }
+
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
@@ -53,33 +70,33 @@ class _LotteryCenterController extends BaseRefreshController<LotteryCenterContro
           child: new Column(
             children: <Widget>[
               //buildItemWidget(context,i),
-              _listItem(),
+              _listItem(i),
 
             ],
           ),
         ),
       ),
       //itemExtent: 200.0,
-      itemCount: items.length,
+      itemCount: dataLotteryCenterList.length,
     );
   }
 
-  Widget _listItem() {
+  Widget _listItem(int index) {
 
     return new Card(
       child: new Column(
         children: <Widget>[
 
-          _listTopView(),
+          _listTopView(index),
           CommonView().commonLine_NoMargin(context),
-          _listBottom(),
+          _listBottom(index),
 
         ],
       ),
     );
   }
 
-  Widget _listTopView() {
+  Widget _listTopView(int index) {
 
     return new Container(
       padding: EdgeInsets.only(left: 10.0, right: 10.0),
@@ -98,7 +115,7 @@ class _LotteryCenterController extends BaseRefreshController<LotteryCenterContro
 
                 new Align(
                   child: new Text(
-                    "重庆时时彩",
+                    dataLotteryCenterList[index].name,
                     style: TextStyle(
                       fontSize: 14.0,
                       color: Color(ColorUtil.textColor_333333),
@@ -108,15 +125,7 @@ class _LotteryCenterController extends BaseRefreshController<LotteryCenterContro
                   alignment: Alignment.centerLeft,
                 ),
 
-                new Row(
-                  children: <Widget>[
-                    _cqNumView(),
-                    _cqNumView(),
-                    _cqNumView(),
-                    _cqNumView(),
-                    _cqNumView(),
-                  ],
-                ),
+                _numStrList(dataLotteryCenterList[index]),
 
               ],
             ),
@@ -127,7 +136,20 @@ class _LotteryCenterController extends BaseRefreshController<LotteryCenterContro
     );
   }
 
-  Widget _cqNumView() {
+  Widget _numStrList(LotteryCenterDataBeen dataListBeen) {
+    List<Widget> numViewList = new List();
+    var pre_draw_code = dataListBeen.preDrawCode;
+    var preListStr = pre_draw_code.split(",");
+    preListStr.forEach((valueNum) {
+      numViewList.add(_cqNumView(valueNum));
+
+    });
+    return new Row(
+      children: numViewList,
+    );
+  }
+
+  Widget _cqNumView(String num) {
 
     return new Container(
       height: 25.0,
@@ -141,7 +163,7 @@ class _LotteryCenterController extends BaseRefreshController<LotteryCenterContro
         //borderRadius: new BorderRadius.circular((24.0)), // 圆角度
       ),
       child: new Text(
-        "11",
+        num,
         style: TextStyle(
           fontSize: 14.0,
           color: Colors.white,
@@ -152,7 +174,16 @@ class _LotteryCenterController extends BaseRefreshController<LotteryCenterContro
   }
 
   /// 列表 期数  走势 玩法
-  Widget _listBottom() {
+  Widget _listBottom(int index) {
+
+    String qs = "";
+    String preDrawIssue = "${dataLotteryCenterList[index].preDrawIssue}";
+    if ( !TextUtil.isEmpty(preDrawIssue)) {
+      String preQsNumQ = preDrawIssue.substring(0, preDrawIssue.length - 3);
+      String preQsNumH = preDrawIssue.substring(preDrawIssue.length - 3, preDrawIssue.length);
+      qs = "$preQsNumQ-$preQsNumH";
+    }
+
     return new Container(
       height: 50.0,
       child: new Row(
@@ -161,7 +192,7 @@ class _LotteryCenterController extends BaseRefreshController<LotteryCenterContro
           new Expanded(
               child: new Container(
                 child: new Text(
-                  "第20191027-16期",
+                  "第$qs期",
                   style: TextStyle(
                     fontSize: 14.0,
                     color: Color(ColorUtil.textColor_888888),
@@ -204,6 +235,16 @@ class _LotteryCenterController extends BaseRefreshController<LotteryCenterContro
         ),
       ),
     );
+  }
+
+
+  @override
+  void setLotteryCenterBeen(LotteryCenterBeen data) {
+    this.dataLotteryCenterList = data.data;
+    setState(() {
+
+    });
+
   }
 
 }

@@ -213,6 +213,8 @@ class _PersonalController extends BaseController<PersonalController> {
             _getRightArrowView(StringUtil.personalBettingRecord, ImageUtil.imgBettingRecord),
             CommonView().commonLine(context),
             _getRightArrowView(StringUtil.personalAccountChangeRecord, ImageUtil.imgAccountChangeRecord),
+            CommonView().commonLine(context),
+            _getRightArrowView(StringUtil.agentWithdrawalRecord, ImageUtil.imgAgentWithdrawalRecord),
 
           ],
         ),
@@ -262,6 +264,10 @@ class _PersonalController extends BaseController<PersonalController> {
           case StringUtil.personalBank:
             //我的银行卡
             Navigator.pushNamed(context, RouteUtil.bankListController);
+            break;
+          case StringUtil.agentWithdrawalRecord:
+            // 提现记录
+            Navigator.pushNamed(context, RouteUtil.userWithdrawalRecordController);
             break;
         }
       },

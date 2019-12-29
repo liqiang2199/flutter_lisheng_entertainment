@@ -128,11 +128,27 @@ class CommonView {
     );
   }
 
+  Widget clipImgSetHW(String headImgUrl, double h , double w) {
+    return new Container(
+      child: ClipOval(
+        child: Image.network(UrlUtil.BaseUrl + headImgUrl,
+          width: w,
+          height: h,
+          fit: BoxFit.cover,
+        ),
+      ),
+    );
+  }
+
   /**
    * 头像
    */
   Widget clipHeadImg() {
     return clipImg(SpUtil.getString(Constant.USER_HEAD_IMG));
+  }
+
+  Widget clipHeadImgHW48() {
+    return clipImgSetHW(SpUtil.getString(Constant.USER_HEAD_IMG), 48.0, 48.0);
   }
 
 }

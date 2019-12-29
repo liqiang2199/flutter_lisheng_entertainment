@@ -18,6 +18,7 @@ import 'package:flutter_lisheng_entertainment/game_hall/page_view/LotteryTickets
 import 'package:flutter_lisheng_entertainment/home/net/HomeHandler.dart';
 import 'package:flutter_lisheng_entertainment/home/net/HomeService.dart';
 import 'package:flutter_lisheng_entertainment/model/bus/AddLotteryListBusBeen.dart';
+import 'package:flutter_lisheng_entertainment/model/bus/LoginOutBusBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/json/game_hall/LotteryTypeDataListBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/json/game_hall/LotteryTypeDataListLotteryBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/json/home_json/GetBannerListDataBeen.dart';
@@ -98,6 +99,13 @@ class _HomeControllerView extends BaseController<HomeControllerView> implements 
         });
       }
 
+    });
+
+    /// 退出登录时退出首页
+    eventBus.on<LoginOutBusBeen>().listen((event){
+      if (event != null && event.isLoginOut) {
+        Navigator.pop(context);
+      }
     });
 
   }

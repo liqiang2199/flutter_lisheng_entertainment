@@ -3,10 +3,12 @@ import 'package:flutter_lisheng_entertainment/Util/Constant.dart';
 import 'package:flutter_lisheng_entertainment/home/net/ActivePageHandler.dart';
 import 'package:flutter_lisheng_entertainment/model/http/BaseTokenHttpBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/http/LoginHttpBeen.dart';
+import 'package:flutter_lisheng_entertainment/model/http/gd_11_5/CpOpenLotteryInfoHttp.dart';
 import 'package:flutter_lisheng_entertainment/net/ApiService.dart';
 import 'package:flutter_lisheng_entertainment/net/RetrofitManager.dart';
 
 import 'HomeHandler.dart';
+import 'LotteryCenterHandler.dart';
 import 'SystemNoticeHandler.dart';
 
 
@@ -59,4 +61,12 @@ class HomeService {
     apiService.setHandler(homeHandler);
     apiService.getActivityList(tokenHttpBeen);
   }
+
+  void getApiHome(LotteryCenterHandler num11choice5handler) {
+    CpOpenLotteryInfoHttp openLotteryListHttpBeen = new CpOpenLotteryInfoHttp(SpUtil.getString(Constant.TOKEN), "");
+    ApiService apiService = RetrofitManager.instance.createApiService();
+    apiService.setHandler(num11choice5handler);
+    apiService.getApiHome(openLotteryListHttpBeen);
+  }
+
 }
