@@ -14,7 +14,8 @@ TeamAccountChangeHttpBeen _$TeamAccountChangeHttpBeenFromJson(
     ..limit = json['limit'] as String
     ..page = json['page'] as String
     ..type = json['type'] as String
-    ..date = json['date'] as String;
+    ..start_date = json['start_date'] as String
+    ..end_date = json['end_date'] as String;
 }
 
 Map<String, dynamic> _$TeamAccountChangeHttpBeenToJson(
@@ -25,5 +26,6 @@ Map<String, dynamic> _$TeamAccountChangeHttpBeenToJson(
       'limit': instance.limit,
       'page': instance.page,
       'type': instance.type,
-      'date': instance.date,
+      'start_date': instance.start_date,
+      'end_date': instance.end_date,
     };

@@ -1,8 +1,12 @@
 class UrlUtil {
 
-  static const BaseUrl = "http://i36iyi.natappfree.cc/";
+  static const BaseUrl = "http://q8j8gc.natappfree.cc/";
 
   static const login = "api/login/login";
+  /// 退出登录
+  static const loginOut = "api/user/loginOut";
+
+
   /// 修改登录密码
   static const editLoginPwd = "api/user/editLoginPwd";
   /// 修改、设置 支付密码
@@ -44,6 +48,22 @@ class UrlUtil {
   static const teamBettingList = "api/betting/teamBettingList";
   /// 团队账变
   static const teamMoneyLog = "api/user/teamMoneyLog";
+  /// 团队充值记录
+  static const rechargeList = "api/user/rechargeList";
+  /// 团队会员列表
+  static const userlist = "api/user/userlist";
+  /// 团队总览
+  static const teamAll = "api/betting/teamAll";
+
+  /**
+   * 个人中心
+   */
+  /// 个人投注记录
+  static const bettingList = "api/betting/bettingList";
+  /// 个人账变记录
+  static const moneyLog = "api/user/moneyLog";
+  /// 获取提现记录
+  static const withdraw = "api/user/withdraw";
 
   /**
    * 彩票种类
@@ -67,10 +87,7 @@ class UrlUtil {
   static const gdBets = "api/guangdong/gdBets";
   /// 广东 11 选 5 下注
   static const orderAdd = "api/guangdong/orderAdd";
-  /// 个人投注记录
-  static const bettingList = "api/betting/bettingList";
-  /// 个人账变记录
-  static const moneyLog = "api/user/moneyLog";
+
 
 
 }

@@ -1,9 +1,15 @@
+import 'package:flustars/flustars.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_lisheng_entertainment/Util/ColorUtil.dart';
+import 'package:flutter_lisheng_entertainment/Util/Constant.dart';
 import 'package:flutter_lisheng_entertainment/Util/ImageUtil.dart';
 import 'package:flutter_lisheng_entertainment/Util/SpaceViewUtil.dart';
 import 'package:flutter_lisheng_entertainment/Util/StringUtil.dart';
+import 'package:flutter_lisheng_entertainment/agent/net/AgentService.dart';
+import 'package:flutter_lisheng_entertainment/agent/net/TeamOverviewHandler.dart';
 import 'package:flutter_lisheng_entertainment/base/BaseController.dart';
+import 'package:flutter_lisheng_entertainment/model/json/agent/TeamOverviewBeen.dart';
+import 'package:flutter_lisheng_entertainment/model/json/agent/TeamOverviewDataBeen.dart';
 import 'package:flutter_lisheng_entertainment/view/common/CommonView.dart';
 
 //团队总预览
@@ -16,7 +22,19 @@ class TeamOverviewController extends StatefulWidget {
 
 }
 
-class _TeamOverviewController extends BaseController<TeamOverviewController> {
+class _TeamOverviewController extends BaseController<TeamOverviewController> implements TeamOverviewHandler{
+
+
+  TeamOverviewDataBeen data ;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+    AgentService.instance.teamAll(this);
+  }
+
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
@@ -113,7 +131,7 @@ class _TeamOverviewController extends BaseController<TeamOverviewController> {
           ),
 
           new Text(
-            "1000.00",
+            "${data != null ? !TextUtil.isEmpty(data.teamAllMoney) ? data.teamAllMoney : "0.0000": "0.0000"}",
             style: TextStyle(
               fontSize: 20.0,
               color: Color(ColorUtil.butColor_FF9728),
@@ -142,7 +160,7 @@ class _TeamOverviewController extends BaseController<TeamOverviewController> {
           ),
 
           new Text(
-            "1000",
+            "${data != null ? !TextUtil.isEmpty("${data.userCount}") ? "${data.userCount}" : "0": "0"}",
             style: TextStyle(
               fontSize: 20.0,
               color: Color(ColorUtil.textColor_333333),
@@ -171,7 +189,7 @@ class _TeamOverviewController extends BaseController<TeamOverviewController> {
           ),
 
           new Text(
-            "1000",
+            "${data != null ? !TextUtil.isEmpty("${data.onlineUserCount}") ? "${data.onlineUserCount}" : "0": "0"}",
             style: TextStyle(
               fontSize: 20.0,
               color: Color(ColorUtil.textColor_333333),
@@ -193,11 +211,12 @@ class _TeamOverviewController extends BaseController<TeamOverviewController> {
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
 
-            new Image.asset(ImageUtil.imgHead, width: 48.0, height: 48.0,),
+            //new Image.asset(ImageUtil.imgHead, width: 48.0, height: 48.0,),
+            CommonView().clipHeadImgHW48(),
             SpaceViewUtil.pading_Left(10.0),
             new Expanded(
                 child: new Text(
-                  "用户昵称",
+                  SpUtil.getString(Constant.USER_NAME),
                   style: new TextStyle(
                     fontSize: 14.0,
                     color: Color(ColorUtil.textColor_333333),
@@ -214,7 +233,7 @@ class _TeamOverviewController extends BaseController<TeamOverviewController> {
             ),
 
             new Text(
-              "1000.00",
+              SpUtil.getString(Constant.ALL_MONEY),
               style: new TextStyle(
                 fontSize: 14.0,
                 color: Color(ColorUtil.butColor_FF9728),
@@ -249,13 +268,13 @@ class _TeamOverviewController extends BaseController<TeamOverviewController> {
               height: 48.0,
             ),
             CommonView().commonLine_NoMargin(context),
-            _teamDetailListItem("充值金额"),
+            _teamDetailListItem("充值金额","${data != null ? !TextUtil.isEmpty("${data.teamCzMoney}") ? "${data.teamCzMoney}" : "0.0000": "0.0000"}"),
             CommonView().commonLine_NoMargin(context),
-            _teamDetailListItem("取款金额"),
+            _teamDetailListItem("取款金额","${data != null ? !TextUtil.isEmpty("${data.teamTxMoney}") ? "${data.teamTxMoney}" : "0.0000": "0.0000"}"),
             CommonView().commonLine_NoMargin(context),
-            _teamDetailListItem("消费金额"),
+            _teamDetailListItem("消费金额","${data != null ? !TextUtil.isEmpty("${data.teamXzMoney}") ? "${data.teamXzMoney}" : "0.0000": "0.0000"}"),
             CommonView().commonLine_NoMargin(context),
-            _teamDetailListItem("派奖金额"),
+            _teamDetailListItem("派奖金额","${data != null ? !TextUtil.isEmpty("${data.teamZjMoney}") ? "${data.teamZjMoney}" : "0.0000": "0.0000"}"),
 
           ],
 
@@ -265,7 +284,7 @@ class _TeamOverviewController extends BaseController<TeamOverviewController> {
 
   }
 
-  Widget _teamDetailListItem(String itemTitle) {
+  Widget _teamDetailListItem(String itemTitle, String money) {
 
     return new Container(
       height: 48.0,
@@ -286,7 +305,7 @@ class _TeamOverviewController extends BaseController<TeamOverviewController> {
           ),
 
           new Text(
-            "0.0000",
+            money,
             style: TextStyle(
               color: Color(ColorUtil.textColor_333333),
               fontSize: 14.0,
@@ -296,6 +315,14 @@ class _TeamOverviewController extends BaseController<TeamOverviewController> {
         ],
       ),
     );
+  }
+
+  @override
+  void setTeamOverviewBeen(TeamOverviewBeen dataBeen) {
+    data = dataBeen.data;
+    setState(() {
+
+    });
   }
 
 }

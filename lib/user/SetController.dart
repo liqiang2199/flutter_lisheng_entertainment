@@ -1,8 +1,15 @@
 import 'package:flustars/flustars.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_lisheng_entertainment/Util/ColorUtil.dart';
+import 'package:flutter_lisheng_entertainment/Util/EventBusUtil.dart';
 import 'package:flutter_lisheng_entertainment/Util/ImageUtil.dart';
+import 'package:flutter_lisheng_entertainment/Util/RouteUtil.dart';
 import 'package:flutter_lisheng_entertainment/Util/StringUtil.dart';
+import 'package:flutter_lisheng_entertainment/base/BaseController.dart';
+import 'package:flutter_lisheng_entertainment/model/bus/LoginOutBusBeen.dart';
+import 'package:flutter_lisheng_entertainment/user/LoginActivity.dart';
+import 'package:flutter_lisheng_entertainment/user/net/SetHandler.dart';
+import 'package:flutter_lisheng_entertainment/user/net/UserService.dart';
 import 'package:flutter_lisheng_entertainment/view/ListStateItemView.dart';
 import 'package:flutter_lisheng_entertainment/view/common/CommonView.dart';
 import 'package:share/share.dart';
@@ -18,7 +25,7 @@ class SetController extends StatefulWidget {
 
 }
 
-class _SetController extends State<SetController> {
+class _SetController extends BaseController<SetController> implements SetHandler{
 
   bool _lights = false; //switch 开关亮起来
   bool _lightsSuspension = false; //switch 开关亮起来
@@ -171,7 +178,7 @@ class _SetController extends State<SetController> {
       margin: EdgeInsets.only(top: 18.0),
       child: new RaisedButton(onPressed: (){
         //退出登录
-
+        _onBackPressed();
       },color: Color(ColorUtil.butColor),
         child: new Text(StringUtil.setExitLoginApp
           , style: TextStyle(fontSize: 16.0,color: Color(ColorUtil.whiteColor)),),
@@ -185,5 +192,68 @@ class _SetController extends State<SetController> {
     );
   }
 
+  Future<bool> _onBackPressed() {
+    return showDialog(
+        context: context,
+        builder: (context) =>
+            AlertDialog(
+              title: Text('确定退出登录?'),
+              actions: <Widget>[
+                FlatButton(
+                  child: Text('取消'),
+                  onPressed: () => Navigator.pop(context, false),
+                ),
+                FlatButton(
+                  child: Text('确定'),
+                  onPressed: () => {
+                    //Navigator.pop(context, true)
+                    UserService.instance.loginOut(this),
+                  },
+                ),
+              ],
+            ));
+  }
+
+  /**
+   * 1. 使用场景：退出登录。
+      /// 路由作用：移除 [ModalRoute.withName("/loginPage")] 除外的所有界面，并跳转到 ["/loginPage"] 界面。
+   ** [ModalRoute.withName("/loginPage")] 可用任意未打开的界面代替，从而达到关闭所有界面效果。 **
+      Navigator.of(context).pushNamedAndRemoveUntil(
+      "/loginPage", ModalRoute.withName("/loginPage"));
+
+      2. 任意界面返回应用首页。
+      /// 路由作用：移除 [/homePage] 除外其它所有界面。
+      Navigator.of(context).popUntil(ModalRoute.withName("/homePage"));
+
+
+      前提配置的路由路径：
+      MaterialApp(
+      　　...,
+      routes: {
+      '/loginPage': (ctx) => LoginPage(),
+      '/homePage': (ctx) => MainPage(),
+      },
+      home: ...,
+      );
+
+   */
+  ///
+  @override
+  void loginOutResult(bool result) {
+//    eventBus.fire(new LoginOutBusBeen(true));
+//    Navigator.pop(context, false);
+    try {
+      /// https://www.wandouip.com/t5i245429/
+      Navigator.of(context).pushNamedAndRemoveUntil(
+          RouteUtil.loginActivity, ModalRoute.withName(RouteUtil.loginActivity));
+//      Navigator.of(context).pushAndRemoveUntil(new MaterialPageRoute(
+//        builder: (BuildContext context) => LoginActivity(),
+//      ), (//跳转到主页
+//          // ignore: unrelated_type_equality_checks
+//          Route route) => route == RouteUtil.loginActivity);
+    } catch (e) {
+
+    }
+  }
 
 }

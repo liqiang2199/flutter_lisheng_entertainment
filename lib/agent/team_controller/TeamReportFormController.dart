@@ -26,7 +26,7 @@ class _TeamReportFormController extends BaseRefreshController<TeamReportFormCont
       body: new Column(
         children: <Widget>[
 
-          SelectionTimeAndEditNameView(this),
+          //SelectionTimeAndEditNameView(this),
 
           new Expanded(child: smartRefreshBase(
             _listReportFromItem(),

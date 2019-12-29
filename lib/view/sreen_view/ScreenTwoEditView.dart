@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_lisheng_entertainment/Util/ColorUtil.dart';
-import 'package:flutter_lisheng_entertainment/Util/ImageUtil.dart';
 import 'package:flutter_lisheng_entertainment/Util/StringUtil.dart';
+import 'package:flutter_lisheng_entertainment/base/BaseController.dart';
 import 'package:flutter_lisheng_entertainment/view/view_interface/ScreenCallBack.dart';
 
-class ScreenTwoEditView extends StatelessWidget {
-
+class ScreenTwoEditView extends StatefulWidget {
   final ScreenCallBack screenCallBack;
 
   const ScreenTwoEditView(
@@ -14,6 +13,22 @@ class ScreenTwoEditView extends StatelessWidget {
       ) : assert(
   screenCallBack != null,
   ), super(key: key);
+
+  @override
+  State<StatefulWidget> createState() {
+    // TODO: implement createState
+    return _ScreenTwoEditView(this.screenCallBack);
+  }
+}
+
+class _ScreenTwoEditView extends BaseController<ScreenTwoEditView> {
+
+  final ScreenCallBack screenCallBack;
+  String userName;
+
+  _ScreenTwoEditView(
+      this.screenCallBack,
+      );
 
   @override
   Widget build(BuildContext context) {
@@ -67,6 +82,7 @@ class ScreenTwoEditView extends StatelessWidget {
                 hintStyle: TextStyle(fontSize: 12.0, color: Color(ColorUtil.textColor_888888)),
               ),
               maxLines: 1,
+              onChanged: _getEditUserName,
             ),
           ),
 
@@ -76,34 +92,45 @@ class ScreenTwoEditView extends StatelessWidget {
     );
   }
 
+  _getEditUserName(String str) {
+    userName = str;
+  }
+
   /// 账户 输入框
   Widget _editAgentName(String hintText) {
 
-    return new Container(
-      height: 30.0,
-      margin: EdgeInsets.only(top: 15.0, left: 10.0, right: 5.0,),
-      padding: EdgeInsets.only(right: 10.0,),
-      decoration: new BoxDecoration(
-        border: new Border.all(color: Color(ColorUtil.lineColor), width: 1), // 边色与边宽度
-        borderRadius: new BorderRadius.circular((5.0)), // 圆角度
-      ),
-      child: new Align(
-        alignment: Alignment.centerLeft,
-        child: new TextField(
-          style: TextStyle(fontSize: 12, color: Color(ColorUtil.textColor_333333)),
-          decoration: InputDecoration(
-            hintText: hintText,
-            contentPadding: const EdgeInsets.only(top: 0.0, bottom: 13.5),
-            border: InputBorder.none,
-            hoverColor: Color(ColorUtil.whiteColor),
-            hintStyle: TextStyle(fontSize: 12.0, color: Color(ColorUtil.textColor_888888)),
+    return new Visibility(
+      visible: false,
+      maintainSize: true,
+      maintainAnimation: true,
+      maintainState: true,
+        child: new Container(
+          height: 30.0,
+          margin: EdgeInsets.only(top: 15.0, left: 10.0, right: 5.0,),
+          padding: EdgeInsets.only(right: 10.0,),
+          decoration: new BoxDecoration(
+            border: new Border.all(color: Color(ColorUtil.lineColor), width: 1), // 边色与边宽度
+            borderRadius: new BorderRadius.circular((5.0)), // 圆角度
           ),
-          maxLines: 1,
-          textAlign: TextAlign.center,
+          child: new Align(
+            alignment: Alignment.centerLeft,
+            child: new TextField(
+              style: TextStyle(fontSize: 12, color: Color(ColorUtil.textColor_333333)),
+              decoration: InputDecoration(
+                hintText: hintText,
+                contentPadding: const EdgeInsets.only(top: 0.0, bottom: 13.5),
+                border: InputBorder.none,
+                hoverColor: Color(ColorUtil.whiteColor),
+                hintStyle: TextStyle(fontSize: 12.0, color: Color(ColorUtil.textColor_888888)),
+              ),
+              maxLines: 1,
+              textAlign: TextAlign.center,
+            ),
+          ),
         ),
-      ),
     );
   }
+
 
   /// 搜索
   Widget _butSearch(var isVisibility) {
@@ -120,7 +147,9 @@ class ScreenTwoEditView extends StatelessWidget {
           margin: EdgeInsets.only(top: 15.0, left: 5.0, right: 15.0,),
           child: new RaisedButton(onPressed: (){
             //
-
+            if (screenCallBack != null) {
+              screenCallBack?.setEditUserName(userName);
+            }
           },color: Color(ColorUtil.butColor),
             child: new Text(StringUtil.searchButText
               , style: TextStyle(fontSize: 13.0,color: Color(ColorUtil.whiteColor)),),

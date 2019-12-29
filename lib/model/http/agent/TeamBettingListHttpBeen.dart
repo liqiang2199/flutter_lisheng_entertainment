@@ -11,6 +11,8 @@ class TeamBettingListHttpBeen {
    String status;
    String pre_draw_issue;
    String kj_time;
+   String start_date;
+   String end_date;
 
    TeamBettingListHttpBeen(this.token, this.username, this.limit, this.page,
        this.lottery_id, this.status, this.pre_draw_issue, this.kj_time);

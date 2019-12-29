@@ -10,6 +10,7 @@ import 'package:flutter_lisheng_entertainment/model/http/set_cash_pass/SetPaypwd
 import 'package:flutter_lisheng_entertainment/model/http/user_info_center/UserInfoCenterHttpBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/http/user_record/UserAccountChangeRecordHttpBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/http/withdraw/UserWithdrawHttpBeen.dart';
+import 'package:flutter_lisheng_entertainment/model/http/withdraw/record/UserWithdrawRecordHttpBeen.dart';
 import 'package:flutter_lisheng_entertainment/net/AccountChangeRecordHandler.dart';
 import 'package:flutter_lisheng_entertainment/net/ApiService.dart';
 import 'package:flutter_lisheng_entertainment/net/GetBettingRecordListHandler.dart';
@@ -17,10 +18,12 @@ import 'package:flutter_lisheng_entertainment/net/RetrofitManager.dart';
 import 'package:flutter_lisheng_entertainment/user/net/BankListHandler.dart';
 import 'package:flutter_lisheng_entertainment/user/net/BindBankHandler.dart';
 import 'package:flutter_lisheng_entertainment/user/net/RechargeHandler.dart';
+import 'package:flutter_lisheng_entertainment/user/net/SetHandler.dart';
 
 import 'LoginHandler.dart';
 import 'ModifyLoginPasswordHandler.dart';
 import 'SetCashPasswordHandler.dart';
+import 'UserWithdrawRecordHandler.dart';
 import 'WithdrawHandler.dart';
 
 class UserService extends ToastUtilBridge{
@@ -56,6 +59,18 @@ class UserService extends ToastUtilBridge{
     LoginHttpBeen loginHttpBeen = new LoginHttpBeen(account: account, pwd: pwd);
     apiService.setHandler(loginHandler);
     apiService.login(loginHttpBeen);
+  }
+
+  /**
+   * 退出登录
+   */
+  ///
+  void loginOut(SetHandler setHandler) {
+    BaseTokenHttpBeen tokenHttpBeen = new BaseTokenHttpBeen(SpUtil.getString(Constant.TOKEN));
+    ApiService apiService = RetrofitManager.instance.createApiService();
+    apiService.setHandler(setHandler);
+    apiService.loginOut(tokenHttpBeen);
+
   }
 
   /**
@@ -213,6 +228,15 @@ class UserService extends ToastUtilBridge{
     ApiService apiService = RetrofitManager.instance.createApiService();
     apiService.setHandler(bettingRecordListHandler);
     apiService.bettingList(openLotteryListHttpBeen);
+  }
+
+  /// 获取提现记录
+  void withdraw(UserWithdrawRecordHandler userWithdrawRecordHandler, String status, String startTime, String endTime) {
+    UserWithdrawRecordHttpBeen withdrawRecordHttpBeen = new UserWithdrawRecordHttpBeen(SpUtil.getString(Constant.TOKEN), "20", status, startTime, endTime);
+
+    ApiService apiService = RetrofitManager.instance.createApiService();
+    apiService.setHandler(userWithdrawRecordHandler);
+    apiService.withdraw(withdrawRecordHttpBeen);
   }
 
 }

@@ -9,7 +9,8 @@ class TeamAccountChangeHttpBeen {
   String limit;
   String page;
   String type;
-  String date;
+  String start_date;
+  String end_date;
 
   TeamAccountChangeHttpBeen();
 

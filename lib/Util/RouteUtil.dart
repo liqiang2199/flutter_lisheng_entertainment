@@ -2,6 +2,7 @@ class RouteUtil {
   static const homeController = "/HomeController";
 
   static const setController = "/SetController";
+  static const loginActivity = "/LoginActivity";
 
   //充值
   static const rechargeController = "/RechargeController";
@@ -28,6 +29,8 @@ class RouteUtil {
   static const bettingRecordController = "/BettingRecordController";
   //彩票报表
   static const lotteryReportController = "/LotteryReportController";
+  // 个人提现记录
+  static const userWithdrawalRecordController = "/UserWithdrawalRecordController";
   //账变记录
   static const accountChangeRecordController = "/AccountChangeRecordController";
   //团队总览

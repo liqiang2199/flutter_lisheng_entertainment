@@ -1,3 +1,4 @@
+import 'package:flustars/flustars.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_lisheng_entertainment/Util/ColorUtil.dart';
 import 'package:flutter_lisheng_entertainment/Util/ImageUtil.dart';
@@ -31,9 +32,6 @@ class SelectionTimeView extends StatefulWidget {
     return SelectionTimeChildView(this.timeCallBack);
   }
 
-
-
-
 }
 
 class SelectionTimeChildView extends BaseController<SelectionTimeView> with ShowPickerDateInterface implements ChoiceTimeResultInterface  {
@@ -47,6 +45,14 @@ class SelectionTimeChildView extends BaseController<SelectionTimeView> with Show
     this.startTime,
     this.endTime
   });
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    startTime = DateUtil.getDateStrByDateTime(DateTime.now(),format: DateFormat.YEAR_MONTH_DAY);
+    endTime = DateUtil.getDateStrByDateTime(DateTime.now(),format: DateFormat.YEAR_MONTH_DAY);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -104,7 +110,7 @@ class SelectionTimeChildView extends BaseController<SelectionTimeView> with Show
 
             new Expanded(
               child: new Text(
-                "选择时间",
+                startTime,
                 style: new TextStyle(
                   fontSize: 12.0,
                   color: Color(ColorUtil.textColor_333333),
@@ -144,7 +150,7 @@ class SelectionTimeChildView extends BaseController<SelectionTimeView> with Show
           children: <Widget>[
             new Expanded(
               child: new Text(
-                "选择时间",
+                endTime,
                 style: new TextStyle(
                   fontSize: 12.0,
                   color: Color(ColorUtil.textColor_333333),

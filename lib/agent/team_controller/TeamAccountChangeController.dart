@@ -12,6 +12,7 @@ import 'package:flutter_lisheng_entertainment/model/json/agent/team_account_chan
 import 'package:flutter_lisheng_entertainment/model/json/agent/team_account_change/TeamAccountChangeDataListBeen.dart';
 import 'package:flutter_lisheng_entertainment/view/sreen_view/SelectionTimeAndEditNameView.dart';
 import 'package:flutter_lisheng_entertainment/view/common/CommonView.dart';
+import 'package:flutter_lisheng_entertainment/view/sreen_view/bridge/TeamAccountChangeInterface.dart';
 import 'package:flutter_lisheng_entertainment/view/view_interface/SelectionTimeCallBack.dart';
 
 /// 团队账变记录
@@ -25,12 +26,13 @@ class TeamAccountChangeController extends StatefulWidget {
 }
 
 class _TeamAccountChangeController extends BaseRefreshTabController<TeamAccountChangeController, TabTitle>
-    implements SelectionTimeCallBack, TeamAccountChangeHandler{
+    implements SelectionTimeCallBack, TeamAccountChangeHandler,TeamAccountChangeInterface{
 
   String userName;
   int _page = 1;
   String _type = "0";
-  String _data;
+  String startTime;
+  String endTime;
 
   List<TeamAccountChangeDataListBeen> dataAccountChangeList = new List();
 
@@ -40,8 +42,9 @@ class _TeamAccountChangeController extends BaseRefreshTabController<TeamAccountC
     super.initState();
     initTabData();
     initTabPageController();
-
-    AgentService.instance.teamMoneyLog(this, userName, _data, "$_page", _type);
+    startTime = DateUtil.getDateStrByDateTime(DateTime.now(),format: DateFormat.YEAR_MONTH_DAY);
+    endTime = DateUtil.getDateStrByDateTime(DateTime.now(),format: DateFormat.YEAR_MONTH_DAY);
+    AgentService.instance.teamMoneyLog(this, userName, startTime, endTime, "$_page", _type);
   }
 
   @override
@@ -54,7 +57,7 @@ class _TeamAccountChangeController extends BaseRefreshTabController<TeamAccountC
         children: <Widget>[
           _tabPage(),
           CommonView().commonLineChange(context,10.0),
-          SelectionTimeAndEditNameView(this),
+          SelectionTimeAndEditNameView(this,this),
           new Expanded(child: _pageView(),),
         ],
       ),
@@ -80,7 +83,7 @@ class _TeamAccountChangeController extends BaseRefreshTabController<TeamAccountC
   @override
   void onRefreshData() {
     _page = 1;
-    AgentService.instance.teamMoneyLog(this, userName, _data, "$_page", _type);
+    AgentService.instance.teamMoneyLog(this, userName, startTime, endTime, "$_page", _type);
   }
 
   @override
@@ -89,7 +92,7 @@ class _TeamAccountChangeController extends BaseRefreshTabController<TeamAccountC
     _type = "${title.id}";
 
     _page = 1;
-    AgentService.instance.teamMoneyLog(this, userName, _data, "$_page", _type);
+    AgentService.instance.teamMoneyLog(this, userName, startTime, endTime, "$_page", _type);
   }
 
   Widget _tabPage() {
@@ -280,10 +283,12 @@ class _TeamAccountChangeController extends BaseRefreshTabController<TeamAccountC
 
   @override
   void selectionEndTime(String endTime) {
+    this.endTime = endTime;
   }
 
   @override
   void selectionStartTime(String starTime) {
+    this.startTime = starTime;
   }
 
   @override
@@ -295,6 +300,14 @@ class _TeamAccountChangeController extends BaseRefreshTabController<TeamAccountC
     setState(() {
 
     });
+  }
+
+  @override
+  void setTeamAccountChangeRecordUserName(String userName) {
+    this.userName = userName;
+    _page = 1;
+    AgentService.instance.teamMoneyLog(this, userName, startTime, endTime, "$_page", _type);
+
   }
 
 }

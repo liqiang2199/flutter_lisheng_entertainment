@@ -34,6 +34,9 @@ class _TeamBettingController extends BaseRefreshTabController<TeamBettingControl
   int _page = 1;
   String _status = "0";
 
+  String startTime;
+  String endTime;
+
   List<TeamBettingDataListBeen> teamBettingList = new List();
 
   @override
@@ -43,7 +46,7 @@ class _TeamBettingController extends BaseRefreshTabController<TeamBettingControl
     initTabData();
     initTabPageController();
 
-    AgentService.instance.teamBettingList(this, _userName, _time, _lotteryId, _qs, "$_page", _status);
+    AgentService.instance.teamBettingList(this, _userName, startTime, endTime, _lotteryId, _qs, "$_page", _status);
   }
 
   @override
@@ -361,11 +364,12 @@ class _TeamBettingController extends BaseRefreshTabController<TeamBettingControl
 
   @override
   void selectionEndTime(String endTime) {
-
+    this.endTime = endTime;
   }
 
   @override
   void selectionStartTime(String starTime) {
+    this.startTime = starTime;
   }
 
   @override
@@ -385,8 +389,12 @@ class _TeamBettingController extends BaseRefreshTabController<TeamBettingControl
   @override
   void setTeamBettingScreenData(String userName, String cpType, String qs) {
 
+    _userName = userName;
+    _lotteryId = cpType;
+    _qs = qs;
+
     Future.delayed(Duration(milliseconds: 300)).then((value) {
-      AgentService.instance.teamBettingList(this, _userName, _time, _lotteryId, _qs, "$_page", _status);
+      AgentService.instance.teamBettingList(this, _userName, startTime, endTime, _lotteryId, _qs, "$_page", _status);
     });
 
   }

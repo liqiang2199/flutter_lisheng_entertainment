@@ -17,7 +17,9 @@ TeamBettingListHttpBeen _$TeamBettingListHttpBeenFromJson(
     json['status'] as String,
     json['pre_draw_issue'] as String,
     json['kj_time'] as String,
-  );
+  )
+    ..start_date = json['start_date'] as String
+    ..end_date = json['end_date'] as String;
 }
 
 Map<String, dynamic> _$TeamBettingListHttpBeenToJson(
@@ -31,4 +33,6 @@ Map<String, dynamic> _$TeamBettingListHttpBeenToJson(
       'status': instance.status,
       'pre_draw_issue': instance.pre_draw_issue,
       'kj_time': instance.kj_time,
+      'start_date': instance.start_date,
+      'end_date': instance.end_date,
     };

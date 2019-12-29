@@ -2,41 +2,41 @@ import 'package:flustars/flustars.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_lisheng_entertainment/Util/ColorUtil.dart';
 import 'package:flutter_lisheng_entertainment/Util/StringUtil.dart';
-import 'package:flutter_lisheng_entertainment/agent/net/AgentService.dart';
 import 'package:flutter_lisheng_entertainment/base/BaseRefreshController.dart';
-import 'package:flutter_lisheng_entertainment/model/json/agent/team_account_change/TeamAccountChangeBeen.dart';
-import 'package:flutter_lisheng_entertainment/model/json/agent/team_account_change/TeamAccountChangeDataListBeen.dart';
+import 'package:flutter_lisheng_entertainment/model/json/withdraw/user_record/UserWithdrawRecordBeen.dart';
+import 'package:flutter_lisheng_entertainment/model/json/withdraw/user_record/UserWithdrawRecordDataListBeen.dart';
+import 'package:flutter_lisheng_entertainment/user/net/UserService.dart';
 import 'package:flutter_lisheng_entertainment/view/common/CommonView.dart';
 import 'package:flutter_lisheng_entertainment/view/sreen_view/SelectionTimeView.dart';
 import 'package:flutter_lisheng_entertainment/view/view_interface/SelectionTimeCallBack.dart';
 
-import 'net/TeamAccountChangeHandler.dart';
+import 'net/UserWithdrawRecordHandler.dart';
+
 
 /// 提款记录
-class WithdrawalRecordController extends StatefulWidget {
+class UserWithdrawalRecordController extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
-    return _WithdrawalRecordController();
+    return _UserWithdrawalRecordController();
   }
 
 }
 
-class _WithdrawalRecordController extends BaseRefreshController<WithdrawalRecordController> with SelectionTimeCallBack implements TeamAccountChangeHandler{
+class _UserWithdrawalRecordController extends BaseRefreshController<UserWithdrawalRecordController> with SelectionTimeCallBack implements UserWithdrawRecordHandler{
 
   String _startTime;
   String _endTime;
   int _page= 1;
 
-  List<TeamAccountChangeDataListBeen> dataWithdrawList = new List();
+  List<UserWithdrawRecordDataListBeen> dataUserWithdrawRecord = new List();
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
 
-    // "2" 固定为2 提现记录
-    AgentService.instance.teamMoneyLog(this, "", _startTime, _endTime, "$_page", "2");
+    UserService.instance.withdraw(this, "0", _startTime, _endTime);
   }
 
   @override
@@ -61,7 +61,7 @@ class _WithdrawalRecordController extends BaseRefreshController<WithdrawalRecord
   void onRefreshData() {
 
     _page = 1;
-    AgentService.instance.teamMoneyLog(this, "", _startTime, _endTime, "$_page", "2");
+    UserService.instance.withdraw(this, "0", _startTime, _endTime);
   }
 
   /// 个人投注信息 列表
@@ -85,7 +85,7 @@ class _WithdrawalRecordController extends BaseRefreshController<WithdrawalRecord
         ),
       ),
       //itemExtent: 200.0,
-      itemCount: dataWithdrawList.length,
+      itemCount: dataUserWithdrawRecord.length,
     );
   }
 
@@ -96,7 +96,7 @@ class _WithdrawalRecordController extends BaseRefreshController<WithdrawalRecord
       return new Column(
         children: <Widget>[
 
-          _recordBottomList(dataWithdrawList[index]),
+          _recordBottomList(dataUserWithdrawRecord[index]),
           CommonView().commonLine_NoMargin(context),
 
         ],
@@ -164,7 +164,7 @@ class _WithdrawalRecordController extends BaseRefreshController<WithdrawalRecord
   }
 
 
-  Widget _recordBottomList(TeamAccountChangeDataListBeen dataListBeen) {
+  Widget _recordBottomList(UserWithdrawRecordDataListBeen dataListBeen) {
 
     return new Container(
       height: 50.0,
@@ -229,19 +229,14 @@ class _WithdrawalRecordController extends BaseRefreshController<WithdrawalRecord
   }
 
   @override
-  void setTeamAccountChangeBeen(TeamAccountChangeBeen dataBeen) {
-
-    if (_page == 1) {
-      dataWithdrawList?.clear();
-      TeamAccountChangeDataListBeen dataListBeen = new TeamAccountChangeDataListBeen(0,0,"","","","","","","","");
-      dataWithdrawList?.add(dataListBeen);
-    }
-    dataWithdrawList.addAll(dataBeen.data.data);
+  void setUserWithdrawRecordBeen(UserWithdrawRecordBeen dataBeen) {
+    dataUserWithdrawRecord.clear();
+    dataUserWithdrawRecord.addAll(dataBeen.data.data);
 
     setState(() {
 
     });
-
   }
+
 
 }

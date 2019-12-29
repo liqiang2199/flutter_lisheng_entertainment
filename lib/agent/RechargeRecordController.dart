@@ -1,11 +1,18 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_lisheng_entertainment/Util/ColorUtil.dart';
 import 'package:flutter_lisheng_entertainment/Util/StringUtil.dart';
+import 'package:flutter_lisheng_entertainment/agent/net/AgentService.dart';
 import 'package:flutter_lisheng_entertainment/base/BaseRefreshController.dart';
+import 'package:flutter_lisheng_entertainment/model/json/agent/team_recharge/TeamRechargeRecordBeen.dart';
+import 'package:flutter_lisheng_entertainment/model/json/agent/team_recharge/TeamRechargeRecordDataListBeen.dart';
 import 'package:flutter_lisheng_entertainment/view/common/CommonView.dart';
 import 'package:flutter_lisheng_entertainment/view/sreen_view/SelectionTimeView.dart';
 import 'package:flutter_lisheng_entertainment/view/view_interface/SelectionTimeCallBack.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+
+import 'net/TeamRechargeRecordHandler.dart';
 
 /// 充值记录
 class RechargeRecordController extends StatefulWidget {
@@ -17,7 +24,24 @@ class RechargeRecordController extends StatefulWidget {
 
 }
 
-class _RechargeRecordController extends BaseRefreshController<RechargeRecordController> with SelectionTimeCallBack{
+class _RechargeRecordController extends BaseRefreshController<RechargeRecordController>
+    with SelectionTimeCallBack implements TeamRechargeRecordHandler{
+
+  String startTime = "";
+  String endTime = "";
+  String userName = "";
+  int page = 1;
+
+  List<TeamRechargeRecordDataListBeen> rechargeRecordList = new List();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+    AgentService.instance.rechargeList(this, userName, "$page", startTime, endTime);
+  }
+
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
@@ -34,6 +58,12 @@ class _RechargeRecordController extends BaseRefreshController<RechargeRecordCont
         ],
       ),
     );
+  }
+
+  @override
+  void onRefreshData() {
+    page = 1;
+    AgentService.instance.rechargeList(this, userName, "$page", startTime, endTime);
   }
 
   /// 个人投注信息 列表
@@ -57,7 +87,7 @@ class _RechargeRecordController extends BaseRefreshController<RechargeRecordCont
         ),
       ),
       //itemExtent: 200.0,
-      itemCount: items.length,
+      itemCount: rechargeRecordList.length,
     );
   }
 
@@ -68,7 +98,7 @@ class _RechargeRecordController extends BaseRefreshController<RechargeRecordCont
       return new Column(
         children: <Widget>[
 
-          _recordBottomList(),
+          _recordBottomList(rechargeRecordList[index]),
           CommonView().commonLine_NoMargin(context),
 
         ],
@@ -136,7 +166,7 @@ class _RechargeRecordController extends BaseRefreshController<RechargeRecordCont
   }
 
 
-  Widget _recordBottomList() {
+  Widget _recordBottomList(TeamRechargeRecordDataListBeen recordDataListBeen) {
 
     return new Container(
       height: 50.0,
@@ -151,7 +181,7 @@ class _RechargeRecordController extends BaseRefreshController<RechargeRecordCont
                 width: ScreenUtil.screenWidth,
                 padding: EdgeInsets.all(5.0),
                 child: new Text(
-                  "2019-11-03 10:54:45",
+                  recordDataListBeen.createtime,
                   style: TextStyle(
                     fontSize: 14.0,
                     color: Color(ColorUtil.textColor_333333),
@@ -173,7 +203,7 @@ class _RechargeRecordController extends BaseRefreshController<RechargeRecordCont
                 width: ScreenUtil.screenWidth,
                 padding: EdgeInsets.all(5.0),
                 child: new Text(
-                  "1798.00",
+                  recordDataListBeen.money,
                   style: TextStyle(
                     fontSize: 14.0,
                     color: Color(ColorUtil.textColor_333333),
@@ -191,10 +221,27 @@ class _RechargeRecordController extends BaseRefreshController<RechargeRecordCont
 
   @override
   void selectionEndTime(String endTime) {
+    this.endTime = endTime;
+    Future.delayed(Duration(milliseconds: 300)).then((value) {
+      AgentService.instance.rechargeList(this, userName, "$page", startTime, endTime);
+    });
   }
 
   @override
   void selectionStartTime(String starTime) {
+    this.startTime = starTime;
+  }
+
+  @override
+  void setTeamRechargeRecordBeen(TeamRechargeRecordBeen dataBeen) {
+
+    if (page == 1) {
+      rechargeRecordList?.clear();
+    }
+    rechargeRecordList.addAll(dataBeen.data.userlist);
+    setState(() {
+
+    });
   }
 
 }
