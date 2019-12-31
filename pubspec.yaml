@@ -14,7 +14,7 @@ description: A new Flutter application.
 version: 1.1.0+1
 
 environment:
-  sdk: ">=2.1.0 <3.0.0"
+  sdk: ">=2.2.0 <3.0.0"
 
 dependencies:
   flutter:
@@ -72,14 +72,15 @@ dev_dependencies:
   retrofit_generator: any
   build_runner: any
   json_serializable: any
-#  flutter_native_splash: ^0.1.9
+  flutter_native_splash: ^0.1.9
   flutter_test:
     sdk: flutter
 
-#flutter_native_splash:
-#  image: resource/imgs/icon_splash.png
-#  color: "42a5f5"
-#  fill: true
+flutter_native_splash:
+  image: resource/imgs/icon_splash.png
+  color: "42a5f5"
+  fill: true
+  android: false
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

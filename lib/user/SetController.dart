@@ -240,8 +240,6 @@ class _SetController extends BaseController<SetController> implements SetHandler
   ///
   @override
   void loginOutResult(bool result) {
-//    eventBus.fire(new LoginOutBusBeen(true));
-//    Navigator.pop(context, false);
     try {
       /// https://www.wandouip.com/t5i245429/
       Navigator.of(context).pushNamedAndRemoveUntil(

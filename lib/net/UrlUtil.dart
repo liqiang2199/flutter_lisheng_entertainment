@@ -1,6 +1,6 @@
 class UrlUtil {
 
-  static const BaseUrl = "http://q8j8gc.natappfree.cc/";
+  static const BaseUrl = "http://cw9xs5.natappfree.cc/";
 
   static const login = "api/login/login";
   /// 退出登录
@@ -54,6 +54,12 @@ class UrlUtil {
   static const userlist = "api/user/userlist";
   /// 团队总览
   static const teamAll = "api/betting/teamAll";
+  /// 团队列表
+  static const teamList = "api/betting/teamList";
+  /// 我的分红
+  static const myFh = "api/user/myFh";
+  /// 历史分红
+  static const userFh = "api/user/userFh";
 
   /**
    * 个人中心
