@@ -80,8 +80,8 @@ class MyApp extends StatelessWidget {
 
       ),
       //home: MyHomePage(title: 'Flutter Demo Home Page'),
-      //home: LoginActivity(),
-      home: SplashController(),
+      home: LoginActivity(),
+//      home: SplashController(),
       routes: <String, WidgetBuilder> {
         RouteUtil.loginActivity: (BuildContext context) => LoginActivity(),
         RouteUtil.homeController: (BuildContext context) => HomeController(),

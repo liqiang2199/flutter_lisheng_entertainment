@@ -24,7 +24,7 @@ class MemberManagerController extends StatefulWidget {
 class _MemberManagerController extends BaseRefreshController<MemberManagerController> with ScreenCallBack implements MemberManagerHandler{
 
   String userName;
-  int page = 1;
+  //int page = 1;
 
   List<MemberManagerDataListBeen> managerList = new List();
 
@@ -33,7 +33,7 @@ class _MemberManagerController extends BaseRefreshController<MemberManagerContro
     // TODO: implement initState
     super.initState();
 
-    AgentService.instance.userlist(this, userName, "$page");
+    AgentService.instance.userlist(this, userName, "$page", "$limit");
 
   }
 
@@ -59,8 +59,15 @@ class _MemberManagerController extends BaseRefreshController<MemberManagerContro
 
   @override
   void onRefreshData() {
-    page = 1;
-    AgentService.instance.userlist(this, userName, "$page");
+    super.onRefreshData();
+
+    AgentService.instance.userlist(this, userName, "$page", "$limit");
+  }
+
+  @override
+  void onLoadingData() {
+    super.onLoadingData();
+    AgentService.instance.userlist(this, userName, "$page", "$limit");
   }
 
   /// 团队报表 信息 列表
@@ -219,6 +226,7 @@ class _MemberManagerController extends BaseRefreshController<MemberManagerContro
 
     if (page == 1) {
       managerList.clear();
+      count = dataBeen.data.count;
     }
 
     managerList?.addAll(dataBeen.data.userlist);
