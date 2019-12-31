@@ -8,6 +8,10 @@ abstract class BaseRefreshController<T extends StatefulWidget> extends BaseContr
   List items = new List();
   RefreshController refreshController = RefreshController(initialRefresh: false);
 
+  int count;//每个列表总数量
+  int limit = 20;//每页20 条数据
+  int page = 1;// 页数
+
   void _onRefresh() async{
     // monitor network fetch
     await Future.delayed(Duration(milliseconds: 1000));
@@ -21,18 +25,32 @@ abstract class BaseRefreshController<T extends StatefulWidget> extends BaseContr
     await Future.delayed(Duration(milliseconds: 1000));
     // if failed,use loadFailed(),if no data return,use LoadNodata()
     //items.add((items.length+1).toString());
+    onLoadingData();
+  }
+
+  /// 下拉数据更新
+  void onRefreshData() {
+    page = 1;
+    refreshController.footerMode = ValueNotifier(LoadStatus.idle);
+  }
+
+  /// 上拉数据更新
+  void onLoadingData() {
+    page ++;
+    if (count >= limit*page) {
+      refreshController.footerMode = ValueNotifier(LoadStatus.idle);
+    } else {
+      //大于当前列表总和
+      refreshController.footerMode = ValueNotifier(LoadStatus.noMore);
+    }
+
     if(mounted)
       setState(() {
         //onLoadingData();
       });
     refreshController.loadComplete();
+
   }
-
-  /// 下拉数据更新
-  void onRefreshData() {}
-
-  /// 上拉数据更新
-  void onLoadingData() {}
 
   Widget smartRefreshBase(Widget child) {
     return new SmartRefresher(

@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:dio/dio.dart';
 import 'package:flustars/flustars.dart';
 import 'package:flutter_lisheng_entertainment/Util/Constant.dart';
+import 'package:flutter_lisheng_entertainment/agent/net/AgencyBonusHandler.dart';
 import 'package:flutter_lisheng_entertainment/agent/net/LinkManagerHandler.dart';
 import 'package:flutter_lisheng_entertainment/agent/net/LinkOpenAccountHandler.dart';
 import 'package:flutter_lisheng_entertainment/agent/net/MemberManagerHandler.dart';
@@ -12,6 +13,7 @@ import 'package:flutter_lisheng_entertainment/agent/net/TeamAccountChangeHandler
 import 'package:flutter_lisheng_entertainment/agent/net/TeamBettingHandler.dart';
 import 'package:flutter_lisheng_entertainment/agent/net/TeamOverviewHandler.dart';
 import 'package:flutter_lisheng_entertainment/agent/net/TeamRechargeRecordHandler.dart';
+import 'package:flutter_lisheng_entertainment/agent/net/TeamReportFormHandler.dart';
 import 'package:flutter_lisheng_entertainment/game_hall/net/GameHallHandler.dart';
 import 'package:flutter_lisheng_entertainment/game_hall/net/PlayMode11Choice5Handler.dart';
 import 'package:flutter_lisheng_entertainment/game_hall/net/game_gd_11_5/CalculationBettingNumHandler.dart';
@@ -30,6 +32,8 @@ import 'package:flutter_lisheng_entertainment/model/http/agent/OrdinaryOpenAccou
 import 'package:flutter_lisheng_entertainment/model/http/agent/RechargeListHttpBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/http/agent/TeamAccountChangeHttpBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/http/agent/TeamBettingListHttpBeen.dart';
+import 'package:flutter_lisheng_entertainment/model/http/agent/TeamReportFormHttpBeen.dart';
+import 'package:flutter_lisheng_entertainment/model/http/agent/UserFhHttpBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/http/bank/BindBankHttpBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/http/game/OpenLotteryListHttpBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/http/gd_11_5/CalculationBettingNumHttpBeen.dart';
@@ -46,11 +50,14 @@ import 'package:flutter_lisheng_entertainment/model/json/active_page/ActivePageL
 import 'package:flutter_lisheng_entertainment/model/json/agent/LinkOpenAccountBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/json/agent/OrdinaryOpenAccountBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/json/agent/TeamOverviewBeen.dart';
+import 'package:flutter_lisheng_entertainment/model/json/agent/agency_bonus/AgencyBonusBeen.dart';
+import 'package:flutter_lisheng_entertainment/model/json/agent/agency_bonus/AgencyBonusHistoryBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/json/agent/link_list/LinkAccountListDataBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/json/agent/team_account_change/TeamAccountChangeBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/json/agent/team_betting/TeamBettingBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/json/agent/team_member/MemberManagerBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/json/agent/team_recharge/TeamRechargeRecordBeen.dart';
+import 'package:flutter_lisheng_entertainment/model/json/agent/team_report_form/TeamReportFormBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/json/bank/BankListBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/json/bank/type/GetBankTypeListBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/json/cash_password/PayPasswordBeen.dart';
@@ -184,6 +191,18 @@ abstract class ApiService<T> {
   /// 团队总览
   @POST(UrlUtil.teamAll)
   void teamAll(@Body() BaseTokenHttpBeen openAccountHttpBeen);
+
+  /// 团队列表
+  @POST(UrlUtil.teamList)
+  void teamList(@Body() TeamReportFormHttpBeen reportFormHttpBeen);
+
+  /// 我的分红
+  @POST(UrlUtil.myFh)
+  void myFh(@Body() BaseTokenHttpBeen openAccountHttpBeen);
+
+  /// 历史分红
+  @POST(UrlUtil.userFh)
+  void userFh(@Body() UserFhHttpBeen openAccountHttpBeen);
 
   /**
    * 广东11 选 5
@@ -724,6 +743,63 @@ class _ApiService<T> implements ApiService<T> {
 
       if (teamOverviewBeen.code == 1) {
         teamOverviewHandler.setTeamOverviewBeen(teamOverviewBeen);
+      } else {
+        teamOverviewHandler.showToast(teamOverviewBeen.msg);
+      }
+
+    });
+  }
+
+  /// 团队列表
+  @override
+  void teamList(TeamReportFormHttpBeen reportFormHttpBeen) {
+    ArgumentError.checkNotNull(reportFormHttpBeen, '参数为空');
+    ArgumentError.checkNotNull(_baseHandler, '_baseHandler为空');
+
+    responseResult(reportFormHttpBeen.toJson(), UrlUtil.teamList).then((onValue) {
+      var teamReportBeen = TeamReportFormBeen.fromJson(onValue);
+      TeamReportFormHandler teamOverviewHandler = _baseHandler as TeamReportFormHandler;
+
+      if (teamReportBeen.code == 1) {
+        teamOverviewHandler.setTeamReportFormBeen(teamReportBeen);
+      } else {
+        teamOverviewHandler.showToast(teamReportBeen.msg);
+      }
+
+    });
+  }
+
+  /// 我的分红
+  @override
+  void myFh(BaseTokenHttpBeen openAccountHttpBeen) {
+    ArgumentError.checkNotNull(openAccountHttpBeen, '参数为空');
+    ArgumentError.checkNotNull(_baseHandler, '_baseHandler为空');
+
+    responseResult(openAccountHttpBeen.toJson(), UrlUtil.myFh).then((onValue) {
+      var teamOverviewBeen = AgencyBonusBeen.fromJson(onValue);
+      AgencyBonusHandler teamOverviewHandler = _baseHandler as AgencyBonusHandler;
+
+      if (teamOverviewBeen.code == 1) {
+        teamOverviewHandler.setAgencyBonusBeen(teamOverviewBeen);
+      } else {
+        teamOverviewHandler.showToast(teamOverviewBeen.msg);
+      }
+
+    });
+  }
+
+  /// 历史分红
+  @override
+  void userFh(UserFhHttpBeen openAccountHttpBeen) {
+    ArgumentError.checkNotNull(openAccountHttpBeen, '参数为空');
+    ArgumentError.checkNotNull(_baseHandler, '_baseHandler为空');
+
+    responseResult(openAccountHttpBeen.toJson(), UrlUtil.userFh).then((onValue) {
+      var teamOverviewBeen = AgencyBonusHistoryBeen.fromJson(onValue);
+      AgencyBonusHandler teamOverviewHandler = _baseHandler as AgencyBonusHandler;
+
+      if (teamOverviewBeen.code == 1) {
+        teamOverviewHandler.setAgencyBonusHistoryBeen(teamOverviewBeen);
       } else {
         teamOverviewHandler.showToast(teamOverviewBeen.msg);
       }

@@ -14,6 +14,7 @@ class LotteryCenterDataBeen {
   String drawTime;
   int drawIssue;
   String serverTime;
+  bool isChoice;
 
   LotteryCenterDataBeen();
 

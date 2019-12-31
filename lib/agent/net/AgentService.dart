@@ -12,9 +12,12 @@ import 'package:flutter_lisheng_entertainment/model/http/agent/OrdinaryOpenAccou
 import 'package:flutter_lisheng_entertainment/model/http/agent/RechargeListHttpBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/http/agent/TeamAccountChangeHttpBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/http/agent/TeamBettingListHttpBeen.dart';
+import 'package:flutter_lisheng_entertainment/model/http/agent/TeamReportFormHttpBeen.dart';
+import 'package:flutter_lisheng_entertainment/model/http/agent/UserFhHttpBeen.dart';
 import 'package:flutter_lisheng_entertainment/net/ApiService.dart';
 import 'package:flutter_lisheng_entertainment/net/RetrofitManager.dart';
 
+import 'AgencyBonusHandler.dart';
 import 'LinkManagerHandler.dart';
 import 'MemberManagerHandler.dart';
 import 'OrdinaryOpenAccountHandler.dart';
@@ -22,6 +25,7 @@ import 'TeamAccountChangeHandler.dart';
 import 'TeamBettingHandler.dart';
 import 'TeamOverviewHandler.dart';
 import 'TeamRechargeRecordHandler.dart';
+import 'TeamReportFormHandler.dart';
 
 /**
  * AgentService
@@ -186,12 +190,12 @@ class AgentService extends ToastUtilBridge{
   }
 
   /// 团队会员列表
-  void userlist(MemberManagerHandler managerHandler, String name, String page) {
+  void userlist(MemberManagerHandler managerHandler, String name, String page, String limit) {
 
     MemberManagerHttpBeen managerHttpBeen = new MemberManagerHttpBeen();
     managerHttpBeen.page = page;
     managerHttpBeen.username = name;
-    managerHttpBeen.limit = "20";
+    managerHttpBeen.limit = limit;
     managerHttpBeen.token = SpUtil.getString(Constant.TOKEN);
 
     ApiService apiService = RetrofitManager.instance.createApiService();
@@ -207,6 +211,39 @@ class AgentService extends ToastUtilBridge{
     ApiService apiService = RetrofitManager.instance.createApiService();
     apiService.setHandler(teamOverviewHandler);
     apiService.teamAll(baseTokenHttpBeen);
+  }
+
+  /// 团队列表
+  void teamList(TeamReportFormHandler reportFormHandler, String page, String userName, String userId) {
+
+    TeamReportFormHttpBeen reportFormHttpBeen = new TeamReportFormHttpBeen();
+    reportFormHttpBeen.token = SpUtil.getString(Constant.TOKEN);
+    reportFormHttpBeen.limit = "20";
+    reportFormHttpBeen.page = page;
+    reportFormHttpBeen.username = userName;
+    reportFormHttpBeen.user_id = userId;
+
+    ApiService apiService = RetrofitManager.instance.createApiService();
+    apiService.setHandler(reportFormHandler);
+    apiService.teamList(reportFormHttpBeen);
+  }
+
+  /// 我的分红
+  void myFh(AgencyBonusHandler agencyBonusHandler) {
+    BaseTokenHttpBeen baseTokenHttpBeen = new BaseTokenHttpBeen(SpUtil.getString(Constant.TOKEN));
+
+    ApiService apiService = RetrofitManager.instance.createApiService();
+    apiService.setHandler(agencyBonusHandler);
+    apiService.myFh(baseTokenHttpBeen);
+  }
+
+  /// 历史分红
+  void userFh(AgencyBonusHandler agencyBonusHandler, String page) {
+    UserFhHttpBeen openAccountHttpBeen = new UserFhHttpBeen(SpUtil.getString(Constant.TOKEN), "20", page);
+
+    ApiService apiService = RetrofitManager.instance.createApiService();
+    apiService.setHandler(agencyBonusHandler);
+    apiService.userFh(openAccountHttpBeen);
   }
 
 }

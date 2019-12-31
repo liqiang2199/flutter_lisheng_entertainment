@@ -1,9 +1,17 @@
+import 'package:flustars/flustars.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_lisheng_entertainment/Util/ColorUtil.dart';
 import 'package:flutter_lisheng_entertainment/Util/ImageUtil.dart';
 import 'package:flutter_lisheng_entertainment/Util/SpaceViewUtil.dart';
+import 'package:flutter_lisheng_entertainment/agent/net/AgentService.dart';
 import 'package:flutter_lisheng_entertainment/base/BaseRefreshController.dart';
+import 'package:flutter_lisheng_entertainment/model/json/agent/agency_bonus/AgencyBonusBeen.dart';
+import 'package:flutter_lisheng_entertainment/model/json/agent/agency_bonus/AgencyBonusDataBeen.dart';
+import 'package:flutter_lisheng_entertainment/model/json/agent/agency_bonus/AgencyBonusHistoryBeen.dart';
+import 'package:flutter_lisheng_entertainment/model/json/agent/agency_bonus/AgencyBonusHistoryDataListBeen.dart';
 import 'package:flutter_lisheng_entertainment/view/common/CommonView.dart';
+
+import 'net/AgencyBonusHandler.dart';
 
 ///代理分红
 class AgencyBonusController extends StatefulWidget {
@@ -15,7 +23,23 @@ class AgencyBonusController extends StatefulWidget {
 
 }
 
-class _AgencyBonusController extends BaseRefreshController<AgencyBonusController> {
+class _AgencyBonusController extends BaseRefreshController<AgencyBonusController> implements AgencyBonusHandler {
+
+  AgencyBonusDataBeen _agencyBonusDataBeen;
+  List<AgencyBonusHistoryDataListBeen> dataAgencyBonusHistoryList = new List();
+
+  int page = 1;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+    AgentService.instance.myFh(this);
+    AgentService.instance.userFh(this, "$page");
+
+  }
+
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
@@ -50,7 +74,7 @@ class _AgencyBonusController extends BaseRefreshController<AgencyBonusController
         ),
       ),
       //itemExtent: 200.0,
-      itemCount: items.length,
+      itemCount: dataAgencyBonusHistoryList.length,
     );
   }
 
@@ -70,7 +94,7 @@ class _AgencyBonusController extends BaseRefreshController<AgencyBonusController
         ),
       );
     } else {
-      return _agencyBonusList();
+      return _agencyBonusList(dataAgencyBonusHistoryList[index]);
     }
   }
 
@@ -166,13 +190,13 @@ class _AgencyBonusController extends BaseRefreshController<AgencyBonusController
           child: new Column(
             children: <Widget>[
               CommonView().commonLine_NoMargin(context),
-              _recordBottomList("团队盈亏金额：", "11111"),
-              _recordBottomList("有效会员人数：", "11111"),
-              _recordBottomList("应得分红：", "11111"),
-              _recordBottomList("已收到分红：", "11111"),
-              _recordBottomList("应派发分红金额：", "11111"),
-              _recordBottomList("已派发分红金额：", "11111"),
-              _recordBottomList("分红时间：", "11111"),
+              _recordBottomList("团队盈亏金额：", "${_agencyBonusDataBeen != null ? TextUtil.isEmpty(_agencyBonusDataBeen.ykMoney) ? _agencyBonusDataBeen.ykMoney : "0.00": "0.00"}"),
+              _recordBottomList("有效会员人数：", "${_agencyBonusDataBeen != null ? TextUtil.isEmpty("${_agencyBonusDataBeen.yxUserNum}") ? _agencyBonusDataBeen.yxUserNum : "0.00": "0.00"}"),
+              _recordBottomList("应得分红：", "${_agencyBonusDataBeen != null ? TextUtil.isEmpty(_agencyBonusDataBeen.bonus_money) ? _agencyBonusDataBeen.bonus_money : "0.00": "0.00"}"),
+              _recordBottomList("已收到分红：", "${_agencyBonusDataBeen != null ? TextUtil.isEmpty(_agencyBonusDataBeen.fhMoney) ? _agencyBonusDataBeen.fhMoney : "0.00": "0.00"}"),
+              _recordBottomList("应派发分红金额：", ""),
+              _recordBottomList("已派发分红金额：", ""),
+              _recordBottomList("分红时间：", ""),
             ],
           ),
         ),
@@ -209,14 +233,14 @@ class _AgencyBonusController extends BaseRefreshController<AgencyBonusController
     );
   }
 
-  Widget _agencyBonusList() {
+  Widget _agencyBonusList(AgencyBonusHistoryDataListBeen dataListBeen) {
 
     return new Container(
         margin: EdgeInsets.only(left: 15.0, right: 15.0,bottom: 15.0),
         child: new Column(
           children: <Widget>[
-            _agencyBonusListTop(),
-            _agencyBonusListBottom(),
+            _agencyBonusListTop(dataListBeen.createtime),
+            _agencyBonusListBottom(dataListBeen),
 
           ],
         ),
@@ -227,7 +251,7 @@ class _AgencyBonusController extends BaseRefreshController<AgencyBonusController
     );
   }
 
-  Widget _agencyBonusListTop() {
+  Widget _agencyBonusListTop(String time) {
 
     return new Container(
       padding: EdgeInsets.only(left: 10.0, right: 10.0),
@@ -237,7 +261,7 @@ class _AgencyBonusController extends BaseRefreshController<AgencyBonusController
 
           new Expanded(
             child: new Text(
-              "2019-11-01",
+              "$time",
               style: new TextStyle(
                 fontSize: 12.0,
                 color: Color(ColorUtil.textColor_333333),
@@ -260,7 +284,7 @@ class _AgencyBonusController extends BaseRefreshController<AgencyBonusController
     );
   }
 
-  Widget _agencyBonusListBottom() {
+  Widget _agencyBonusListBottom(AgencyBonusHistoryDataListBeen dataListBeen) {
 
     return new Container(
       padding: EdgeInsets.only(bottom: 15.0,left: 10.0, right: 10.0),
@@ -268,26 +292,50 @@ class _AgencyBonusController extends BaseRefreshController<AgencyBonusController
         children: <Widget>[
 
           CommonView().commonLine_NoMargin(context),
-          _agencyBonusListBottomDetail("分红比例：", "团队盈亏："),
-          _agencyBonusListBottomDetail("分红金额：", "状态："),
+          _agencyBonusListBottomDetail("分红比例：","${dataListBeen.bili}"
+              , "团队盈亏：","${dataListBeen.money}"),
+
+          _agencyBonusListBottomDetail("分红金额：","${dataListBeen.bonus_money}"
+              , "状态："," ${!TextUtil.isEmpty(dataListBeen.moneytype) ? dataListBeen.moneytype == "+" ?"盈利": "亏损":"亏损"}"),
 
         ],
       ),
     );
   }
 
-  Widget _agencyBonusListBottomDetail(String titleOne, String titleTwo) {
+  Widget _agencyBonusListBottomDetail(String titleOne,String oneContent, String titleTwo, String twoContent) {
 
     return new Container(
       child: new Row(
         children: <Widget>[
 
-          new Expanded(child: _recordBottomList(titleOne, "11111"),),
-          new Expanded(child: _recordBottomList(titleTwo, "11111"),),
+          new Expanded(child: _recordBottomList(titleOne, oneContent),),
+          new Expanded(child: _recordBottomList(titleTwo, twoContent),),
 
         ],
       ),
     );
+  }
+
+  @override
+  void setAgencyBonusBeen(AgencyBonusBeen dataBeen) {
+    this._agencyBonusDataBeen = dataBeen.data;
+    setState(() {
+
+    });
+  }
+
+  @override
+  void setAgencyBonusHistoryBeen(AgencyBonusHistoryBeen dataBeen) {
+    if (page == 1) {
+      AgencyBonusHistoryDataListBeen historyDataListBeenTop = new AgencyBonusHistoryDataListBeen();
+      dataAgencyBonusHistoryList.add(historyDataListBeenTop);
+      dataAgencyBonusHistoryList.add(historyDataListBeenTop);
+    }
+    dataAgencyBonusHistoryList.addAll(dataBeen.data);
+    setState(() {
+
+    });
   }
 
 }

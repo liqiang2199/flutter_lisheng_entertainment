@@ -17,7 +17,8 @@ LotteryCenterDataBeen _$LotteryCenterDataBeenFromJson(
     ..preDrawCode = json['preDrawCode'] as String
     ..drawTime = json['drawTime'] as String
     ..drawIssue = json['drawIssue'] as int
-    ..serverTime = json['serverTime'] as String;
+    ..serverTime = json['serverTime'] as String
+    ..isChoice = json['isChoice'] as bool;
 }
 
 Map<String, dynamic> _$LotteryCenterDataBeenToJson(
@@ -32,4 +33,5 @@ Map<String, dynamic> _$LotteryCenterDataBeenToJson(
       'drawTime': instance.drawTime,
       'drawIssue': instance.drawIssue,
       'serverTime': instance.serverTime,
+      'isChoice': instance.isChoice,
     };

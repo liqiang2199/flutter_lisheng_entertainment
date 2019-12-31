@@ -101,13 +101,6 @@ class _HomeControllerView extends BaseController<HomeControllerView> implements 
 
     });
 
-    /// 退出登录时退出首页
-    eventBus.on<LoginOutBusBeen>().listen((event){
-      if (event != null && event.isLoginOut) {
-        Navigator.pop(context);
-      }
-    });
-
   }
 
   _addNormolCp(List<LotteryTypeDataListLotteryBeen> lottery) {

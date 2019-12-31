@@ -9,6 +9,8 @@ import 'package:flutter_lisheng_entertainment/Util/StringUtil.dart';
 import 'package:flutter_lisheng_entertainment/view/ListStateItemView.dart';
 import 'package:flutter_lisheng_entertainment/view/common/CommonView.dart';
 
+import 'team_controller/TeamReportFormController.dart';
+
 /// 代理中心
 class AgentCenterController extends StatefulWidget{
   @override
@@ -271,7 +273,19 @@ class _AgentCenterController extends State<AgentCenterController> {
               break;
             case 1:
               //团队报表
-              Navigator.pushNamed(context, RouteUtil.teamReportFormController);
+              //Navigator.pushNamed(context, RouteUtil.teamReportFormController);
+              try {
+                Navigator.of(context).pushAndRemoveUntil(new MaterialPageRoute(
+                  builder: (BuildContext context) => TeamReportFormController(),
+                  settings: RouteSettings(
+                    arguments: {"userIdDL" : "0"},
+                  ),
+                ), (//跳转到主页
+                    // ignore: unrelated_type_equality_checks
+                    Route route) => route == RouteUtil.teamReportFormController);
+              } catch (e) {
+
+              }
               break;
             case 2:
               //团队账变

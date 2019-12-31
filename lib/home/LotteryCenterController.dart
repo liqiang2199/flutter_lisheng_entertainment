@@ -29,7 +29,9 @@ class _LotteryCenterController extends BaseRefreshController<LotteryCenterContro
     // TODO: implement initState
     super.initState();
 
-    HomeService.instance.getApiHome(this);
+    Future.delayed(Duration(milliseconds: 300)).then((value){
+      HomeService.instance.getApiHome(this);
+    });
 
   }
 
