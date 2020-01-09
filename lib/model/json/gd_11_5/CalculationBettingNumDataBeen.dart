@@ -11,6 +11,7 @@ class CalculationBettingNumDataBeen extends BaseJson {
   String play_name;
   String money_award;
   String money;
+  String fd;// 返点
 
   CalculationBettingNumDataBeen(this.data_num, this.count, this.play_name,
       this.money_award, this.money);

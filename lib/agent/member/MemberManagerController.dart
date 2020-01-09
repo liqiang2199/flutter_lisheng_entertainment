@@ -33,7 +33,7 @@ class _MemberManagerController extends BaseRefreshController<MemberManagerContro
     // TODO: implement initState
     super.initState();
 
-    AgentService.instance.userlist(this, userName, "$page", "$limit");
+    //AgentService.instance.userlist(this, userName, "$page", "$limit");
 
   }
 
@@ -65,8 +65,7 @@ class _MemberManagerController extends BaseRefreshController<MemberManagerContro
   }
 
   @override
-  void onLoadingData() {
-    super.onLoadingData();
+  void onLoadingDataRefresh() {
     AgentService.instance.userlist(this, userName, "$page", "$limit");
   }
 

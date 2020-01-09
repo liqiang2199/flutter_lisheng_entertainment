@@ -98,18 +98,20 @@ class LotteryTimeNumChildView extends BaseController<LotteryTimeNumView> {
     this.playRemark = playRemark;
     this.openLotteryListBeen = openLotteryListBeen;
 
-    setState(() {
+    if (mounted)
+      setState(() {
 
-    });
+      });
   }
 
   void onSetRefreshState(String time, String qs) {
     this.openLotteryTime = time;
     this.openLotteryDrawIssue = qs;
 
-    setState(() {
+    if (mounted)
+      setState(() {
 
-    });
+      });
   }
 
   /**

@@ -3,16 +3,17 @@ import 'package:flustars/flustars.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_lisheng_entertainment/Util/ColorUtil.dart';
+import 'package:flutter_lisheng_entertainment/base/BaseController.dart';
 import 'package:flutter_lisheng_entertainment/game_hall/game_bridge/BonusAdjustmentInterface.dart';
 import 'package:flutter_lisheng_entertainment/view/common/CommonView.dart';
 
 /**
  * 奖金调节
  */
-class BonusAdjustmentView extends StatelessWidget {
+///
 
+class BonusAdjustmentView extends StatefulWidget {
 
-  TextEditingController textEditingController = new TextEditingController();
 
   final BonusAdjustmentInterface adjustmentInterface; // 奖金调节回调接口
   final int multipleNum;
@@ -26,6 +27,36 @@ class BonusAdjustmentView extends StatelessWidget {
     this.segmentedIndex = 0,
     this.sliderValue = 0.0,
   }) : super(key: key);
+
+  @override
+  State<StatefulWidget> createState() {
+    // TODO: implement createState
+    return BonusAdjustmentStateView(
+      adjustmentInterface: this.adjustmentInterface,
+      multipleNum: this.multipleNum,
+      segmentedIndex: this.segmentedIndex,
+      sliderValue: this.sliderValue,
+    );
+  }
+
+}
+
+class BonusAdjustmentStateView extends BaseController<BonusAdjustmentView> {
+
+
+  TextEditingController textEditingController = new TextEditingController();
+
+  BonusAdjustmentInterface adjustmentInterface; // 奖金调节回调接口
+  int multipleNum;
+  int segmentedIndex;
+  double sliderValue;
+
+  BonusAdjustmentStateView({
+    this.adjustmentInterface,
+    this.multipleNum,
+    this.segmentedIndex,
+    this.sliderValue ,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -69,24 +100,24 @@ class BonusAdjustmentView extends StatelessWidget {
   Widget _sliderPro() {
 
     return new Container(
-        child: new Row(
+      child: new Row(
         children: <Widget>[
 
           new Expanded(
-              child: new Slider(
-                  value: this.sliderValue,
-                  max: 1994,
-                  min: 1800,
-                  divisions: 97,//
-                  activeColor: Color(ColorUtil.butColor),
-                  inactiveColor: Color(ColorUtil.textColor_888888),
-                  onChanged: (value) {
-                    print("Slider $value");
-                    if(adjustmentInterface != null) {
-                      adjustmentInterface.sliderChangeNum(value);
-                    }
-                  },
-              ),
+            child: new Slider(
+              value: this.sliderValue,
+              max: 1994,
+              min: 1800,
+              divisions: 97,//
+              activeColor: Color(ColorUtil.butColor),
+              inactiveColor: Color(ColorUtil.textColor_888888),
+              onChanged: (value) {
+                print("Slider $value");
+                if(adjustmentInterface != null) {
+                  adjustmentInterface.sliderChangeNum(value);
+                }
+              },
+            ),
           ),
 
           _proportion("${this.sliderValue}/${(this.sliderValue - 1800.0)/ 20}%")
@@ -95,6 +126,17 @@ class BonusAdjustmentView extends StatelessWidget {
       ),
     );
 
+  }
+
+  /// 刷新 奖金调节界面
+  bonusAdjustmentRefreshState(int segmentedIndex, double sliderValue, int bettingMultipleNum) {
+    this.segmentedIndex = segmentedIndex;
+    this.sliderValue = sliderValue;
+    this.multipleNum = bettingMultipleNum;
+    if (mounted)
+      setState(() {
+
+      });
   }
 
   // 奖金调节比例显示
@@ -178,7 +220,7 @@ class BonusAdjustmentView extends StatelessWidget {
   }
 
   Widget _addBettingView() {
-    
+
     return new Container(
       margin: EdgeInsets.only(right: 15.0),
       child: new Row(
@@ -194,7 +236,7 @@ class BonusAdjustmentView extends StatelessWidget {
   }
 
   Widget _addBettingItemView() {
-    
+
     return new GestureDetector(
       onTap: () {
         /// 倍数调节 -

@@ -21,13 +21,38 @@ class BettingController extends StatefulWidget {
 
 }
 
-class _BettingController extends BaseController<BettingController>{
+class _BettingController extends BaseController<BettingController> with SingleTickerProviderStateMixin{
 
   int _segmentedIndex = 2;//顶部菜单 切换
   // 显示那个 对应的界面 initialPage
   PageController mPageController = PageController(initialPage: 2);
   var isPageCanChanged = true;
 
+  TabController mTabController;
+
+  /// 初始化 TabPageController
+  initTabPageController() {
+    mTabController = TabController(
+      length: 4,
+      vsync: this,
+    );
+    mTabController.addListener(() {//TabBar的监听
+      print(mTabController.index);
+      if (mounted)
+        setState(() {
+          _segmentedIndex = mTabController.index;
+        });
+    });
+
+    mTabController.animateTo(_segmentedIndex);
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    initTabPageController();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -43,25 +68,11 @@ class _BettingController extends BaseController<BettingController>{
       body: new Column(
         children: <Widget>[
           new Expanded(
-            child: _pageView(),
+            child: _tabView(),
           ),
         ],
       ),
     );
-  }
-
-  onPageChange(int index, {PageController p, TabController t}) async {
-    if (p != null) {//判断是哪一个切换
-      isPageCanChanged = false;
-      //等待pageview切换完毕,再释放pageivew监听
-      await mPageController.animateToPage(index, duration: Duration(milliseconds: 500), curve: Curves.ease);
-      isPageCanChanged = true;
-    } else {
-//      mTabController.animateTo(index);//切换Tabbar
-      setState(() {
-        _segmentedIndex = index;
-      });
-    }
   }
 
   Widget _appBarTitle() {
@@ -75,10 +86,13 @@ class _BettingController extends BaseController<BettingController>{
       },
         onValueChanged: (value){
           print("the value changed ! $value");
-          setState(() {
-            _segmentedIndex = value;
-          });
-          onPageChange(value, p: mPageController);
+          mTabController.animateTo(value);//切换Tabbar
+          if (mounted)
+            setState(() {
+              _segmentedIndex = value;
+            });
+
+          //onPageChange(value, p: mPageController);
         },
         groupValue: _segmentedIndex,
       ),
@@ -95,20 +109,21 @@ class _BettingController extends BaseController<BettingController>{
     );
   }
 
-  Widget _pageView() {
+  Widget _tabView() {
 
-    return PageView.builder(
-      itemCount: 4,
-      onPageChanged: (index) {
-        if (isPageCanChanged) {//由于pageview切换是会回调这个方法,又会触发切换tabbar的操作,所以定义一个flag,控制pageview的回调
-          onPageChange(index);
-        }
-      },
-      controller: mPageController,
-      itemBuilder: (BuildContext context, int index) {
-        return _pageViewIndex(index);
-      },
+    return new TabBarView(
+        controller: this.mTabController,
+        children: _tabListView()
     );
+  }
+
+  List<Widget> _tabListView() {
+    List<Widget> tabViewList = new List();
+
+    for (int i = 0; i < 4; i++) {
+      tabViewList.add(_pageViewIndex(i));
+    }
+    return tabViewList;
   }
 
   Widget _pageViewIndex(var index) {

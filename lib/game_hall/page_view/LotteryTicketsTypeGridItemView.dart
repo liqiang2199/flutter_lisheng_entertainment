@@ -94,7 +94,7 @@ class _LotteryTicketsTypeGridItemView extends BaseController<LotteryTicketsTypeG
         primary: false,
         mainAxisSpacing: 0.0,//竖向间距
         crossAxisSpacing: 0.0,//横向间距
-        childAspectRatio: 1.0,
+        childAspectRatio: 0.85,
         children: _gridListItemView(),
         shrinkWrap: true,
 
@@ -115,6 +115,10 @@ class _LotteryTicketsTypeGridItemView extends BaseController<LotteryTicketsTypeG
             case 9:
               //广东11 选 5
               Navigator.pushNamed(context, RouteUtil.bettingController);
+              break;
+            case 15:
+              //越南 河内1分彩
+              Navigator.pushNamed(context, RouteUtil.vietnamHanoiOneLotteryController);
               break;
             case -1:
               // 添加常玩彩种
@@ -141,6 +145,9 @@ class _LotteryTicketsTypeGridItemView extends BaseController<LotteryTicketsTypeG
               fontSize: 14.0,
               color: Color(ColorUtil.textColor_888888)
           ),
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
+          textAlign: TextAlign.center,
         ),
 
       ],
@@ -159,6 +166,9 @@ class _LotteryTicketsTypeGridItemView extends BaseController<LotteryTicketsTypeG
               fontSize: 14.0,
               color: Color(ColorUtil.textColor_888888)
           ),
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
+          textAlign: TextAlign.center,
         ),
 
       ],

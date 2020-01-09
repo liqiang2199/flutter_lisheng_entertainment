@@ -32,7 +32,7 @@ class _LotteryNum11Choice5Controller extends BaseRefreshController<LotteryNum11C
     // TODO: implement initState
     super.initState();
 
-    GameService.instance.kjlogList("9","1", this);
+    //GameService.instance.kjlogList("9","1", this);
   }
 
   @override
@@ -44,8 +44,10 @@ class _LotteryNum11Choice5Controller extends BaseRefreshController<LotteryNum11C
     );
   }
 
+  @override
   void onRefreshData() {
-    GameService.instance.kjlogList("9","1", this);
+    page = 1;
+    GameService.instance.kjlogList("9","$page", this);
   }
 
   @override

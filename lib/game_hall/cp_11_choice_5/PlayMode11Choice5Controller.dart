@@ -426,9 +426,10 @@ class _PlayMode11Choice5Controller extends BaseController<PlayMode11Choice5Contr
       }
     });
 
-    setState(() {
+    if (mounted)
+      setState(() {
 
-    });
+      });
   }
 
 }

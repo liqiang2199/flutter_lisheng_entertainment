@@ -6,10 +6,10 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 abstract class BaseRefreshController<T extends StatefulWidget> extends BaseController<T> {
 
   List items = new List();
-  RefreshController refreshController = RefreshController(initialRefresh: false);
+  RefreshController refreshController = RefreshController(initialRefresh: true);
 
-  int count;//每个列表总数量
-  int limit = 20;//每页20 条数据
+  int count = 0;//每个列表总数量
+  int limit = 4;//每页20 条数据
   int page = 1;// 页数
 
   void _onRefresh() async{
@@ -31,26 +31,37 @@ abstract class BaseRefreshController<T extends StatefulWidget> extends BaseContr
   /// 下拉数据更新
   void onRefreshData() {
     page = 1;
-    refreshController.footerMode = ValueNotifier(LoadStatus.idle);
+//    refreshController.footerMode = ValueNotifier(LoadStatus.idle);
+//    refreshController.footerMode = ValueNotifier(LoadStatus.canLoading);
+
   }
 
   /// 上拉数据更新
   void onLoadingData() {
-    page ++;
+
     if (count >= limit*page) {
-      refreshController.footerMode = ValueNotifier(LoadStatus.idle);
+      page ++;
+//      refreshController.footerMode = ValueNotifier(LoadStatus.idle);
+//      refreshController.footerMode = ValueNotifier(LoadStatus.canLoading);
+      onLoadingDataRefresh();
+
+      refreshController.loadComplete();
     } else {
       //大于当前列表总和
-      refreshController.footerMode = ValueNotifier(LoadStatus.noMore);
+//      refreshController.footerMode = ValueNotifier(LoadStatus.idle);
+//      refreshController.footerMode = ValueNotifier(LoadStatus.noMore);
+      refreshController.loadNoData();
     }
 
-    if(mounted)
+    if (mounted) {
       setState(() {
         //onLoadingData();
       });
-    refreshController.loadComplete();
+    }
 
   }
+
+  void onLoadingDataRefresh(){}
 
   Widget smartRefreshBase(Widget child) {
     return new SmartRefresher(
@@ -58,6 +69,7 @@ abstract class BaseRefreshController<T extends StatefulWidget> extends BaseContr
       enablePullUp: isCanLoadMore(),
       header: ClassicHeader(),
       footer: CustomFooter(
+        loadStyle: LoadStyle.ShowAlways,
         builder: (BuildContext context,LoadStatus mode){
           Widget body ;
           if(mode==LoadStatus.idle){
@@ -71,6 +83,9 @@ abstract class BaseRefreshController<T extends StatefulWidget> extends BaseContr
           }
           else if(mode == LoadStatus.canLoading){
             body = Text("松手,加载更多!");
+          }
+          else if(mode == LoadStatus.noMore){
+            body = Text("没有更多数据了!");
           }
           else{
             body = Text("没有更多数据了!");

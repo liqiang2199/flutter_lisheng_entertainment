@@ -29,7 +29,7 @@ class _AccountChangeRecordController extends BaseRefreshTabController<AccountCha
   String type = "0";
   String startTime = "0";
   String endTime = "0";
-  int page = 1;
+  //int page = 1;
 
   List<AccountChangeRecordDataListBeen> accountRecordList = new List();
 
@@ -40,7 +40,7 @@ class _AccountChangeRecordController extends BaseRefreshTabController<AccountCha
     initTabData();
     initTabPageController();
 
-    UserService.instance.moneyLog(this, "0", page, startTime, endTime);
+    //UserService.instance.moneyLog(this, "0", page, startTime, endTime, limit);
   }
 
   @override
@@ -52,7 +52,7 @@ class _AccountChangeRecordController extends BaseRefreshTabController<AccountCha
         children: <Widget>[
           _tabPage(),
           SelectionTimeView(this),
-          new Expanded(child: _pageView(),),
+          new Expanded(child: _tabView(),),
         ],
       ),
     );
@@ -74,9 +74,20 @@ class _AccountChangeRecordController extends BaseRefreshTabController<AccountCha
   }
 
   @override
+  bool isUserTabPage() {
+
+    return false;
+  }
+
+  @override
   void onRefreshData() {
     page = 1;
-    UserService.instance.moneyLog(this, type, page, startTime, endTime);
+    UserService.instance.moneyLog(this, type, page, startTime, endTime, limit);
+  }
+
+  @override
+  void onLoadingDataRefresh() {
+    UserService.instance.moneyLog(this, type, page, startTime, endTime, limit);
   }
 
   Widget _tabPage() {
@@ -98,23 +109,42 @@ class _AccountChangeRecordController extends BaseRefreshTabController<AccountCha
     );
   }
 
-  Widget _pageView() {
+//  Widget _pageView() {
+//
+//    return PageView.builder(
+//      itemCount: tabList.length,
+//      onPageChanged: (index) {
+//        if (isPageCanChanged) {//由于pageview切换是会回调这个方法,又会触发切换tabbar的操作,所以定义一个flag,控制pageview的回调
+//          onPageChange(index);
+//          type = "${tabList[index].id}";
+//        }
+//      },
+//      controller: mPageController,
+//      itemBuilder: (BuildContext context, int index) {
+//        return smartRefreshBase(
+//          _listRecordItem(),
+//        );
+//      },
+//    );
+//  }
 
-    return PageView.builder(
-      itemCount: tabList.length,
-      onPageChanged: (index) {
-        if (isPageCanChanged) {//由于pageview切换是会回调这个方法,又会触发切换tabbar的操作,所以定义一个flag,控制pageview的回调
-          onPageChange(index);
-          type = "${tabList[index].id}";
-        }
-      },
-      controller: mPageController,
-      itemBuilder: (BuildContext context, int index) {
-        return smartRefreshBase(
-          _listRecordItem(),
-        );
-      },
+  Widget _tabView() {
+
+    return new TabBarView(
+        controller: this.mTabController,
+        children: _tabListView()
     );
+  }
+
+  List<Widget> _tabListView() {
+    List<Widget> tabViewList = new List();
+
+    for (int i = 0; i < tabList.length; i++) {
+      tabViewList.add(smartRefreshBase(
+        _listRecordItem(),
+      ));
+    }
+    return tabViewList;
   }
 
   /// 个人账变信息 列表
@@ -358,15 +388,16 @@ class _AccountChangeRecordController extends BaseRefreshTabController<AccountCha
   @override
   void selectionStartTime(String endTime) {
     this.endTime = endTime;
-    UserService.instance.moneyLog(this, type, page, startTime, endTime);
+    UserService.instance.moneyLog(this, type, page, startTime, endTime, limit);
   }
 
   @override
   void changeTabIndex(int pos) {
+    page = 1;
     var tabListD = tabList[pos];
     type = "${tabListD.id}";
     Future.delayed(Duration(milliseconds: 1000)).then((value){
-      UserService.instance.moneyLog(this, type, page, startTime, endTime);
+      UserService.instance.moneyLog(this, type, page, startTime, endTime, limit);
     });
 
   }
@@ -375,12 +406,16 @@ class _AccountChangeRecordController extends BaseRefreshTabController<AccountCha
   void setAccountChangeRecord(AccountChangeRecordBeen changeRecordBeen) {
     if (page == 1) {
       accountRecordList.clear();
+      count = changeRecordBeen.data.count;
     }
     items = changeRecordBeen.data.data;
     accountRecordList.addAll(changeRecordBeen.data.data);
-    setState(() {
+    if(mounted) {
+      setState(() {
 
-    });
+      });
+    }
+
   }
 
 }

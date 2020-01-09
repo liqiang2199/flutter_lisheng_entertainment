@@ -148,9 +148,10 @@ class AgentService extends ToastUtilBridge{
    * 团队投注
    */
   ///
-  void teamBettingList(TeamBettingHandler bettingHandler, String userName, String time, String endTime, String lotteryId, String qs, String page, String status) {
+  void teamBettingList(TeamBettingHandler bettingHandler, String userName, String time, String endTime, String lotteryId
+      , String qs, String page, String status, int limit) {
     TeamBettingListHttpBeen teamBettingListHttpBeen =
-            new TeamBettingListHttpBeen (SpUtil.getString(Constant.TOKEN), userName, "20", page, lotteryId, status,qs,time );
+            new TeamBettingListHttpBeen (SpUtil.getString(Constant.TOKEN), userName, "$limit", page, lotteryId, status,qs,time );
     teamBettingListHttpBeen.start_date = time;
     teamBettingListHttpBeen.end_date = endTime;
 
@@ -160,12 +161,12 @@ class AgentService extends ToastUtilBridge{
   }
 
   /// 团队账变
-  void teamMoneyLog(TeamAccountChangeHandler accountChangeHandler, String userName, String time, String endTime,String page, String status) {
+  void teamMoneyLog(TeamAccountChangeHandler accountChangeHandler, String userName, String time, String endTime,String page, String status, int limit) {
 
     TeamAccountChangeHttpBeen teamBettingListHttpBeen = new TeamAccountChangeHttpBeen();
     teamBettingListHttpBeen.token = SpUtil.getString(Constant.TOKEN);
     teamBettingListHttpBeen.page = page;
-    teamBettingListHttpBeen.limit = "20";
+    teamBettingListHttpBeen.limit = "$limit";
     teamBettingListHttpBeen.type = status;
     teamBettingListHttpBeen.end_date = endTime;
     teamBettingListHttpBeen.start_date = time;
@@ -214,11 +215,11 @@ class AgentService extends ToastUtilBridge{
   }
 
   /// 团队列表
-  void teamList(TeamReportFormHandler reportFormHandler, String page, String userName, String userId) {
+  void teamList(TeamReportFormHandler reportFormHandler, String page, String userName, String userId, int limit) {
 
     TeamReportFormHttpBeen reportFormHttpBeen = new TeamReportFormHttpBeen();
     reportFormHttpBeen.token = SpUtil.getString(Constant.TOKEN);
-    reportFormHttpBeen.limit = "20";
+    reportFormHttpBeen.limit = "$limit";
     reportFormHttpBeen.page = page;
     reportFormHttpBeen.username = userName;
     reportFormHttpBeen.user_id = userId;

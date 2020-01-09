@@ -17,7 +17,8 @@ CalculationBettingNumDataBeen _$CalculationBettingNumDataBeenFromJson(
   )
     ..code = json['code'] as int
     ..msg = json['msg'] as String
-    ..time = json['time'];
+    ..time = json['time']
+    ..fd = json['fd'] as String;
 }
 
 Map<String, dynamic> _$CalculationBettingNumDataBeenToJson(
@@ -31,4 +32,5 @@ Map<String, dynamic> _$CalculationBettingNumDataBeenToJson(
       'play_name': instance.play_name,
       'money_award': instance.money_award,
       'money': instance.money,
+      'fd': instance.fd,
     };

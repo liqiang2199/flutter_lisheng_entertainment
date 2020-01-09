@@ -7,7 +7,6 @@ import 'package:flutter_lisheng_entertainment/Util/SpaceViewUtil.dart';
 import 'package:flutter_lisheng_entertainment/base/BaseController.dart';
 import 'package:flutter_lisheng_entertainment/view/ListStateItemView.dart';
 import 'package:flutter_lisheng_entertainment/view/common/CommonView.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 /// 线路选择
 //class LineSwitchingDialog extends Dialog {

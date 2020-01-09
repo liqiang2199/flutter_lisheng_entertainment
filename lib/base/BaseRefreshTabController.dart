@@ -20,13 +20,19 @@ abstract class BaseRefreshTabController<T extends StatefulWidget, B>
       vsync: this,
     );
     mTabController.addListener(() {//TabBar的监听
-      if (mTabController.indexIsChanging) {//判断TabBar是否切换
+      if (!isUserTabPage()) {
         print(mTabController.index);
         changeTabIndex(mTabController.index);
-        if (isUserTabPage()) {
-          onPageChange(mTabController.index, p: mPageController);
+      } else {
+        if (mTabController.indexIsChanging) {//判断TabBar是否切换
+          print(mTabController.index);
+          changeTabIndex(mTabController.index);
+          if (isUserTabPage()) {
+            onPageChange(mTabController.index, p: mPageController);
+          }
         }
       }
+
     });
   }
 
@@ -55,8 +61,9 @@ abstract class BaseRefreshTabController<T extends StatefulWidget, B>
 
   @override
   void dispose() {
-    super.dispose();
     mTabController.dispose();
+    super.dispose();
+
   }
 
 }

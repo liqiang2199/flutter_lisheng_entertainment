@@ -3,18 +3,23 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_lisheng_entertainment/Util/ColorUtil.dart';
+import 'package:flutter_lisheng_entertainment/base/BaseController.dart';
 import 'package:flutter_lisheng_entertainment/game_hall/game_bridge/Choose11And5Interface.dart';
 import 'package:flutter_lisheng_entertainment/view/common/CommonView.dart';
 
 /**
  * 彩种  11 选 5 的 布局
+ * 越南 河内一分彩
  */
-class Choose11And5View extends StatelessWidget {
+///
 
-  List<String> cpNumStr = ["01","02","03","04","05","06","07","08","09","10","11"];
+class Choose11And5View extends StatefulWidget {
+
+  //List<String> cpNumStr = ["01","02","03","04","05","06","07","08","09","10","11"];
   List<bool> cpNumBool = [false, false, false, false, false, false, false, false, false, false, false];
   List<bool> chooseTypeList = [false, false, false, false, false, false];
 
+  final List<String> cpNumStr;
   final int typeIndex;
   final List<int> cpNumIndex ;
   final List<String> choiceCpNumList ;//选中list 的集合
@@ -35,9 +40,57 @@ class Choose11And5View extends StatelessWidget {
     /// 每行的文本提示
     this.titleTip,
     this.choiceCpNumList,
+    this.cpNumStr,
   }) : assert(
-    choose11and5interface != null,
+  choose11and5interface != null,
   ), super(key: key);
+
+  @override
+  State<StatefulWidget> createState() {
+    // TODO: implement createState
+    return Choose11And5StateView(
+      choose11and5interface: choose11and5interface,
+      typeIndex: typeIndex,
+      cpNumIndex: cpNumIndex,
+      isClickType: isClickType,
+      viewIndex: viewIndex,
+      titleTip: titleTip,
+      choiceCpNumList: choiceCpNumList,
+      cpNumStr: cpNumStr,
+    );
+  }
+
+
+}
+
+class Choose11And5StateView extends BaseController<Choose11And5View> {
+
+  //List<String> cpNumStr = ["01","02","03","04","05","06","07","08","09","10","11"];
+  List<bool> cpNumBool = new List();
+  List<bool> chooseTypeList = [false, false, false, false, false, false];// 大小单双
+
+  List<String> cpNumStr;
+  int typeIndex;
+  List<int> cpNumIndex ;
+  List<String> choiceCpNumList ;//选中list 的集合
+
+  bool isClickType;
+  int viewIndex;
+  String titleTip;
+
+  Choose11And5Interface choose11and5interface;
+
+  Choose11And5StateView({
+    this.choose11and5interface,
+    this.typeIndex = -1,
+    this.cpNumIndex,
+    this.isClickType = false,
+    this.viewIndex,
+    /// 每行的文本提示
+    this.titleTip,
+    this.choiceCpNumList,
+    this.cpNumStr,
+  }) ;
 
   /// 选中 全
   _selectionAll() {
@@ -57,8 +110,10 @@ class Choose11And5View extends StatelessWidget {
     if (isClickType) {
       if (typeIndex == 1) {
         //全 默认全部选中
-        for (int i = 0; i < cpNumIndex.length; i++) {
-          if(i > 4) {
+        var length = cpNumIndex.length;
+        var lSize = length / 2;
+        for (int i = 0; i < length; i++) {
+          if(i >= lSize) {
             cpNumIndex[i] = 0;
           } else {
             cpNumIndex[i] = -1;
@@ -73,8 +128,10 @@ class Choose11And5View extends StatelessWidget {
     if (isClickType) {
       if (typeIndex == 2) {
         //全 默认全部选中
-        for (int i = 0; i < cpNumIndex.length; i++) {
-          if(i > 4) {
+        var length = cpNumIndex.length;
+        var lSize = length / 2;
+        for (int i = 0; i < length; i++) {
+          if(i >= lSize) {
             cpNumIndex[i] = -1;
           } else {
             cpNumIndex[i] = 0;
@@ -87,16 +144,31 @@ class Choose11And5View extends StatelessWidget {
     }
   }
 
-  /// 选中 奇偶切换   odd(奇) 
+  /// 选中 奇偶切换   odd(奇)
   _selectionParity(bool isOdd) {
     if (isClickType) {
       if (typeIndex == 3 || typeIndex == 4) {
         //全 默认全部选中
-        for (int i = 0; i < cpNumIndex.length; i++) {
-          if(i%2 == 0) {
-            cpNumIndex[i] = isOdd ? 0 : -1;
-          } else {
-            cpNumIndex[i] = isOdd ? -1 : 0;
+        var length = cpNumIndex.length;
+        if (length % 2 == 0) {
+          // length 偶数
+          for (int i = 0; i < length; i++) {
+            if(i%2 == 0) {
+              // 偶
+              cpNumIndex[i] = isOdd ? -1 : 0;
+            } else {
+              cpNumIndex[i] = isOdd ? 0 : -1;
+            }
+          }
+        } else {
+          // length 奇数
+          for (int i = 0; i < length; i++) {
+            if((i+1)%2 == 0) {
+              // 偶
+              cpNumIndex[i] = isOdd ? -1 : 0;
+            } else {
+              cpNumIndex[i] = isOdd ? 0 : -1;
+            }
           }
         }
 
@@ -136,8 +208,19 @@ class Choose11And5View extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
-    // TODO: implement build
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+    if (cpNumStr != null) {
+      for (int i = 0;i < cpNumStr.length; i++) {
+        cpNumBool.add(false);
+      }
+    }
+  }
+
+  /// 改变彩票类型选择状态
+  _changeCpTypeChoiceState() {
     if (typeIndex >= 0) {
 
       for (int i = 0; i<chooseTypeList.length; i++) {
@@ -170,14 +253,19 @@ class Choose11And5View extends StatelessWidget {
 
     if (cpNumIndex != null && cpNumIndex.length > 0) {
       for (int num = 0; num < cpNumIndex.length; num++) {
-//        print("cpNumIndex  =$num  cpNumIndex[num] = ${cpNumIndex[num]}");
         if(cpNumIndex[num] >= 0) {
-          cpNumBool[num] = !cpNumBool[num];
+          cpNumBool[num] = true;
         } else {
           cpNumBool[num] = false;
         }
       }
     }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // TODO: implement build
+
 
     return new Column(
       children: <Widget>[
@@ -236,8 +324,8 @@ class Choose11And5View extends StatelessWidget {
           child: new Text(
             title,
             style: TextStyle(
-                fontSize: 14.0,
-                color: Color(colorId),
+              fontSize: 14.0,
+              color: Color(colorId),
             ),
             textAlign: TextAlign.center,
           ),
@@ -347,6 +435,53 @@ class Choose11And5View extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  /// 选中刷新
+  chooseCpNumViewListRefresh(List<int> cpNumList, bool isClickType) {
+    this.cpNumIndex = cpNumList;
+    this.isClickType = isClickType;
+    _changeCpTypeChoiceState();
+    if (mounted)
+      setState(() {
+
+      });
+  }
+
+  /// 大小单双
+  chooseCpNumViewListTypeIndexList(int _typeIndexList, bool isClickType) {
+    this.typeIndex = _typeIndexList;
+    this.isClickType = isClickType;
+    _changeCpTypeChoiceState();
+    if (mounted)
+      setState(() {
+
+      });
+  }
+
+  /// 大小单双  号码
+  chooseCpNumViewListTypeIndexRefresh(List<int> cpNumList, int _typeIndexList, bool isClickType) {
+    this.cpNumIndex = cpNumList;
+    this.typeIndex = _typeIndexList;
+    this.isClickType = isClickType;
+    _changeCpTypeChoiceState();
+    if (mounted)
+      setState(() {
+
+      });
+  }
+
+  /// 随机选中 baseNum 随机基数
+  randomChoiceCpNum(int baseNum) {
+    var randomNum = Random().nextInt(4) + baseNum;
+
+    for (var i = 0; i < randomNum; i++) {
+      cpNumIndex[Random().nextInt(11)] = 0;
+    }
+    if (mounted)
+      setState(() {
+
+      });
   }
 
 }

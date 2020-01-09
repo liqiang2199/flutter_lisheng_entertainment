@@ -11,6 +11,9 @@ class BettingNumSingleFormEditView extends StatelessWidget{
 
   final int singleFormNum;//单式 判断输入多少加一个 分隔符号
   final String editContent;// 传入输入的内容
+  final int singleFormTotalNum;// 当前输入总数
+  final int singleFormMaxNum;// 当前彩种最大彩票数
+  final int singleFormBaseNum;// 当前彩种基数 （11 选5 = 2， 河内一分彩  = 1）（根据彩种的最大数位数决定）
 //  final bool is11Choice5;// 是否是 11 选 5
   final Choose11And5EditContentHandle contentHandle;
 
@@ -18,8 +21,11 @@ class BettingNumSingleFormEditView extends StatelessWidget{
       {
         Key key,
         this.singleFormNum = 3,
+        this.singleFormTotalNum = 6,
         this.editContent = "",
         this.contentHandle,
+        this.singleFormMaxNum = 12,
+        this.singleFormBaseNum = 2,
       }
   ) : super(key: key);
 
@@ -127,17 +133,20 @@ class BettingNumSingleFormEditView extends StatelessWidget{
       return;
     }
 
-    if (str.startsWith("2")) {
-      //刷新界面  不接收当前的输入内容
-      textEditingController.clear();
-      return;
+    if (singleFormBaseNum > 1) {
+      if (str.startsWith("2")) {
+        //刷新界面  不接收当前的输入内容
+        textEditingController.clear();
+        return;
+      }
     }
+
 
     print("输入数字： $str");
     var length = stringBuffer.toString().split(",").length;
 //    int length = (editLength~/6);
 //    print("分割 长度 $length");
-    int le = singleFormNum * 2 * length + (length -1);
+    int le = singleFormNum * singleFormBaseNum * length + (length -1);
 
 
     if(str.length == le) {
@@ -156,7 +165,7 @@ class BettingNumSingleFormEditView extends StatelessWidget{
         var split2 = split[split.length -2];
         for (int i = 0; i < split2.length; i = i+2) {
           String subStr = split2.substring(i,i+2);
-          if (double.parse(subStr) > 12) {
+          if (double.parse(subStr) > singleFormMaxNum) {
             isRepeat = true;
             break;
           }
@@ -209,21 +218,21 @@ class BettingNumSingleFormEditView extends StatelessWidget{
     } else {
       var strVal = str.replaceAll(",", "");
       var editLength = strVal.length;
-      int b = editLength ~/ 6;
-      if (editLength >= 6) {
-        int yushu = editLength % 6;
+      int b = editLength ~/ singleFormTotalNum;
+      if (editLength >= singleFormTotalNum) {
+        int yushu = editLength % singleFormTotalNum;
         if (yushu == 0) {
-          b = (editLength / 6 - 1).toInt();
-          yushu = 6;
+          b = (editLength / singleFormTotalNum - 1).toInt();
+          yushu = singleFormTotalNum;
         }
         print("editLength $editLength");
         String strAfter = "";
         String strBefore = strVal;
-        if (str.length % 7 == 0) {
-          if (editLength > 6) {
+        if (str.length % (singleFormTotalNum + 1) == 0) {
+          if (editLength > singleFormTotalNum) {
             for (int i = 1; i <= editLength; i++) {
-              if (i != 0 && i % 6 == 0) {
-                strAfter = strAfter + strVal.substring(i - 6, i) + "," ;
+              if (i != 0 && i % singleFormTotalNum == 0) {
+                strAfter = strAfter + strVal.substring(i - singleFormTotalNum, i) + "," ;
 //              strAfter = strAfter + strVal.substring(i - 6, i) + "," + strVal.substring(i, editLength) ;
 //              strAfter = strAfter + strBefore.substring(0, 6) + "," ;
 //              strBefore = strVal.substring(i, editLength);

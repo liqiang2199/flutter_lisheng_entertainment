@@ -18,6 +18,7 @@ import 'package:flutter_lisheng_entertainment/game_hall/net/GameHallHandler.dart
 import 'package:flutter_lisheng_entertainment/game_hall/net/PlayMode11Choice5Handler.dart';
 import 'package:flutter_lisheng_entertainment/game_hall/net/game_gd_11_5/CalculationBettingNumHandler.dart';
 import 'package:flutter_lisheng_entertainment/game_hall/net/game_gd_11_5/LotteryNum11Choice5Handler.dart';
+import 'package:flutter_lisheng_entertainment/game_hall/net/vietnam_hanoi/VietnamHanoiBettingHandler.dart';
 import 'package:flutter_lisheng_entertainment/home/net/ActivePageHandler.dart';
 import 'package:flutter_lisheng_entertainment/home/net/HomeHandler.dart';
 import 'package:flutter_lisheng_entertainment/home/net/LotteryCenterHandler.dart';
@@ -25,6 +26,7 @@ import 'package:flutter_lisheng_entertainment/home/net/SystemNoticeHandler.dart'
 import 'package:flutter_lisheng_entertainment/model/http/BaseTokenHttpBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/http/GetBettingRecordListHttpBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/http/LoginHttpBeen.dart';
+import 'package:flutter_lisheng_entertainment/model/http/UserReportHttpBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/http/agent/DelLinkAccountHttpBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/http/agent/LinkOpenAccountHttpBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/http/agent/MemberManagerHttpBeen.dart';
@@ -42,6 +44,7 @@ import 'package:flutter_lisheng_entertainment/model/http/set_cash_pass/ModifyPay
 import 'package:flutter_lisheng_entertainment/model/http/set_cash_pass/SetPaypwdHttpBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/http/user_info_center/UserInfoCenterHttpBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/http/user_record/UserAccountChangeRecordHttpBeen.dart';
+import 'package:flutter_lisheng_entertainment/model/http/vietnam_hanoi/VietnamHanoiHttpBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/http/withdraw/UserWithdrawHttpBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/http/withdraw/record/UserWithdrawRecordHttpBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/json/BaseJson.dart';
@@ -75,6 +78,7 @@ import 'package:flutter_lisheng_entertainment/model/json/lottery_record/GetBetti
 import 'package:flutter_lisheng_entertainment/model/json/recharge/RechargeTypeListBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/json/set/SetLoginOutBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/json/system_notice/SystemNoticeListBeen.dart';
+import 'package:flutter_lisheng_entertainment/model/json/user_report/UserReportBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/json/withdraw/WithdrawListDataBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/json/withdraw/user_record/UserWithdrawRecordBeen.dart';
 import 'package:flutter_lisheng_entertainment/net/BaseHandler.dart';
@@ -83,6 +87,7 @@ import 'package:flutter_lisheng_entertainment/user/bank/BindBankController.dart'
 import 'package:flutter_lisheng_entertainment/user/net/BankListHandler.dart';
 import 'package:flutter_lisheng_entertainment/user/net/BindBankHandler.dart';
 import 'package:flutter_lisheng_entertainment/user/net/LoginHandler.dart';
+import 'package:flutter_lisheng_entertainment/user/net/LotteryReportHandler.dart';
 import 'package:flutter_lisheng_entertainment/user/net/ModifyLoginPasswordHandler.dart';
 import 'package:flutter_lisheng_entertainment/user/net/RechargeHandler.dart';
 import 'package:flutter_lisheng_entertainment/user/net/SetCashPasswordHandler.dart';
@@ -235,6 +240,17 @@ abstract class ApiService<T> {
   void getApiHome(@Body() CpOpenLotteryInfoHttp openLotteryListHttpBeen);
 
   /**
+   * 越南 河内一分彩
+   */
+  ///
+  @POST(UrlUtil.hanoiOneGetPlay)
+  void hanoiOneGetPlay(@Body() BaseTokenHttpBeen openAccountHttpBeen);
+
+  /// 计算注数
+  @POST(UrlUtil.hanoiOneGetGDBets)
+  void hanoiOneGetGDBets(@Body() VietnamHanoiHttpBeen openAccountHttpBeen);
+
+  /**
    * 个人中心
    */
   /// 个人投注记录
@@ -243,6 +259,10 @@ abstract class ApiService<T> {
 
   @POST(UrlUtil.moneyLog)
   void moneyLog(@Body() UserAccountChangeRecordHttpBeen openLotteryListHttpBeen);
+
+  /// 个人报表
+  @POST(UrlUtil.userReport)
+  void userReport(@Body() UserReportHttpBeen userReportHttpBeen);
 
   /// 获取提现记录
   @POST(UrlUtil.withdraw)
@@ -983,6 +1003,57 @@ class _ApiService<T> implements ApiService<T> {
         bettingRecordListHandler.showToast(bettingNum.msg);
       }
 
+    });
+  }
+
+  /**
+   * 个人报表
+   */
+  ///
+  void userReport(UserReportHttpBeen userReportHttpBeen) {
+    ArgumentError.checkNotNull(userReportHttpBeen, '参数为空');
+    ArgumentError.checkNotNull(_baseHandler, '_baseHandler为空');
+    responseResult(userReportHttpBeen.toJson(), UrlUtil.userReport).then((onValue) {
+      var bettingNum = UserReportBeen.fromJson(onValue);
+      LotteryReportHandler bettingRecordListHandler = _baseHandler as LotteryReportHandler;
+
+      if (bettingNum.code == 1) {
+        bettingRecordListHandler.setUserReportDataBeen(bettingNum.data);
+      } else {
+        bettingRecordListHandler.showToast(bettingNum.msg);
+      }
+
+    });
+  }
+
+  /**
+   * 越南 河内一分彩
+   */
+  ///
+  @override
+  void hanoiOneGetPlay(BaseTokenHttpBeen openAccountHttpBeen) {
+    ArgumentError.checkNotNull(openAccountHttpBeen, '参数为空');
+    ArgumentError.checkNotNull(_baseHandler, '_baseHandler为空');
+    responseResult(openAccountHttpBeen.toJson(), UrlUtil.hanoiOneGetPlay).then((onValue) {
+      PlayMode11Choice5Handler linkManagerHandler = _baseHandler as PlayMode11Choice5Handler;
+      linkManagerHandler.playModeMapValue(onValue);
+
+    });
+  }
+
+  /// 计算注数
+  @override
+  void hanoiOneGetGDBets(VietnamHanoiHttpBeen openAccountHttpBeen) {
+    ArgumentError.checkNotNull(openAccountHttpBeen, '参数为空');
+    ArgumentError.checkNotNull(_baseHandler, '_baseHandler为空');
+    responseResult(openAccountHttpBeen.toJson(), UrlUtil.hanoiOneGetPlay).then((onValue) {
+      var bettingNum = CalculationBettingNumBeen.fromJson(onValue);
+      VietnamHanoiBettingHandler linkManagerHandler = _baseHandler as VietnamHanoiBettingHandler;
+      if (bettingNum.code == 1) {
+        linkManagerHandler.getCalculationBettingNumData(bettingNum.data);
+      } else {
+        linkManagerHandler.showToast(bettingNum.msg);
+      }
     });
   }
 

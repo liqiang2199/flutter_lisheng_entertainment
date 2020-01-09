@@ -31,7 +31,7 @@ class _GameHallView extends BaseRefreshController<GameHallView> implements GameH
   void initState() {
     // TODO: implement initState
     super.initState();
-    GameService.instance.lotteryList(this);
+
   }
 
   @override
@@ -48,7 +48,7 @@ class _GameHallView extends BaseRefreshController<GameHallView> implements GameH
 
   @override
   void onRefreshData() {
-
+    GameService.instance.lotteryList(this);
   }
 
   /// 游戏大厅 列表

@@ -9,6 +9,7 @@ import 'package:flutter_lisheng_entertainment/base/BaseController.dart';
 import 'package:flutter_lisheng_entertainment/dialog/LineSwitchingDialog.dart';
 import 'package:flutter_lisheng_entertainment/model/json/login/LoginBeen.dart';
 import 'package:flutter_lisheng_entertainment/user/net/UserService.dart';
+import 'package:flutter_lisheng_entertainment/user/view/LineChangeView.dart';
 import 'package:package_info/package_info.dart';
 import 'package:video_player/video_player.dart';
 import 'package:chewie/chewie.dart';
@@ -48,6 +49,10 @@ class _LoginActivity extends BaseController<LoginActivity> implements LoginHandl
   String phone = "";
   String password = "";
   String version;//保存当前版本
+
+  /// 移动的坐标
+  double topDistance = 0.0;
+  double leftDistance = 0.0;
 
   @override
   void initState() {
@@ -96,6 +101,9 @@ class _LoginActivity extends BaseController<LoginActivity> implements LoginHandl
     // TODO: implement build
     ScreenUtil.getInstance();
     SpUtil.getInstance();
+
+    leftDistance = ScreenUtil.getScreenW(context) - 60;
+
     return new Scaffold(
       resizeToAvoidBottomPadding: false,
       body: new Center(
@@ -125,26 +133,14 @@ class _LoginActivity extends BaseController<LoginActivity> implements LoginHandl
       ),
     );
   }
-
+  GlobalKey<LineChangeStateView> textKey = GlobalKey ();
   /// 线路切换
   Widget _lineChage() {
 
-    return new GestureDetector(
-      onTap: () {
-        //线路切换
-        showDialog(
-          context: context,
-          barrierDismissible: false,
-          builder: (_) => new LineSwitchingDialog()
-        );
-      },
-      child: new Align(
-        alignment: Alignment.topRight,
-        child: new Container(
-          margin: EdgeInsets.only(top: 200.0),
-          child: new Image.asset(ImageUtil.imgLoginChangeGroup, width: 61.0, height: 68.0, ),
-        ),
-      ),
+    return new LineChangeView(
+      textKey,
+      topDistance: topDistance,
+      leftDistance: leftDistance,
     );
   }
 

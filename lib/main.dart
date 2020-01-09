@@ -20,6 +20,7 @@ import 'package:flutter_lisheng_entertainment/user/SetController.dart';
 import 'package:flutter_lisheng_entertainment/user/TransferAccountsController.dart';
 import 'package:flutter_lisheng_entertainment/user/WithdrawalController.dart';
 import 'package:flutter_lisheng_entertainment/user/personal_center/ModifyLoginPasswordController.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import 'agent/AgencyBonusController.dart';
 import 'agent/AgentCenterController.dart';
@@ -35,6 +36,8 @@ import 'game_hall/GameShoppingCartController.dart';
 import 'game_hall/cp_11_choice_5/BettingController.dart';
 import 'game_hall/GameHallController.dart';
 import 'game_hall/cp_11_choice_5/PlayMode11Choice5Controller.dart';
+import 'game_hall/vietnam_hanoi_one_lottery/PlayModeHanoiOneLotteryController.dart';
+import 'game_hall/vietnam_hanoi_one_lottery/VietnamHanoiOneLotteryController.dart';
 import 'home/ActivePageController.dart';
 import 'home/AddGameController.dart';
 import 'home/LotteryCenterController.dart';
@@ -42,7 +45,7 @@ import 'home/SystemNoticeController.dart';
 import 'home/SystemNoticeDetailController.dart';
 import 'user/UserWithdrawalRecordController.dart';
 import 'user/personal_center/SetCapitalPasswordController.dart';
-//import 'package:flutter_native_splash/flutter_native_splash.dart' as flutter_native_splash;
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 void main() {
   runApp(MyApp());
@@ -60,66 +63,94 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: '',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
-        primarySwatch: Colors.blue,
+    return new RefreshConfiguration(
+        footerTriggerDistance: 15,
+        dragSpeedRatio: 0.91,
+        headerBuilder: () => MaterialClassicHeader(),
+        footerBuilder: () => ClassicFooter(),
+        enableLoadingWhenNoData: true,
+        shouldFooterFollowWhenNotFull: (state) {
+          // If you want load more with noMoreData state ,may be you should return false
+          return false;
+        },
+        autoLoad: true,
+        child: MaterialApp(
+          title: '',
+          debugShowCheckedModeBanner: false,
+          theme: ThemeData(
+            // This is the theme of your application.
+            //
+            // Try running your application with "flutter run". You'll see the
+            // application has a blue toolbar. Then, without quitting the app, try
+            // changing the primarySwatch below to Colors.green and then invoke
+            // "hot reload" (press "r" in the console where you ran "flutter run",
+            // or simply save your changes to "hot reload" in a Flutter IDE).
+            // Notice that the counter didn't reset back to zero; the application
+            // is not restarted.
+              primarySwatch: Colors.blue,
 //        primarySwatch: Color(mainColor[""]),
-      primaryColor: Color(ColorUtil.butColor),
-          brightness: Brightness.light
+              primaryColor: Color(ColorUtil.butColor),
+              brightness: Brightness.light
 
-      ),
-      //home: MyHomePage(title: 'Flutter Demo Home Page'),
-      home: LoginActivity(),
+          ),
+          localizationsDelegates: [
+            RefreshLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalMaterialLocalizations.delegate
+          ],
+          supportedLocales: [
+            const Locale('en'),
+            const Locale('zh'),
+          ],
+          localeResolutionCallback:
+              (Locale locale, Iterable<Locale> supportedLocales) {
+            //print("change language");
+            return locale;
+          },
+          //home: MyHomePage(title: 'Flutter Demo Home Page'),
+          home: LoginActivity(),
 //      home: SplashController(),
-      routes: <String, WidgetBuilder> {
-        RouteUtil.loginActivity: (BuildContext context) => LoginActivity(),
-        RouteUtil.homeController: (BuildContext context) => HomeController(),
-        RouteUtil.setController: (BuildContext context) => SetController(),
-        RouteUtil.rechargeController: (BuildContext context) => RechargeController(),
-        RouteUtil.withdrawalController: (BuildContext context) => WithdrawalController(),
-        RouteUtil.transferAccountsController: (BuildContext context) => TransferAccountsController(),
-        RouteUtil.personalController: (BuildContext context) => PersonalController(),
-        RouteUtil.agentCenterController: (BuildContext context) => AgentCenterController(),
-        RouteUtil.modifyLoginPasswordController: (BuildContext context) => ModifyLoginPasswordController(),
-        RouteUtil.modifyCapitalPasswordController: (BuildContext context) => ModifyCapitalPasswordController(),
-        RouteUtil.setCapitalPasswordController: (BuildContext context) => SetCapitalPasswordController(),
-        RouteUtil.activePageController: (BuildContext context) => ActivePageController(),
-        RouteUtil.systemNoticeController: (BuildContext context) => SystemNoticeController(),
-        RouteUtil.systemNoticeDetailController: (BuildContext context) => SystemNoticeDetailController(),
-        RouteUtil.bettingRecordController: (BuildContext context) => BettingRecordController(),
-        RouteUtil.lotteryReportController: (BuildContext context) => LotteryReportController(),
-        RouteUtil.userWithdrawalRecordController: (BuildContext context) => UserWithdrawalRecordController(),
-        RouteUtil.accountChangeRecordController: (BuildContext context) => AccountChangeRecordController(),
-        RouteUtil.teamOverviewController: (BuildContext context) => TeamOverviewController(),
-        RouteUtil.teamReportFormController: (BuildContext context) => TeamReportFormController(),
-        RouteUtil.teamAccountChangeController: (BuildContext context) => TeamAccountChangeController(),
-        RouteUtil.teamBettingController: (BuildContext context) => TeamBettingController(),
-        RouteUtil.memberManagerController: (BuildContext context) => MemberManagerController(),
-        RouteUtil.rechargeRecordController: (BuildContext context) => RechargeRecordController(),
-        RouteUtil.withdrawalRecordController: (BuildContext context) => WithdrawalRecordController(),
-        RouteUtil.lotteryCenterController: (BuildContext context) => LotteryCenterController(),
+          routes: <String, WidgetBuilder> {
+            RouteUtil.loginActivity: (BuildContext context) => LoginActivity(),
+            RouteUtil.homeController: (BuildContext context) => HomeController(),
+            RouteUtil.setController: (BuildContext context) => SetController(),
+            RouteUtil.rechargeController: (BuildContext context) => RechargeController(),
+            RouteUtil.withdrawalController: (BuildContext context) => WithdrawalController(),
+            RouteUtil.transferAccountsController: (BuildContext context) => TransferAccountsController(),
+            RouteUtil.personalController: (BuildContext context) => PersonalController(),
+            RouteUtil.agentCenterController: (BuildContext context) => AgentCenterController(),
+            RouteUtil.modifyLoginPasswordController: (BuildContext context) => ModifyLoginPasswordController(),
+            RouteUtil.modifyCapitalPasswordController: (BuildContext context) => ModifyCapitalPasswordController(),
+            RouteUtil.setCapitalPasswordController: (BuildContext context) => SetCapitalPasswordController(),
+            RouteUtil.activePageController: (BuildContext context) => ActivePageController(),
+            RouteUtil.systemNoticeController: (BuildContext context) => SystemNoticeController(),
+            RouteUtil.systemNoticeDetailController: (BuildContext context) => SystemNoticeDetailController(),
+            RouteUtil.bettingRecordController: (BuildContext context) => BettingRecordController(),
+            RouteUtil.lotteryReportController: (BuildContext context) => LotteryReportController(),
+            RouteUtil.userWithdrawalRecordController: (BuildContext context) => UserWithdrawalRecordController(),
+            RouteUtil.accountChangeRecordController: (BuildContext context) => AccountChangeRecordController(),
+            RouteUtil.teamOverviewController: (BuildContext context) => TeamOverviewController(),
+            RouteUtil.teamReportFormController: (BuildContext context) => TeamReportFormController(),
+            RouteUtil.teamAccountChangeController: (BuildContext context) => TeamAccountChangeController(),
+            RouteUtil.teamBettingController: (BuildContext context) => TeamBettingController(),
+            RouteUtil.memberManagerController: (BuildContext context) => MemberManagerController(),
+            RouteUtil.rechargeRecordController: (BuildContext context) => RechargeRecordController(),
+            RouteUtil.withdrawalRecordController: (BuildContext context) => WithdrawalRecordController(),
+            RouteUtil.lotteryCenterController: (BuildContext context) => LotteryCenterController(),
 //        RouteUtil.bettingRecordDetailController: (BuildContext context) => BettingRecordDetailController(),
-        RouteUtil.openAccountCenterController: (BuildContext context) => OpenAccountCenterController(),
-        RouteUtil.bankListController: (BuildContext context) => BankListController(),
-        RouteUtil.bindBankController: (BuildContext context) => BindBankController(),
-        RouteUtil.agencyBonusController: (BuildContext context) => AgencyBonusController(),
-        RouteUtil.gameHallController: (BuildContext context) => GameHallController(),
-        RouteUtil.bettingController: (BuildContext context) => BettingController(),
-        RouteUtil.playMode11Choice5Controller: (BuildContext context) => PlayMode11Choice5Controller(),
-        RouteUtil.gameShoppingCartController: (BuildContext context) => GameShoppingCartController(),
-        RouteUtil.addGameController: (BuildContext context) => AddGameController(),
-      },
+            RouteUtil.openAccountCenterController: (BuildContext context) => OpenAccountCenterController(),
+            RouteUtil.bankListController: (BuildContext context) => BankListController(),
+            RouteUtil.bindBankController: (BuildContext context) => BindBankController(),
+            RouteUtil.agencyBonusController: (BuildContext context) => AgencyBonusController(),
+            RouteUtil.gameHallController: (BuildContext context) => GameHallController(),
+            RouteUtil.bettingController: (BuildContext context) => BettingController(),
+            RouteUtil.playMode11Choice5Controller: (BuildContext context) => PlayMode11Choice5Controller(),
+            RouteUtil.gameShoppingCartController: (BuildContext context) => GameShoppingCartController(),
+            RouteUtil.addGameController: (BuildContext context) => AddGameController(),
+            RouteUtil.vietnamHanoiOneLotteryController: (BuildContext context) => VietnamHanoiOneLotteryController(),
+            RouteUtil.playModeHanoiOneLotteryController: (BuildContext context) => PlayModeHanoiOneLotteryController(),
+          },
+        )
     );
   }
 }

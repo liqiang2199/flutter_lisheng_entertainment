@@ -530,7 +530,7 @@ class _BettingView extends BaseRefreshNoHeadController<BettingView> with Automat
       for(int i = 0; i < _choiceTypeGroupNum; i++) {
         listView.add(Choose11And5View(choose11and5interface: this, typeIndex: _typeIndexList[i],
           cpNumIndex: groupCpNumList[i], isClickType: isClickType,
-          viewIndex: i, titleTip: _groupTitleList[i], choiceCpNumList: choiceCpNumList[i],));
+          viewIndex: i, titleTip: _groupTitleList[i], choiceCpNumList: choiceCpNumList[i],cpNumStr: cpNumStr,));
       }
     } else {
       /// 单式

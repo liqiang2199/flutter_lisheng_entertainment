@@ -8,7 +8,6 @@ import 'package:flutter_lisheng_entertainment/model/TabTitle.dart';
 import 'package:flutter_lisheng_entertainment/view/sreen_view/SelectionTimeAndEditNameView.dart';
 import 'package:flutter_lisheng_entertainment/view/common/CommonView.dart';
 import 'package:flutter_lisheng_entertainment/view/view_interface/SelectionTimeCallBack.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'agent_view/LinkManagerController.dart';
 import 'agent_view/LinkOpenAccountCenterView.dart';
