@@ -31,7 +31,7 @@ class _TeamBettingController extends BaseRefreshTabController<TeamBettingControl
   String _time;
   String _lotteryId;
   String _qs;
-  int _page = 1;
+  //int _page = 1;
   String _status = "0";
 
   String startTime;
@@ -46,7 +46,7 @@ class _TeamBettingController extends BaseRefreshTabController<TeamBettingControl
     initTabData();
     initTabPageController();
 
-    AgentService.instance.teamBettingList(this, _userName, startTime, endTime, _lotteryId, _qs, "$_page", _status);
+    //AgentService.instance.teamBettingList(this, _userName, startTime, endTime, _lotteryId, _qs, "$page", _status, limit);
   }
 
   @override
@@ -60,7 +60,7 @@ class _TeamBettingController extends BaseRefreshTabController<TeamBettingControl
           _tabPage(),
           CommonView().commonLineChange(context,10.0),
           TimeAndEditAndFindChoiceView(this, this),
-          new Expanded(child: _pageView(),),
+          new Expanded(child: _tabView(),),
         ],
       ),
     );
@@ -79,12 +79,21 @@ class _TeamBettingController extends BaseRefreshTabController<TeamBettingControl
 
   @override
   void onRefreshData() {
-    _page = 1;
+    page = 1;
+    AgentService.instance.teamBettingList(this, _userName, startTime, endTime, _lotteryId, _qs, "$page", _status, limit);
   }
 
+  @override
+  void onLoadingDataRefresh() {
+    AgentService.instance.teamBettingList(this, _userName, startTime, endTime, _lotteryId, _qs, "$page", _status, limit);
+  }
+
+  @override
   void changeTabIndex(int pos){
     var tabIndexId = tabList[pos];
     _status = "${tabIndexId.id}";
+    page = 1;
+    AgentService.instance.teamBettingList(this, _userName, startTime, endTime, _lotteryId, _qs, "$page", _status, limit);
   }
 
   Widget _tabPage() {
@@ -109,22 +118,46 @@ class _TeamBettingController extends BaseRefreshTabController<TeamBettingControl
     );
   }
 
-  Widget _pageView() {
+//  Widget _pageView() {
+//
+//    return PageView.builder(
+//      itemCount: tabList.length,
+//      onPageChanged: (index) {
+//        if (isPageCanChanged) {//由于pageview切换是会回调这个方法,又会触发切换tabbar的操作,所以定义一个flag,控制pageview的回调
+//          onPageChange(index);
+//        }
+//      },
+//      controller: mPageController,
+//      itemBuilder: (BuildContext context, int index) {
+//        return smartRefreshBase(
+//          _listRecordItem(),
+//        );
+//      },
+//    );
+//  }
 
-    return PageView.builder(
-      itemCount: tabList.length,
-      onPageChanged: (index) {
-        if (isPageCanChanged) {//由于pageview切换是会回调这个方法,又会触发切换tabbar的操作,所以定义一个flag,控制pageview的回调
-          onPageChange(index);
-        }
-      },
-      controller: mPageController,
-      itemBuilder: (BuildContext context, int index) {
-        return smartRefreshBase(
-          _listRecordItem(),
-        );
-      },
+  Widget _tabView() {
+
+    return new TabBarView(
+        controller: this.mTabController,
+        children: _tabListView()
     );
+  }
+
+  List<Widget> _tabListView() {
+    List<Widget> tabViewList = new List();
+
+    for (int i = 0; i < tabList.length; i++) {
+      tabViewList.add(smartRefreshBase(
+        _listRecordItem(),
+      ));
+    }
+    return tabViewList;
+  }
+
+  @override
+  bool isUserTabPage() {
+    return false;
   }
 
   /// 个人投注信息 列表
@@ -374,8 +407,9 @@ class _TeamBettingController extends BaseRefreshTabController<TeamBettingControl
 
   @override
   void setTeamBettingBeen(TeamBettingBeen dataBeen) {
-    if (_page == 1) {
+    if (page == 1) {
       teamBettingList.clear();
+      count = dataBeen.data.count;
       TeamBettingDataListBeen teamBettingDataListBeen = new TeamBettingDataListBeen();
       teamBettingList.add(teamBettingDataListBeen);
     }
@@ -394,7 +428,7 @@ class _TeamBettingController extends BaseRefreshTabController<TeamBettingControl
     _qs = qs;
 
     Future.delayed(Duration(milliseconds: 300)).then((value) {
-      AgentService.instance.teamBettingList(this, _userName, startTime, endTime, _lotteryId, _qs, "$_page", _status);
+      AgentService.instance.teamBettingList(this, _userName, startTime, endTime, _lotteryId, _qs, "$page", _status, limit);
     });
 
   }

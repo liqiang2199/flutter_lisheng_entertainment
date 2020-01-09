@@ -17,6 +17,8 @@ environment:
   sdk: ">=2.2.0 <3.0.0"
 
 dependencies:
+  flutter_localizations:
+    sdk: flutter
   flutter:
     sdk: flutter
 
@@ -25,7 +27,7 @@ dependencies:
   cupertino_icons: ^0.1.2
   video_player: ^0.10.5
   chewie: ^0.9.8+1
-  flutter_screenutil: ^0.6.1
+  #flutter_screenutil: ^0.6.1
   #轮播Banner
   flutter_banner_swiper: ^0.1.4
   flutter_picker: ^1.1.0

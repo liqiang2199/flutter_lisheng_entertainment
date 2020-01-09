@@ -1,6 +1,6 @@
 class UrlUtil {
 
-  static const BaseUrl = "http://cw9xs5.natappfree.cc/";
+  static const BaseUrl = "http://kwnng8.natappfree.cc/";
 
   static const login = "api/login/login";
   /// 退出登录
@@ -70,6 +70,8 @@ class UrlUtil {
   static const moneyLog = "api/user/moneyLog";
   /// 获取提现记录
   static const withdraw = "api/user/withdraw";
+  /// 个人报表
+  static const userReport = "api/user/userReport";
 
   /**
    * 彩票种类
@@ -93,6 +95,14 @@ class UrlUtil {
   static const gdBets = "api/guangdong/gdBets";
   /// 广东 11 选 5 下注
   static const orderAdd = "api/guangdong/orderAdd";
+
+  /**
+   * 越南 河内一分彩
+   */
+  ///
+  static const hanoiOneGetPlay = "api/Ylhlyfc/getPlay";
+  /// 计算注数
+  static const hanoiOneGetGDBets = "api/Ylhlyfc/gdBets";
 
 
 

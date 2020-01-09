@@ -29,7 +29,7 @@ class _TeamReportFormController extends BaseRefreshController<TeamReportFormCont
 
   List<TeamReportFormDataListBeen> dataReport = new List();
 
-  int page = 1;
+  //int page = 1;
   String _userName;
   String _userId = "0";
 
@@ -53,7 +53,7 @@ class _TeamReportFormController extends BaseRefreshController<TeamReportFormCont
 //      print("当前userID $_userId");
 //    }
 
-    AgentService.instance.teamList(this,"$page", _userName, _userId);
+    //AgentService.instance.teamList(this,"$page", _userName, _userId);
 
   }
 
@@ -82,7 +82,12 @@ class _TeamReportFormController extends BaseRefreshController<TeamReportFormCont
   @override
   void onRefreshData() {
     page = 1;
-    AgentService.instance.teamList(this,"$page", _userName, _userId);
+    AgentService.instance.teamList(this,"$page", _userName, _userId,limit);
+  }
+
+  @override
+  void onLoadingDataRefresh() {
+    AgentService.instance.teamList(this,"$page", _userName, _userId,limit);
   }
 
   /// 团队报表 信息 列表
@@ -255,7 +260,7 @@ class _TeamReportFormController extends BaseRefreshController<TeamReportFormCont
   void setEditUserName(String name) {
     _userName = name;
     page = 1;
-    AgentService.instance.teamList(this,"$page", _userName, _userId);
+    AgentService.instance.teamList(this,"$page", _userName, _userId, limit);
   }
 
 
@@ -264,12 +269,15 @@ class _TeamReportFormController extends BaseRefreshController<TeamReportFormCont
 
     if (page == 1) {
       dataReport?.clear();
+      count = dataBeen.data.count;
     }
 
     dataReport.addAll(dataBeen.data.data);
-    setState(() {
+    if (mounted) {
+      setState(() {
 
-    });
+      });
+    }
 
   }
 

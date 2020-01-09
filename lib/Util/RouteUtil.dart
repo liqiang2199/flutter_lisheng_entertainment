@@ -63,6 +63,11 @@ class RouteUtil {
   static const gameHallController = "/GameHallController";
   // 添加常玩彩种
   static const addGameController = "/AddGameController";
+  // 河内一分彩
+  static const vietnamHanoiOneLotteryController = "/VietnamHanoiOneLotteryController";
+  static const playModeHanoiOneLotteryController = "/PlayModeHanoiOneLotteryController";
+
+
   // 投注
   static const bettingController = "/BettingController";
   // 玩法选择

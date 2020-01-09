@@ -29,7 +29,7 @@ class _TeamAccountChangeController extends BaseRefreshTabController<TeamAccountC
     implements SelectionTimeCallBack, TeamAccountChangeHandler,TeamAccountChangeInterface{
 
   String userName;
-  int _page = 1;
+  //int _page = 1;
   String _type = "0";
   String startTime;
   String endTime;
@@ -44,7 +44,7 @@ class _TeamAccountChangeController extends BaseRefreshTabController<TeamAccountC
     initTabPageController();
     startTime = DateUtil.getDateStrByDateTime(DateTime.now(),format: DateFormat.YEAR_MONTH_DAY);
     endTime = DateUtil.getDateStrByDateTime(DateTime.now(),format: DateFormat.YEAR_MONTH_DAY);
-    AgentService.instance.teamMoneyLog(this, userName, startTime, endTime, "$_page", _type);
+    //AgentService.instance.teamMoneyLog(this, userName, startTime, endTime, "$page", _type, limit);
   }
 
   @override
@@ -58,7 +58,7 @@ class _TeamAccountChangeController extends BaseRefreshTabController<TeamAccountC
           _tabPage(),
           CommonView().commonLineChange(context,10.0),
           SelectionTimeAndEditNameView(this,this),
-          new Expanded(child: _pageView(),),
+          new Expanded(child: _tabView(),),
         ],
       ),
     );
@@ -82,8 +82,13 @@ class _TeamAccountChangeController extends BaseRefreshTabController<TeamAccountC
 
   @override
   void onRefreshData() {
-    _page = 1;
-    AgentService.instance.teamMoneyLog(this, userName, startTime, endTime, "$_page", _type);
+    page = 1;
+    AgentService.instance.teamMoneyLog(this, userName, startTime, endTime, "$page", _type, limit);
+  }
+
+  @override
+  void onLoadingDataRefresh() {
+    AgentService.instance.teamMoneyLog(this, userName, startTime, endTime, "$page", _type, limit);
   }
 
   @override
@@ -91,8 +96,8 @@ class _TeamAccountChangeController extends BaseRefreshTabController<TeamAccountC
     var title = tabList[pos];
     _type = "${title.id}";
 
-    _page = 1;
-    AgentService.instance.teamMoneyLog(this, userName, startTime, endTime, "$_page", _type);
+    page = 1;
+    AgentService.instance.teamMoneyLog(this, userName, startTime, endTime, "$page", _type, limit);
   }
 
   Widget _tabPage() {
@@ -117,22 +122,47 @@ class _TeamAccountChangeController extends BaseRefreshTabController<TeamAccountC
     );
   }
 
-  Widget _pageView() {
+//  Widget _pageView() {
+//
+//    return PageView.builder(
+//      physics: ClampingScrollPhysics(),
+//      itemCount: tabList.length,
+//      onPageChanged: (index) {
+//        if (isPageCanChanged) {//由于pageview切换是会回调这个方法,又会触发切换tabbar的操作,所以定义一个flag,控制pageview的回调
+//          onPageChange(index);
+//        }
+//      },
+//      controller: mPageController,
+//      itemBuilder: (BuildContext context, int index) {
+//        return smartRefreshBase(
+//          _listRecordItem(),
+//        );
+//      },
+//    );
+//  }
 
-    return PageView.builder(
-      itemCount: tabList.length,
-      onPageChanged: (index) {
-        if (isPageCanChanged) {//由于pageview切换是会回调这个方法,又会触发切换tabbar的操作,所以定义一个flag,控制pageview的回调
-          onPageChange(index);
-        }
-      },
-      controller: mPageController,
-      itemBuilder: (BuildContext context, int index) {
-        return smartRefreshBase(
-          _listRecordItem(),
-        );
-      },
+  Widget _tabView() {
+
+    return new TabBarView(
+        controller: this.mTabController,
+        children: _tabListView()
     );
+  }
+
+  List<Widget> _tabListView() {
+    List<Widget> tabViewList = new List();
+
+    for (int i = 0; i < tabList.length; i++) {
+      tabViewList.add(smartRefreshBase(
+        _listRecordItem(),
+      ));
+    }
+    return tabViewList;
+  }
+
+  @override
+  bool isUserTabPage() {
+    return false;
   }
 
   /// 个人投注信息 列表
@@ -293,8 +323,9 @@ class _TeamAccountChangeController extends BaseRefreshTabController<TeamAccountC
 
   @override
   void setTeamAccountChangeBeen(TeamAccountChangeBeen dataBeen) {
-    if (_page == 1) {
+    if (page == 1) {
       dataAccountChangeList.clear();
+      count = dataBeen.data.count;
     }
     dataAccountChangeList.addAll(dataBeen.data?.data);
     setState(() {
@@ -305,8 +336,8 @@ class _TeamAccountChangeController extends BaseRefreshTabController<TeamAccountC
   @override
   void setTeamAccountChangeRecordUserName(String userName) {
     this.userName = userName;
-    _page = 1;
-    AgentService.instance.teamMoneyLog(this, userName, startTime, endTime, "$_page", _type);
+    page = 1;
+    AgentService.instance.teamMoneyLog(this, userName, startTime, endTime, "$page", _type, limit);
 
   }
 

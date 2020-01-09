@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flustars/flustars.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_lisheng_entertainment/Util/ColorUtil.dart';
 import 'package:flutter_lisheng_entertainment/Util/StringUtil.dart';
@@ -10,7 +11,6 @@ import 'package:flutter_lisheng_entertainment/model/json/agent/team_recharge/Tea
 import 'package:flutter_lisheng_entertainment/view/common/CommonView.dart';
 import 'package:flutter_lisheng_entertainment/view/sreen_view/SelectionTimeView.dart';
 import 'package:flutter_lisheng_entertainment/view/view_interface/SelectionTimeCallBack.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'net/TeamRechargeRecordHandler.dart';
 
@@ -120,7 +120,7 @@ class _RechargeRecordController extends BaseRefreshController<RechargeRecordCont
               alignment: Alignment.center,
               child: new Container(
 
-                width: ScreenUtil.screenWidth,
+                width: ScreenUtil.getScreenW(context),
                 padding: EdgeInsets.all(15.0),
                 child: new Text(
                   "充值时间",
@@ -144,7 +144,7 @@ class _RechargeRecordController extends BaseRefreshController<RechargeRecordCont
             child: new Align(
               alignment: Alignment.center,
               child: new Container(
-                width: ScreenUtil.screenWidth,
+                width: ScreenUtil.getScreenW(context),
                 padding: EdgeInsets.all(15.0),
                 child: new Text(
                   "金额（元）",
@@ -178,7 +178,7 @@ class _RechargeRecordController extends BaseRefreshController<RechargeRecordCont
             child: new Align(
               alignment: Alignment.center,
               child: new Container(
-                width: ScreenUtil.screenWidth,
+                width: ScreenUtil.getScreenW(context),
                 padding: EdgeInsets.all(5.0),
                 child: new Text(
                   recordDataListBeen.createtime,
@@ -200,7 +200,7 @@ class _RechargeRecordController extends BaseRefreshController<RechargeRecordCont
             child: new Align(
               alignment: Alignment.center,
               child: new Container(
-                width: ScreenUtil.screenWidth,
+                width: ScreenUtil.getScreenW(context),
                 padding: EdgeInsets.all(5.0),
                 child: new Text(
                   recordDataListBeen.money,

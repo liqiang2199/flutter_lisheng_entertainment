@@ -26,7 +26,7 @@ class _WithdrawalRecordController extends BaseRefreshController<WithdrawalRecord
 
   String _startTime;
   String _endTime;
-  int _page= 1;
+  //int _page= 1;
 
   List<TeamAccountChangeDataListBeen> dataWithdrawList = new List();
 
@@ -36,7 +36,7 @@ class _WithdrawalRecordController extends BaseRefreshController<WithdrawalRecord
     super.initState();
 
     // "2" 固定为2 提现记录
-    AgentService.instance.teamMoneyLog(this, "", _startTime, _endTime, "$_page", "2");
+    //AgentService.instance.teamMoneyLog(this, "", _startTime, _endTime, "$_page", "2");
   }
 
   @override
@@ -60,9 +60,14 @@ class _WithdrawalRecordController extends BaseRefreshController<WithdrawalRecord
   @override
   void onRefreshData() {
 
-    _page = 1;
-    AgentService.instance.teamMoneyLog(this, "", _startTime, _endTime, "$_page", "2");
+    page = 1;
+    AgentService.instance.teamMoneyLog(this, "", _startTime, _endTime, "$page", "2", limit);
   }
+  @override
+  void onLoadingDataRefresh() {
+    AgentService.instance.teamMoneyLog(this, "", _startTime, _endTime, "$page", "2", limit);
+  }
+
 
   /// 个人投注信息 列表
   Widget _listRecordItem () {
@@ -231,7 +236,7 @@ class _WithdrawalRecordController extends BaseRefreshController<WithdrawalRecord
   @override
   void setTeamAccountChangeBeen(TeamAccountChangeBeen dataBeen) {
 
-    if (_page == 1) {
+    if (page == 1) {
       dataWithdrawList?.clear();
       TeamAccountChangeDataListBeen dataListBeen = new TeamAccountChangeDataListBeen(0,0,"","","","","","","","");
       dataWithdrawList?.add(dataListBeen);

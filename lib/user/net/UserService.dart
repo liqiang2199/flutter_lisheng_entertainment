@@ -4,6 +4,7 @@ import 'package:flutter_lisheng_entertainment/Util/bridge/ToastUtilBridge.dart';
 import 'package:flutter_lisheng_entertainment/model/http/BaseTokenHttpBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/http/GetBettingRecordListHttpBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/http/LoginHttpBeen.dart';
+import 'package:flutter_lisheng_entertainment/model/http/UserReportHttpBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/http/bank/BindBankHttpBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/http/set_cash_pass/ModifyPaypwdHttpBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/http/set_cash_pass/SetPaypwdHttpBeen.dart';
@@ -21,6 +22,7 @@ import 'package:flutter_lisheng_entertainment/user/net/RechargeHandler.dart';
 import 'package:flutter_lisheng_entertainment/user/net/SetHandler.dart';
 
 import 'LoginHandler.dart';
+import 'LotteryReportHandler.dart';
 import 'ModifyLoginPasswordHandler.dart';
 import 'SetCashPasswordHandler.dart';
 import 'UserWithdrawRecordHandler.dart';
@@ -206,9 +208,9 @@ class UserService extends ToastUtilBridge{
    * 个人账变记录
    */
   ///
-  void moneyLog(AccountChangeRecordHandler changeRecordHandler,String type, int page, String startTime, String endTime) {
+  void moneyLog(AccountChangeRecordHandler changeRecordHandler,String type, int page, String startTime, String endTime, int limit) {
     UserAccountChangeRecordHttpBeen openLotteryListHttpBeen =
-    new UserAccountChangeRecordHttpBeen(SpUtil.getString(Constant.TOKEN), type, "20", startTime, endTime,page);
+    new UserAccountChangeRecordHttpBeen(SpUtil.getString(Constant.TOKEN), type, "$limit", startTime, endTime,page);
 
     ApiService apiService = RetrofitManager.instance.createApiService();
     apiService.setHandler(changeRecordHandler);
@@ -237,6 +239,18 @@ class UserService extends ToastUtilBridge{
     ApiService apiService = RetrofitManager.instance.createApiService();
     apiService.setHandler(userWithdrawRecordHandler);
     apiService.withdraw(withdrawRecordHttpBeen);
+  }
+
+  /// 个人报表
+  void userReport(LotteryReportHandler lotteryReportHandler,String startTime, String endTime) {
+    UserReportHttpBeen userReportHttpBeen = new UserReportHttpBeen();
+    userReportHttpBeen.token = SpUtil.getString(Constant.TOKEN);
+    userReportHttpBeen.start_date = startTime;
+    userReportHttpBeen.end_date = endTime;
+
+    ApiService apiService = RetrofitManager.instance.createApiService();
+    apiService.setHandler(lotteryReportHandler);
+    apiService.userReport(userReportHttpBeen);
   }
 
 }
