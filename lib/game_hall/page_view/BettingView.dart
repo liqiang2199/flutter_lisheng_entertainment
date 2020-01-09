@@ -558,6 +558,7 @@ class _BettingView extends BaseRefreshNoHeadController<BettingView> with Automat
    * 随机选中彩票
    * isRoll 是否需要滚动
    */
+  ///
   _randomChoiceCpNum(bool isRoll) {
 
     if (isSinglePlay) {
@@ -1078,7 +1079,7 @@ class _BettingView extends BaseRefreshNoHeadController<BettingView> with Automat
   /**
    * 奖金调节
    */
-
+///
   @override
   void bettingMultipleAddAndSub(bool isAdd, int num) {
     bettingMultipleNum = num;
