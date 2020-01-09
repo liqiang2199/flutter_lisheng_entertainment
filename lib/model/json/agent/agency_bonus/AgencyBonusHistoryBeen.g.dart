@@ -9,12 +9,10 @@ part of 'AgencyBonusHistoryBeen.dart';
 AgencyBonusHistoryBeen _$AgencyBonusHistoryBeenFromJson(
     Map<String, dynamic> json) {
   return AgencyBonusHistoryBeen(
-    (json['data'] as List)
-        ?.map((e) => e == null
-            ? null
-            : AgencyBonusHistoryDataListBeen.fromJson(
-                e as Map<String, dynamic>))
-        ?.toList(),
+    json['data'] == null
+        ? null
+        : AgencyBonusHistoryDataBeen.fromJson(
+            json['data'] as Map<String, dynamic>),
   )
     ..code = json['code'] as int
     ..msg = json['msg'] as String

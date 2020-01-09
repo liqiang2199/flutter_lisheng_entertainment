@@ -332,7 +332,7 @@ class _AgencyBonusController extends BaseRefreshController<AgencyBonusController
       dataAgencyBonusHistoryList.add(historyDataListBeenTop);
       dataAgencyBonusHistoryList.add(historyDataListBeenTop);
     }
-    dataAgencyBonusHistoryList.addAll(dataBeen.data);
+    dataAgencyBonusHistoryList.addAll(dataBeen.data.data);
     setState(() {
 
     });
