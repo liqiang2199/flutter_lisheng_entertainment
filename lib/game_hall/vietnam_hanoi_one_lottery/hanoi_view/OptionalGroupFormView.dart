@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_lisheng_entertainment/base/BaseController.dart';
 import 'package:flutter_lisheng_entertainment/game_hall/cp_find_view/Choose11And5View.dart';
 import 'package:flutter_lisheng_entertainment/game_hall/game_bridge/Choose11And5Interface.dart';
+import 'package:flutter_lisheng_entertainment/game_hall/game_bridge/ThousandsOfBitsChoiceInterface.dart';
 import 'package:flutter_lisheng_entertainment/game_hall/game_view/ThousandsOfBitsView.dart';
 import 'package:flutter_lisheng_entertainment/game_hall/vietnam_hanoi_one_lottery/hanoi_util/HanoiPlayModelChoiceUtils.dart';
 import 'package:flutter_lisheng_entertainment/model/json/gd_11_5/Play11Choice5DataPlayBeen.dart';
@@ -58,10 +59,11 @@ class OptionalGroupFormView extends StatefulWidget{
 
 }
 
-class OptionalGroupFormStateView extends BaseController<OptionalGroupFormView> {
+class OptionalGroupFormStateView extends BaseController<OptionalGroupFormView> implements ThousandsOfBitsChoiceInterface{
 
   List<bool> cpNumBool = [false, false, false, false, false, false, false, false, false];
   List<bool> chooseTypeList = [false, false, false, false, false, false];
+  List<String> groupBitsList = new List();/// 组选时 万,千,百,十,个
 
   List<String> cpNumStr;
   int typeIndex;
@@ -145,6 +147,28 @@ class OptionalGroupFormStateView extends BaseController<OptionalGroupFormView> {
   randomOptionalGroupNumView(Play11Choice5DataPlayBeen playBeen) {
     _bitsStateViewKey.currentState.randomThousandsOfBitsStateRefresh(playBeen.id);
     _chooseCpNumViewKey.currentState.randomChoiceCpNum(HanoiPlayModelChoiceUtils.getInstance().getGamePlayModelRandomBase(playBeen));
+
+  }
+
+  /// 获取 选中的 万,千,百,十,个
+  List<String> getGroupBitsList() {
+
+    return groupBitsList;
+  }
+
+  /**
+   * ThousandsOfBitsChoiceInterface
+   * 万,千,百,十,个
+   */
+  ///
+  @override
+  void setThousandsOfBitsStateSave(Set<String> _bitsStateSet) {
+    groupBitsList.clear();
+    var iterator = _bitsStateSet.iterator;
+    while (iterator.moveNext()) {
+      var current = iterator.current;
+      groupBitsList.add(current);
+    }
 
   }
 

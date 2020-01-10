@@ -464,6 +464,8 @@ class HanoiPlayModelChoiceUtils {
   }
 
 
+
+
   /// 玩法类型随机基数 (复式 可以选号)
   int getGamePlayModelRandomBase(Play11Choice5DataPlayBeen playBeen) {
     int basNum = 1;
@@ -490,9 +492,11 @@ class HanoiPlayModelChoiceUtils {
     switch(playBeen.id) {
       case 148:
       case 161:
+      case 230:
         basNum = 3;
         break;
       case 191:
+      case 227:
         basNum = 2;
         break;
     }
@@ -506,7 +510,7 @@ class HanoiPlayModelChoiceUtils {
    * hanoiBettingHandler 通知界面
    */
   /// 请求投注数量
-  getGameHttpBettingNum(Play11Choice5DataPlayBeen playBeen, List<List<String>> choiceCpNumList, VietnamHanoiBettingHandler hanoiBettingHandler) {
+  getGameHttpBettingNum(Play11Choice5DataPlayBeen playBeen, List<List<String>> choiceCpNumList, List<String> groupBitsList, VietnamHanoiBettingHandler hanoiBettingHandler) {
     switch(playBeen.id) {
       case 147:
         //前三/前三直选/复式（计算注数）

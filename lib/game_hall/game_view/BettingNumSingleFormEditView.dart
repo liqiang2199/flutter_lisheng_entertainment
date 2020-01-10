@@ -112,6 +112,7 @@ class BettingNumSingleFormEditView extends StatelessWidget{
                 hintStyle: TextStyle(fontSize: 14.0, color: Color(ColorUtil.textColor_888888)),
                 labelStyle: TextStyle(fontSize: 14.0, color: Color(ColorUtil.textColor_333333)),
               ),
+              maxLines: 50,
               controller: textEditingController,
               onChanged: _editContentHandle,
 
@@ -162,14 +163,16 @@ class BettingNumSingleFormEditView extends StatelessWidget{
       /// 判断分割的号码是否存在相同 和里面数字 不合理的
       var split = stringBufferStr.toString().split(",");
       if (split.length >= 2) {
-        var split2 = split[split.length -2];
-        for (int i = 0; i < split2.length; i = i+2) {
-          String subStr = split2.substring(i,i+2);
-          if (double.parse(subStr) > singleFormMaxNum) {
-            isRepeat = true;
-            break;
+        if (singleFormBaseNum > 1) {
+          var split2 = split[split.length -2];
+          for (int i = 0; i < split2.length; i = i+2) {
+            String subStr = split2.substring(i,i+2);
+            if (double.parse(subStr) > singleFormMaxNum) {
+              isRepeat = true;
+              break;
+            }
+            numList.add(subStr);
           }
-          numList.add(subStr);
         }
       }
 
@@ -202,6 +205,21 @@ class BettingNumSingleFormEditView extends StatelessWidget{
             }
           }
         }
+
+        /// 去除先前的重
+//        Set<String> cancelReNum = new Set();
+//        splitAfter?.forEach((value) {
+//          cancelReNum.add(value);
+//        });
+//        splitAfter.clear();
+//        stringBuffer.clear();
+//        cancelReNum?.forEach((value) {
+//          splitAfter.add(value);
+//          stringBuffer.write("$value");
+//          stringBuffer.write(",");
+//        });
+//        cancelReNum.clear();
+
       }
 
       if(!isRepeat) {

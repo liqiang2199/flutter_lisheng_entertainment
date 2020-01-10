@@ -26,13 +26,13 @@ class DragonTigerSumStateView extends BaseController<DragonTigerSumView> {
   List<String> cpNumStr = ["龙", " 虎", "和"];
   int typeIndex;
   List<int> cpNumIndex = [-1, -1, -1];
-  List<String> choiceCpNumList ;//选中list 的集合
+  List<String> choiceCpNumList = new List();//选中list 的集合
 
   @override
   Widget build(BuildContext context) {
 
 
-    return new Row(
+    return new Column(
       children: <Widget>[
         _chooseTitle("龙虎"),
         _gridList(),
@@ -85,12 +85,12 @@ class DragonTigerSumStateView extends BaseController<DragonTigerSumView> {
       margin: EdgeInsets.only(bottom: 15.0),
       child: new GridView.count(
         physics: new NeverScrollableScrollPhysics(),
-        crossAxisCount: 7,
+        crossAxisCount: 3,
         //padding: const EdgeInsets.all(8.0),
         primary: false,
         mainAxisSpacing: 0.0,//竖向间距
         crossAxisSpacing: 0.0,//横向间距
-        childAspectRatio: 1.3,
+        childAspectRatio: 1.9,
         children: _gridListItemView(),
         shrinkWrap: true,
 
@@ -165,9 +165,10 @@ class DragonTigerSumStateView extends BaseController<DragonTigerSumView> {
   /// 随机 龙虎和
   randomDragonTigerChoiceNum() {
     int index = Random().nextInt(3);
-    cpNumBool.forEach((value) {
-      value = false;
-    });
+    for (int i = 0; i < cpNumBool.length; i++) {
+      cpNumBool[i] = false;
+    }
+
     cpNumBool[index] = true;
     if (mounted)
       setState(() {

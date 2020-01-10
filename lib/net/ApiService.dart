@@ -310,18 +310,19 @@ class _ApiService<T> implements ApiService<T> {
             headers: _getHeaders (),
             extra: _extra,
             baseUrl: UrlUtil.BaseUrl),
-        data: _data);
+        data: _data)
+        .catchError((error) {
+      switch (error.runtimeType) {
+        case DioError:
+        // Here's the sample to get the failed response error code and message
+          final res = (error as DioError).response;
+          //print("Got error : ${res.statusCode} -> ${res.statusMessage}");
+          break;
+        default:
+      }
+    });
 
-//    .catchError((error) {
-//    switch (error.runtimeType) {
-//    case DioError:
-//    // Here's the sample to get the failed response error code and message
-//    final res = (error as DioError).response;
-//    //print("Got error : ${res.statusCode} -> ${res.statusMessage}");
-//    break;
-//    default:
-//    }
-//    })
+
 
     if (_result.data != null) {
       print(_result.data);

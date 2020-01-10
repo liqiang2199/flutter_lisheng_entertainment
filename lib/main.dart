@@ -109,7 +109,7 @@ class MyApp extends StatelessWidget {
           },
           //home: MyHomePage(title: 'Flutter Demo Home Page'),
           home: LoginActivity(),
-//      home: SplashController(),
+//      home: VietnamHanoiOneLotteryController(),
           routes: <String, WidgetBuilder> {
             RouteUtil.loginActivity: (BuildContext context) => LoginActivity(),
             RouteUtil.homeController: (BuildContext context) => HomeController(),

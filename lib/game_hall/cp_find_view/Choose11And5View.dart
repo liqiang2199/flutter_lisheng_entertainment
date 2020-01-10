@@ -475,9 +475,14 @@ class Choose11And5StateView extends BaseController<Choose11And5View> {
   randomChoiceCpNum(int baseNum) {
     var randomNum = Random().nextInt(4) + baseNum;
 
-    for (var i = 0; i < randomNum; i++) {
-      cpNumIndex[Random().nextInt(11)] = 0;
+    var length = cpNumIndex.length;
+    for (var i = 0; i < length; i++) {
+      cpNumIndex[i] = -1;
     }
+    for (var i = 0; i < randomNum; i++) {
+      cpNumIndex[Random().nextInt(length)] = 0;
+    }
+    _changeCpTypeChoiceState();
     if (mounted)
       setState(() {
 
