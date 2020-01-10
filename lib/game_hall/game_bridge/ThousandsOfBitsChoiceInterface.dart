@@ -5,4 +5,6 @@
 ///
 abstract class ThousandsOfBitsChoiceInterface {
 
+  void setThousandsOfBitsStateSave(Set<String> _bitsStateSet);
+
 }

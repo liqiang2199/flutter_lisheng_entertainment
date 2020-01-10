@@ -6,6 +6,7 @@ import 'dart:math';
  */
 import 'package:flutter/material.dart';
 import 'package:flutter_lisheng_entertainment/Util/ColorUtil.dart';
+import 'package:flutter_lisheng_entertainment/Util/ImageUtil.dart';
 import 'package:flutter_lisheng_entertainment/base/BaseController.dart';
 import 'package:flutter_lisheng_entertainment/game_hall/game_bridge/ThousandsOfBitsChoiceInterface.dart';
 
@@ -35,9 +36,11 @@ class ThousandsOfBitsStateView extends BaseController<ThousandsOfBitsView> {
 
   List<bool> _checkStateList = [false, false, false, false, false,];
   List<String> _checkStateStrList = ["万位", "千位", "百位", "十位", "个位",];
+  List<String> _checkStateStrListS = ["万", "千", "百", "十", "个",];
   int _cpID = 0;//彩票ID
   int _randomNum = 0;// 机选是 随机个数
   Set<int> _randomSet = new Set();// 保存随机数
+  Set<String> _bitsStateSet = new Set();// 保存 万,千,百,十,个
 
   ThousandsOfBitsStateView(
       this.bitsChoiceInterface
@@ -47,6 +50,7 @@ class ThousandsOfBitsStateView extends BaseController<ThousandsOfBitsView> {
   Widget build(BuildContext context) {
     // TODO: implement build
     return new Container(
+      padding: EdgeInsets.only(top: 15.0),
       child: Row(
         children: _checkListView(),
       ),
@@ -69,41 +73,51 @@ class ThousandsOfBitsStateView extends BaseController<ThousandsOfBitsView> {
 
     return new GestureDetector(
       onTap: () {
+
         if (mounted) {
           setState(() {
-            //state = !state;
             _checkStateList[index] = !state;
+            _addBitsNumList(_checkStateList[index], index);
           });
         }
       },
       child: new Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
 
-          Checkbox(
-            value: state,
-            activeColor: Color(ColorUtil.butColor), //选中时的颜色
-            onChanged:(value){
-              if (mounted) {
-                setState(() {
-                  _checkStateList[index] = !state;
-                });
-              }
-            } ,
+          Image.asset(state? ImageUtil.imgRadioBgSelection : ImageUtil.imgRadioBg
+            , width: 22.0, height: 22.0,),
 
-          ),
-
-          Text(
-            text,
-            style: TextStyle(
-              fontSize: 12.0,
-              color: Color(ColorUtil.textColor_333333),
+          new Align(
+            alignment: Alignment.centerLeft,
+            child: Text(
+              text,
+              style: TextStyle(
+                fontSize: 12.0,
+                color: Color(ColorUtil.textColor_333333),
+              ),
+              textAlign: TextAlign.center,
+              softWrap: true,
             ),
           ),
 
         ],
       ),
     );
+  }
+
+  /// 保存位数位置说明
+  _addBitsNumList( bool state, int index) {
+    if (state) {
+      _bitsStateSet.add(_checkStateStrListS[index]);
+    } else {
+      _bitsStateSet.remove(_checkStateStrListS[index]);
+    }
+
+    if (bitsChoiceInterface != null) {
+      bitsChoiceInterface?.setThousandsOfBitsStateSave(_bitsStateSet);
+    }
   }
 
   /// 刷新状态 id  彩票ID
@@ -134,20 +148,18 @@ class ThousandsOfBitsStateView extends BaseController<ThousandsOfBitsView> {
     _randomSet.clear();
 
     while (_randomSet.length < _randomNum) {
-      var randomIndex = Random().nextInt(5) + 1;
+      var randomIndex = Random().nextInt(5);
       _randomSet.add(randomIndex);
     }
+    print("set = ${_randomNum.toString()}");
 
     if (_randomSet.length == _randomNum) {
-      var iterator = _randomSet.iterator;
-
       for (int s = 0; s <  _checkStateList.length; s++) {
         _checkStateList[s] = false;
       }
-      while (iterator.moveNext()) {
-        var current = iterator.current;
-        _checkStateList[current] = true;
-      }
+      _randomSet.toList().forEach((value) {
+        _checkStateList[value] = true;
+      });
 
       if (mounted)
         setState(() {

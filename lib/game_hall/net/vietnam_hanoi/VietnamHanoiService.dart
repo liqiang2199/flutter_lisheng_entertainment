@@ -153,4 +153,111 @@ class VietnamHanoiService {
 
   }
 
+  /**
+   *  任选复式
+   */
+  ///
+  void hanoiOneGetGDBetsOptional(VietnamHanoiBettingHandler hanoiBettingHandler, List<String> oneNum
+      , List<String> twoNum, List<String> threeNum, List<String> four_num, List<String> five_num, String playID) {
+    CalculationBettingNumDataBeen calculationBettingNumBeen = new CalculationBettingNumDataBeen(new List(),0,"0.00","0.00","0.00");//注数 和 金额
+    if (oneNum.length <= 0) {
+      hanoiBettingHandler.getCalculationBettingNumData(calculationBettingNumBeen);
+      return;
+    }
+    if (twoNum.length <= 0) {
+      hanoiBettingHandler.getCalculationBettingNumData(calculationBettingNumBeen);
+      return;
+    }
+    if (threeNum.length <= 0) {
+      hanoiBettingHandler.getCalculationBettingNumData(calculationBettingNumBeen);
+      return;
+    }
+    if (four_num.length <= 0) {
+      hanoiBettingHandler.getCalculationBettingNumData(calculationBettingNumBeen);
+      return;
+    }
+    if (five_num.length <= 0) {
+      hanoiBettingHandler.getCalculationBettingNumData(calculationBettingNumBeen);
+      return;
+    }
+
+    VietnamHanoiHttpBeen openAccountHttpBeen = new VietnamHanoiHttpBeen();
+    openAccountHttpBeen.token = SpUtil.getString(Constant.TOKEN);
+    openAccountHttpBeen.play_id = playID;
+
+    openAccountHttpBeen.one_num = _stringAppend(oneNum);
+    openAccountHttpBeen.two_num = _stringAppend(twoNum);
+    openAccountHttpBeen.three_num = _stringAppend(threeNum);
+    openAccountHttpBeen.four_num = _stringAppend(four_num);
+    openAccountHttpBeen.five_num = _stringAppend(five_num);
+
+
+    ApiService apiService = RetrofitManager.instance.createApiService();
+    apiService.setHandler(hanoiBettingHandler);
+    apiService.hanoiOneGetGDBets(openAccountHttpBeen);
+
+  }
+
+  /**
+   * 任选组选(非单式)
+   */
+  ///
+  void hanoiOneGetGDBetsOptionalGroup(VietnamHanoiBettingHandler hanoiBettingHandler, List<String> oneNum
+      , List<String> bitsNum,  String playID) {
+    CalculationBettingNumDataBeen calculationBettingNumBeen = new CalculationBettingNumDataBeen(new List(),0,"0.00","0.00","0.00");//注数 和 金额
+    if (oneNum.length <= 0) {
+      hanoiBettingHandler.getCalculationBettingNumData(calculationBettingNumBeen);
+      return;
+    }
+    if (bitsNum.length <= 0) {
+      hanoiBettingHandler.getCalculationBettingNumData(calculationBettingNumBeen);
+      return;
+    }
+
+
+    VietnamHanoiHttpBeen openAccountHttpBeen = new VietnamHanoiHttpBeen();
+    openAccountHttpBeen.token = SpUtil.getString(Constant.TOKEN);
+    openAccountHttpBeen.play_id = playID;
+
+    openAccountHttpBeen.data_num = _stringAppend(oneNum);
+    openAccountHttpBeen.data_address = _stringAppend(bitsNum);
+
+
+    ApiService apiService = RetrofitManager.instance.createApiService();
+    apiService.setHandler(hanoiBettingHandler);
+    apiService.hanoiOneGetGDBets(openAccountHttpBeen);
+
+  }
+
+  /**
+   * 任选（单式)
+   */
+  ///
+  void hanoiOneGetGDBetsOptionalSingle(VietnamHanoiBettingHandler hanoiBettingHandler, List<String> oneNum
+      , List<String> bitsNum,  String playID) {
+    CalculationBettingNumDataBeen calculationBettingNumBeen = new CalculationBettingNumDataBeen(new List(),0,"0.00","0.00","0.00");//注数 和 金额
+    if (oneNum.length <= 0) {
+      hanoiBettingHandler.getCalculationBettingNumData(calculationBettingNumBeen);
+      return;
+    }
+    if (bitsNum.length <= 0) {
+      hanoiBettingHandler.getCalculationBettingNumData(calculationBettingNumBeen);
+      return;
+    }
+
+
+    VietnamHanoiHttpBeen openAccountHttpBeen = new VietnamHanoiHttpBeen();
+    openAccountHttpBeen.token = SpUtil.getString(Constant.TOKEN);
+    openAccountHttpBeen.play_id = playID;
+
+    openAccountHttpBeen.data_num = _stringAppend(oneNum);
+    openAccountHttpBeen.data_address = _stringAppend(bitsNum);
+
+
+    ApiService apiService = RetrofitManager.instance.createApiService();
+    apiService.setHandler(hanoiBettingHandler);
+    apiService.hanoiOneGetGDBets(openAccountHttpBeen);
+
+  }
+
 }
