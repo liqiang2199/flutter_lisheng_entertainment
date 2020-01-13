@@ -4,13 +4,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_lisheng_entertainment/Util/ColorUtil.dart';
 import 'package:flutter_lisheng_entertainment/Util/Constant.dart';
 import 'package:flutter_lisheng_entertainment/Util/SpaceViewUtil.dart';
+import 'package:flutter_lisheng_entertainment/base/BaseController.dart';
 import 'package:flutter_lisheng_entertainment/game_hall/game_bridge/BettingNumAndOperationHandler.dart';
 import 'package:flutter_lisheng_entertainment/model/json/gd_11_5/CalculationBettingNumDataBeen.dart';
 
 /**
  * 下面投注 按钮
  */
-class BettingNumAndOperationView extends StatelessWidget {
+///
+class BettingNumAndOperationView extends StatefulWidget {
 
   final CalculationBettingNumDataBeen calculationBettingNumBeen;
   final BettingNumAndOperationHandler operationHandler;
@@ -28,7 +30,38 @@ class BettingNumAndOperationView extends StatelessWidget {
         this.bettingNum = 1,
         this.moneyCompany = 0,
       }
-  ) : super(key: key);
+      ) : super(key: key);
+
+  @override
+  State<StatefulWidget> createState() {
+    return BettingNumAndOperationStateView(
+      calculationBettingNumBeen: this.calculationBettingNumBeen,
+      operationHandler: this.operationHandler,
+      playMoneyAward: this.playMoneyAward,
+      bettingNum: this.bettingNum,
+      moneyCompany: this.moneyCompany,
+    );
+  }
+}
+
+class BettingNumAndOperationStateView extends BaseController<BettingNumAndOperationView> {
+
+  CalculationBettingNumDataBeen calculationBettingNumBeen;
+  BettingNumAndOperationHandler operationHandler;
+  String playMoneyAward;//玩法奖金
+  int bettingNum;// 投注倍数
+  int moneyCompany;// 钱的单位 0 元 1 角 2 分 3 厘
+
+
+  BettingNumAndOperationStateView(
+      {
+        this.calculationBettingNumBeen,
+        this.operationHandler,
+        this.playMoneyAward = "0.00",
+        this.bettingNum = 1,
+        this.moneyCompany = 0,
+      }
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -295,6 +328,14 @@ class BettingNumAndOperationView extends StatelessWidget {
         textAlign: TextAlign.center,
       ),
     );
+  }
+
+  setCalculationBettingNumData(CalculationBettingNumDataBeen calculationBettingNumBeen) {
+    this.calculationBettingNumBeen = calculationBettingNumBeen;
+    if (mounted)
+      setState(() {
+
+      });
   }
 
 }

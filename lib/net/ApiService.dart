@@ -310,18 +310,17 @@ class _ApiService<T> implements ApiService<T> {
             headers: _getHeaders (),
             extra: _extra,
             baseUrl: UrlUtil.BaseUrl),
-        data: _data)
-        .catchError((error) {
-      switch (error.runtimeType) {
-        case DioError:
-        // Here's the sample to get the failed response error code and message
-          final res = (error as DioError).response;
-          //print("Got error : ${res.statusCode} -> ${res.statusMessage}");
-          break;
-        default:
-      }
-    });
-
+        data: _data);
+//    .catchError((error) {
+//    switch (error.runtimeType) {
+//    case DioError:
+//    // Here's the sample to get the failed response error code and message
+//    final res = (error as DioError).response;
+//    //print("Got error : ${res.statusCode} -> ${res.statusMessage}");
+//    break;
+//    default:
+//    }
+//    })
 
 
     if (_result.data != null) {
@@ -1047,7 +1046,7 @@ class _ApiService<T> implements ApiService<T> {
   void hanoiOneGetGDBets(VietnamHanoiHttpBeen openAccountHttpBeen) {
     ArgumentError.checkNotNull(openAccountHttpBeen, '参数为空');
     ArgumentError.checkNotNull(_baseHandler, '_baseHandler为空');
-    responseResult(openAccountHttpBeen.toJson(), UrlUtil.hanoiOneGetPlay).then((onValue) {
+    responseResult(openAccountHttpBeen.toJson(), UrlUtil.hanoiOneGetGDBets).then((onValue) {
       var bettingNum = CalculationBettingNumBeen.fromJson(onValue);
       VietnamHanoiBettingHandler linkManagerHandler = _baseHandler as VietnamHanoiBettingHandler;
       if (bettingNum.code == 1) {

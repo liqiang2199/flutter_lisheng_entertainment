@@ -438,8 +438,24 @@ class Choose11And5StateView extends BaseController<Choose11And5View> {
   }
 
   /// 选中刷新
-  chooseCpNumViewListRefresh(List<int> cpNumList, bool isClickType) {
-    this.cpNumIndex = cpNumList;
+  chooseCpNumViewListRefresh(List<int> cpNumList, bool isClickType, int index) {
+    //this.cpNumIndex = cpNumList;
+    this.cpNumIndex[index] = this.cpNumIndex[index] == 0 ? -1 : 0;
+    this.isClickType = isClickType;
+    _changeCpTypeChoiceState();
+    if (mounted)
+      setState(() {
+
+      });
+  }
+
+  /// 选中刷新 包胆 刷新 只能选择一个（河内一分彩）
+  chooseCpNumViewListPlayBraveryRefresh(int playID, List<int> cpNumList, bool isClickType, int index) {
+    var length = cpNumIndex.length;
+    for (var i = 0; i < length; i++) {
+      cpNumIndex[i] = -1;
+    }
+    this.cpNumIndex[index] = this.cpNumIndex[index] == 0 ? -1 : 0;
     this.isClickType = isClickType;
     _changeCpTypeChoiceState();
     if (mounted)
@@ -460,7 +476,8 @@ class Choose11And5StateView extends BaseController<Choose11And5View> {
   }
 
   /// 大小单双  号码
-  chooseCpNumViewListTypeIndexRefresh(List<int> cpNumList, int _typeIndexList, bool isClickType) {
+  chooseCpNumViewListTypeIndexRefresh(List<int> cpNumList, int _typeIndexList, bool isClickType, int index) {
+
     this.cpNumIndex = cpNumList;
     this.typeIndex = _typeIndexList;
     this.isClickType = isClickType;
@@ -472,21 +489,38 @@ class Choose11And5StateView extends BaseController<Choose11And5View> {
   }
 
   /// 随机选中 baseNum 随机基数
-  randomChoiceCpNum(int baseNum) {
-    var randomNum = Random().nextInt(4) + baseNum;
-
+  randomChoiceCpNum(int playID, int baseNum) {
+    if (choiceCpNumList == null) {
+      choiceCpNumList = new List();
+    }
     var length = cpNumIndex.length;
     for (var i = 0; i < length; i++) {
       cpNumIndex[i] = -1;
     }
-    for (var i = 0; i < randomNum; i++) {
+    this.typeIndex = 5;
+    this.isClickType = false;
+    _cleanAllSelection();
+    if(playID == 180 || playID == 198 || playID == 203) {
+      // 包胆 只能选择一个
       cpNumIndex[Random().nextInt(length)] = 0;
+    } else {
+      var randomNum = Random().nextInt(4) + baseNum;
+
+      for (var i = 0; i < randomNum; i++) {
+        cpNumIndex[Random().nextInt(length)] = 0;
+      }
     }
+
     _changeCpTypeChoiceState();
     if (mounted)
       setState(() {
 
       });
+  }
+
+  /// 获取选择列表
+  getChoiceCpNumList() {
+    return choiceCpNumList;
   }
 
 }
