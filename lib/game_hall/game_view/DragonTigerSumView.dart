@@ -6,16 +6,19 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_lisheng_entertainment/Util/ColorUtil.dart';
 import 'package:flutter_lisheng_entertainment/base/BaseController.dart';
+import 'package:flutter_lisheng_entertainment/game_hall/vietnam_hanoi_one_lottery/hanoi_util/DragonTigerSumInterface.dart';
 
 /// 龙  虎  和
 class DragonTigerSumView extends StatefulWidget{
 
-  DragonTigerSumView(Key key,): super(key: key);
+  final DragonTigerSumInterface dragonTigerSumInterface;
+
+  DragonTigerSumView(Key key, this.dragonTigerSumInterface,): super(key: key);
 
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
-    return DragonTigerSumStateView();
+    return DragonTigerSumStateView(this.dragonTigerSumInterface);
   }
 
 }
@@ -27,6 +30,9 @@ class DragonTigerSumStateView extends BaseController<DragonTigerSumView> {
   int typeIndex;
   List<int> cpNumIndex = [-1, -1, -1];
   List<String> choiceCpNumList = new List();//选中list 的集合
+
+  DragonTigerSumInterface dragonTigerSumInterface;
+  DragonTigerSumStateView(this.dragonTigerSumInterface,);
 
   @override
   Widget build(BuildContext context) {
@@ -131,9 +137,9 @@ class DragonTigerSumStateView extends BaseController<DragonTigerSumView> {
 
           });
         }
-//        if (choose11and5interface != null) {
-//          choose11and5interface.cpNumChoiceState(index,viewIndex);
-//        }
+        if (dragonTigerSumInterface!= null) {
+          dragonTigerSumInterface.setDragonTigerSumHandler(choiceCpNumList);
+        }
       },
       child: new Container(
         height: 30.0,
@@ -174,6 +180,23 @@ class DragonTigerSumStateView extends BaseController<DragonTigerSumView> {
       setState(() {
 
       });
+  }
+
+  /// 清空
+  cleanDragonTigerChoiceNum() {
+    for (int i = 0; i < 3; i++) {
+      cpNumBool[i] = false;
+    }
+
+    if (mounted)
+      setState(() {
+
+      });
+  }
+
+  List<String> getRandomDragonTigerList() {
+
+    return this.choiceCpNumList;
   }
 
 

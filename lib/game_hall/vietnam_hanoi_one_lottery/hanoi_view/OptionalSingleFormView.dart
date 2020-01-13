@@ -5,6 +5,7 @@ import 'package:flustars/flustars.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_lisheng_entertainment/Util/ColorUtil.dart';
 import 'package:flutter_lisheng_entertainment/base/BaseController.dart';
+import 'package:flutter_lisheng_entertainment/game_hall/game_bridge/Choose11And5EditContentHandle.dart';
 import 'package:flutter_lisheng_entertainment/game_hall/game_view/ThousandsOfBitsView.dart';
 
 /**
@@ -13,12 +14,14 @@ import 'package:flutter_lisheng_entertainment/game_hall/game_view/ThousandsOfBit
 ///
 class OptionalSingleFormView extends StatefulWidget {
 
-  OptionalSingleFormView(Key key): super(key: key);
+  final Choose11And5EditContentHandle contentHandle;
+
+  OptionalSingleFormView(Key key, this.contentHandle): super(key: key);
 
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
-    return OptionalSingleFormStateView();
+    return OptionalSingleFormStateView(this.contentHandle);
   }
 
 }
@@ -29,6 +32,7 @@ class OptionalSingleFormStateView extends BaseController<OptionalSingleFormView>
   Set<int> _randomSet = new Set();// 保存随机数
 
   TextEditingController textEditingController = new TextEditingController();
+  Choose11And5EditContentHandle contentHandle;
 
   int singleFormNum = 3;//单式 判断输入多少加一个 分隔符号
   String editContent = "";// 传入输入的内容
@@ -38,6 +42,8 @@ class OptionalSingleFormStateView extends BaseController<OptionalSingleFormView>
   StringBuffer stringBuffer = new StringBuffer();
 
   GlobalKey<ThousandsOfBitsStateView> _bitsStateViewKey = new GlobalKey();
+
+  OptionalSingleFormStateView(this.contentHandle);
 
   @override
   Widget build(BuildContext context) {
@@ -163,8 +169,8 @@ class OptionalSingleFormStateView extends BaseController<OptionalSingleFormView>
           stringBuffer.write(",");
         });
         editContent = stringBuffer.toString();
-      }
 
+      }
     } else {
       print("输入数字 长度不够： $str");
       var strVal = str.replaceAll(",", "");
@@ -241,6 +247,9 @@ class OptionalSingleFormStateView extends BaseController<OptionalSingleFormView>
       }
 
     }
+    if (contentHandle != null) {
+      contentHandle.editContent11Choose5Handle(editContent);
+    }
     if (mounted)
       setState(() {
 
@@ -270,12 +279,20 @@ class OptionalSingleFormStateView extends BaseController<OptionalSingleFormView>
     stringBuffer.write(",");
     this.stringBuffer = stringBuffer;
     editContent = "${stringBuffer.toString()}";
+    if (contentHandle != null) {
+      contentHandle.editContent11Choose5Handle(editContent);
+    }
     _bitsStateViewKey.currentState.randomThousandsOfBitsStateRefresh(id);
+    if (mounted)
+      setState(() {
 
-//    if(mounted)
-//      setState(() {
-//
-//      });
+      });
+  }
+
+  /// 获取 万千
+  getThousandsOfBitsStateStr() {
+
+    return _bitsStateViewKey.currentState.getCheckStateThousandsOfBitsList();
   }
 
 }

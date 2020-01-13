@@ -110,10 +110,10 @@ class OptionalGroupFormStateView extends BaseController<OptionalGroupFormView> i
   }
 
   /// 选中刷新
-  optionalGroupCpNumViewListRefresh(List<int> cpNumList, bool isClickType) {
+  optionalGroupCpNumViewListRefresh(List<int> cpNumList, bool isClickType, int viewOnClickIndex) {
     this.cpNumIndex = cpNumList;
     this.isClickType = isClickType;
-    _chooseCpNumViewKey.currentState.chooseCpNumViewListRefresh(cpNumList, isClickType);
+    _chooseCpNumViewKey.currentState.chooseCpNumViewListRefresh(cpNumList, isClickType, viewOnClickIndex);
     if (mounted)
       setState(() {
 
@@ -132,11 +132,11 @@ class OptionalGroupFormStateView extends BaseController<OptionalGroupFormView> i
   }
 
   /// 大小单双  号码
-  optionalGroupCpNumViewListTypeIndexRefresh(List<int> cpNumList, int _typeIndexList, bool isClickType) {
+  optionalGroupCpNumViewListTypeIndexRefresh(List<int> cpNumList, int _typeIndexList, bool isClickType, int viewOnClickIndex) {
     this.cpNumIndex = cpNumList;
     this.typeIndex = _typeIndexList;
     this.isClickType = isClickType;
-    _chooseCpNumViewKey.currentState.chooseCpNumViewListTypeIndexRefresh(cpNumList, _typeIndexList, isClickType);
+    _chooseCpNumViewKey.currentState.chooseCpNumViewListTypeIndexRefresh(cpNumList, _typeIndexList, isClickType, viewOnClickIndex);
     if (mounted)
       setState(() {
 
@@ -146,14 +146,20 @@ class OptionalGroupFormStateView extends BaseController<OptionalGroupFormView> i
   /// 随机彩种
   randomOptionalGroupNumView(Play11Choice5DataPlayBeen playBeen) {
     _bitsStateViewKey.currentState.randomThousandsOfBitsStateRefresh(playBeen.id);
-    _chooseCpNumViewKey.currentState.randomChoiceCpNum(HanoiPlayModelChoiceUtils.getInstance().getGamePlayModelRandomBase(playBeen));
+    _chooseCpNumViewKey.currentState.randomChoiceCpNum(playBeen.id
+        ,HanoiPlayModelChoiceUtils.getInstance().getGamePlayModelRandomBase(playBeen));
 
+  }
+
+  /// 彩票数量
+  List<String> getOptionalGroupCpNumList() {
+    return _chooseCpNumViewKey.currentState.getChoiceCpNumList();
   }
 
   /// 获取 选中的 万,千,百,十,个
   List<String> getGroupBitsList() {
 
-    return groupBitsList;
+    return _bitsStateViewKey.currentState.getCheckStateThousandsOfBitsList();
   }
 
   /**

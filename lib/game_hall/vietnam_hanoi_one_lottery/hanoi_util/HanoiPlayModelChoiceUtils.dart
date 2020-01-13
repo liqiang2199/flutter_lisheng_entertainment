@@ -53,6 +53,7 @@ class HanoiPlayModelChoiceUtils {
         _topTwoChoicePlayModel(playBeen);
         break;
       case 6:
+        _choiceFiveTitleTip();
         cpChoiceNum = 5;
         break;
       case 7:
@@ -354,7 +355,7 @@ class HanoiPlayModelChoiceUtils {
   _uncertainGallbladderChoicePlayModel(Play11Choice5DataPlayBeen playBeen) {
 
     cpChoiceNum = 1;
-    cpChoiceTitle = "号码";
+    cpChoiceTitle = "不定胆";
     _choiceOneTitleTip(cpChoiceTitle);
   }
 
@@ -510,16 +511,232 @@ class HanoiPlayModelChoiceUtils {
    * hanoiBettingHandler 通知界面
    */
   /// 请求投注数量
-  getGameHttpBettingNum(Play11Choice5DataPlayBeen playBeen, List<List<String>> choiceCpNumList, List<String> groupBitsList, VietnamHanoiBettingHandler hanoiBettingHandler) {
+  getGameHttpBettingNum(Play11Choice5DataPlayBeen playBeen, List<List<String>> choiceCpNumList
+      , List<String> groupBitsList, VietnamHanoiBettingHandler hanoiBettingHandler) {
     switch(playBeen.id) {
       case 147:
+      case 160:
+      case 173:
         //前三/前三直选/复式（计算注数）
+        //中三/中三直选/复式（计算注数）
+        //后三/后三直选/复式（计算注数）
         if (choiceCpNumList.length >= 3) {
-          VietnamHanoiService.instance.hanoiOneGetGDBets(hanoiBettingHandler, choiceCpNumList[0], choiceCpNumList[1], choiceCpNumList[2],"${ playBeen.id}", false);
+          VietnamHanoiService.instance.hanoiOneGetGDBets(hanoiBettingHandler, choiceCpNumList[0]
+              , choiceCpNumList[1], choiceCpNumList[2],"${ playBeen.id}", false);
+        }
+
+        break;
+      case 148://前三/前三直选/复式（计算注数）
+      case 161://中三/中三直选/单式（计算注数）
+      case 174://后三/后三直选/单式（计算注数）
+      case 191://前二/直选/单试（计算注数）
+      case 196://前二/组选/单式（计算注数）
+      case 191://前二/直选/单试（计算注数）
+        if (choiceCpNumList.length >= 1) {
+          VietnamHanoiService.instance.hanoiOneGetGDBetsEditSingle(hanoiBettingHandler, choiceCpNumList[0]
+              ,"${ playBeen.id}");
+        }
+
+        break;
+      case 149:
+      case 150:
+      case 152:
+      case 153:
+      case 155://前三/前三组选/组选和值（计算注数）
+      case 157://前三/前三其他 /和值尾数（计算注数）
+      case 162:
+      case 163:
+      case 166:
+      case 168://中三/中三组选/和值尾数（计算注数）
+      case 175:
+      case 176:
+      case 177:
+      case 178:
+      case 179:
+      case 181://后三/后三其他/和值尾数（计算注数）
+
+      case 180://后三/后三组选/组选包胆（计算注数）
+      case 198://前二/组选/包胆（计算注数）
+      case 203://后二/组选/包胆（计算注数）
+
+      case 235://趣味/特殊/一帆风顺（计算注数）
+      case 236://趣味/特殊/好事成双（计算注数）
+      case 237://趣味/特殊/三星报喜（计算注数）
+
+      case 209://不定胆/五星不定胆/二码不定位（计算注数）
+      case 210://不定胆/五星不定胆/二码不定位（计算注数）
+      case 212://不定胆/前四不定胆 /一码不定位（计算注数）
+      case 215://不定胆/前四不定胆 /一码不定位（计算注数）
+      case 213://不定胆/前四不定胆 /二码不定位（计算注数）
+      case 216://不定胆/前四不定胆 /二码不定位（计算注数）
+      case 216://不定胆/前四不定胆 /二码不定位（计算注数）
+      case 219://不定胆/三星不定胆一码/后三（计算注数）
+      case 220://不定胆/三星不定胆一码/前三（计算注数）
+      case 222://不定胆/三星不定胆二码/前三（计算注数）
+      case 221://不定胆/三星不定胆二码/后三（计算注数）
+        if (choiceCpNumList.length >= 1) {
+          VietnamHanoiService.instance.hanoiOneGetGDBetsSpan(hanoiBettingHandler, choiceCpNumList[0]
+              ,"${ playBeen.id}");
+        }
+
+        break;
+      case 184:
+      case 190:
+        //前二/直选/复试（计算注数）
+        //后二/直选/复试（计算注数）
+        if (choiceCpNumList.length >= 2) {
+          VietnamHanoiService.instance.hanoiOneGetGDBets(hanoiBettingHandler, choiceCpNumList[0]
+              , choiceCpNumList[1], choiceCpNumList[0],"${ playBeen.id}", true);
+        }
+
+        break;
+      case 226://任选/任二/复式（计算注数）
+      case 229://任选/任三/复式（计算注数）
+      case 206://定位胆/定位胆/定位胆（计算注数）
+        if (choiceCpNumList.length >= 5) {
+          VietnamHanoiService.instance.hanoiOneGetGDBetsOptional(hanoiBettingHandler, choiceCpNumList[0]
+              , choiceCpNumList[1], choiceCpNumList[2], choiceCpNumList[3], choiceCpNumList[4],"${ playBeen.id}");
+        }
+
+        break;
+      case 227://任选/任二/单式（计算注数）
+      case 230://任选/任三/单式（计算注数）
+        if (choiceCpNumList.length >= 1) {
+          VietnamHanoiService.instance.hanoiOneGetGDBetsOptionalGroup(hanoiBettingHandler, choiceCpNumList[0]
+              , groupBitsList,"${ playBeen.id}", true);
+        }
+
+        break;
+      case 228://任选/任二/组选（计算注数）
+      case 231://任选/任三/组三（计算注数）
+      case 232://任选/任三/组六（计算注数）
+        if (choiceCpNumList.length >= 1) {
+          VietnamHanoiService.instance.hanoiOneGetGDBetsOptionalGroup(hanoiBettingHandler, choiceCpNumList[0]
+              , groupBitsList,"${ playBeen.id}", false);
         }
 
         break;
     }
+  }
+
+  /// 新龙虎
+  getGameHttpBettingNumDragonTiger(Play11Choice5DataPlayBeen playBeen
+      , List<String> dragonTigerList, VietnamHanoiBettingHandler hanoiBettingHandler) {
+    var playIdIndex = 0;
+    switch(playBeen.id) {
+      case 240:// 新龙虎/新龙虎/1v2/和（计算注数）
+        if (dragonTigerList.length > 0) {
+          var dragonTigerStr = dragonTigerList[0];
+          switch(dragonTigerStr) {
+            case "龙":
+              playIdIndex = 250;
+              break;
+            case "虎":
+              playIdIndex = 251;
+              break;
+            case "和":
+              playIdIndex = 252;
+              break;
+          }
+
+        }
+
+        break;
+
+      case 241:// 新龙虎/新龙虎/1v3/虎（计算注数）
+        if (dragonTigerList.length > 0) {
+          var dragonTigerStr = dragonTigerList[0];
+          switch(dragonTigerStr) {
+            case "龙":
+              playIdIndex = 253;
+              break;
+            case "虎":
+              playIdIndex = 254;
+              break;
+            case "和":
+              playIdIndex = 255;
+              break;
+          }
+
+        }
+
+        break;
+
+      case 242:// 新龙虎/新龙虎/1v4/和（计算注数）
+        if (dragonTigerList.length > 0) {
+          var dragonTigerStr = dragonTigerList[0];
+          switch(dragonTigerStr) {
+            case "龙":
+              playIdIndex = 256;
+              break;
+            case "虎":
+              playIdIndex = 257;
+              break;
+            case "和":
+              playIdIndex = 258;
+              break;
+          }
+
+        }
+
+        break;
+      case 243:// 新龙虎/新龙虎/1v5/龙（计算注数）
+        if (dragonTigerList.length > 0) {
+          var dragonTigerStr = dragonTigerList[0];
+          switch(dragonTigerStr) {
+            case "龙":
+              playIdIndex = 259;
+              break;
+            case "虎":
+              playIdIndex = 260;
+              break;
+            case "和":
+              playIdIndex = 261;
+              break;
+          }
+
+        }
+
+        break;
+      case 244:// 新龙虎/新龙虎/2v3/龙（计算注数）
+        if (dragonTigerList.length > 0) {
+          var dragonTigerStr = dragonTigerList[0];
+          switch(dragonTigerStr) {
+            case "龙":
+              playIdIndex = 262;
+              break;
+            case "虎":
+              playIdIndex = 263;
+              break;
+            case "和":
+              playIdIndex = 264;
+              break;
+          }
+
+        }
+
+        break;
+      case 245:// 新龙虎/新龙虎/2v4/龙（计算注数）
+        if (dragonTigerList.length > 0) {
+          var dragonTigerStr = dragonTigerList[0];
+          switch(dragonTigerStr) {
+            case "龙":
+              playIdIndex = 265;
+              break;
+            case "虎":
+              playIdIndex = 266;
+              break;
+            case "和":
+              playIdIndex = 267;
+              break;
+          }
+
+        }
+
+        break;
+
+    }
+    VietnamHanoiService.instance.hanoiOneGetGDBetsDragonTiger(hanoiBettingHandler, dragonTigerList, "$playIdIndex");
   }
 
 }
