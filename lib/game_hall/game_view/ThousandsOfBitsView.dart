@@ -120,6 +120,11 @@ class ThousandsOfBitsStateView extends BaseController<ThousandsOfBitsView> {
     }
   }
 
+  /// 获取 千 万
+  List<String> getCheckStateThousandsOfBitsList() {
+    return _bitsStateSet.toList();
+  }
+
   /// 刷新状态 id  彩票ID
   randomThousandsOfBitsStateRefresh(int id) {
     _cpID = id;
@@ -160,6 +165,15 @@ class ThousandsOfBitsStateView extends BaseController<ThousandsOfBitsView> {
       _randomSet.toList().forEach((value) {
         _checkStateList[value] = true;
       });
+
+      _bitsStateSet.clear();
+      for (int i = 0 ; i < _checkStateList.length; i++) {
+        if (_checkStateList[i] == true) {
+          _bitsStateSet.add(_checkStateStrListS[i]);
+        }
+
+      }
+
 
       if (mounted)
         setState(() {

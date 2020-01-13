@@ -19,6 +19,7 @@ import 'package:flutter_lisheng_entertainment/game_hall/game_view/DragonTigerSum
 import 'package:flutter_lisheng_entertainment/game_hall/game_view/LotteryNumListView.dart';
 import 'package:flutter_lisheng_entertainment/game_hall/game_view/LotteryTimeNumView.dart';
 import 'package:flutter_lisheng_entertainment/game_hall/net/vietnam_hanoi/VietnamHanoiBettingHandler.dart';
+import 'package:flutter_lisheng_entertainment/game_hall/vietnam_hanoi_one_lottery/hanoi_util/DragonTigerSumInterface.dart';
 import 'package:flutter_lisheng_entertainment/game_hall/vietnam_hanoi_one_lottery/hanoi_util/HanoiPlayModelChoiceInterface.dart';
 import 'package:flutter_lisheng_entertainment/game_hall/vietnam_hanoi_one_lottery/hanoi_util/HanoiPlayModelChoiceUtils.dart';
 import 'package:flutter_lisheng_entertainment/model/json/gd_11_5/CalculationBettingNumDataBeen.dart';
@@ -42,7 +43,8 @@ class VietnamHanoiOneLotteryBettingView extends StatefulWidget{
 }
 
 class _VietnamHanoiOneLotteryBettingView extends BaseController<VietnamHanoiOneLotteryBettingView> with AutomaticKeepAliveClientMixin implements BettingNumAndOperationHandler
-, BonusAdjustmentInterface,Choose11And5Interface, Choose11And5EditContentHandle, HanoiPlayModelChoiceInterface, VietnamHanoiBettingHandler{
+, BonusAdjustmentInterface,Choose11And5Interface, Choose11And5EditContentHandle, HanoiPlayModelChoiceInterface, VietnamHanoiBettingHandler
+,DragonTigerSumInterface{
 
   /// 彩票数
   List<String> cpNumStr = ["00","01","02","03","04","05","06","07","08","09"];
@@ -76,7 +78,7 @@ class _VietnamHanoiOneLotteryBettingView extends BaseController<VietnamHanoiOneL
 
   ScrollController scrollController = ScrollController(
     initialScrollOffset: 0.0,
-    keepScrollOffset: false,
+    keepScrollOffset: true,
   );
 
   /**
@@ -103,6 +105,7 @@ class _VietnamHanoiOneLotteryBettingView extends BaseController<VietnamHanoiOneL
   GlobalKey<DragonTigerSumStateView> dragonTigerStateKey = GlobalKey();//新龙虎
   GlobalKey<BonusAdjustmentStateView> adjustmentKey = GlobalKey();//奖金调节
   GlobalKey<OptionalGroupFormStateView> optionalGroupFormKey = GlobalKey();//任选组选
+  GlobalKey<BettingNumAndOperationStateView> numAndOperationStateViewKey = GlobalKey();//注数显示
   /// 彩票列表 选号 key
   List<GlobalKey<Choose11And5StateView>> listCpNumKey = new List();
 
@@ -159,7 +162,9 @@ class _VietnamHanoiOneLotteryBettingView extends BaseController<VietnamHanoiOneL
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
+
     return new Column(
+      verticalDirection: VerticalDirection.down,
       children: <Widget>[
 
         new Expanded(
@@ -167,6 +172,7 @@ class _VietnamHanoiOneLotteryBettingView extends BaseController<VietnamHanoiOneL
         ),
         /// 下面投注 按钮
         BettingNumAndOperationView(
+          key: numAndOperationStateViewKey,
           calculationBettingNumBeen: calculationBettingNumBeen,
           operationHandler: this,
           playMoneyAward: this.playMoneyAward,
@@ -211,7 +217,7 @@ class _VietnamHanoiOneLotteryBettingView extends BaseController<VietnamHanoiOneL
       },
 
 //      child: smartRefreshBase(_listViewData()),
-      child: _singleView(),
+      child: _listViewData(),
     );
   }
 
@@ -225,6 +231,60 @@ class _VietnamHanoiOneLotteryBettingView extends BaseController<VietnamHanoiOneL
       ),
     );
   }
+
+
+  Widget _listViewData() {
+
+    return new ListView(
+      physics: BouncingScrollPhysics(),
+      controller: scrollController,
+      children: <Widget>[
+
+        _getRightArrowView("玩法选择", ImageUtil.imgLotteryCenterCqSSC, 1),
+        CommonView().commonLine_NoMargin(context),
+        // 47
+        _playType(),
+        CommonView().commonLine_NoMarginChange(context, 10.0),
+        //14 + 8 + 8 + 2 + (25 + 8 + 8) + 14
+        LotteryTimeNumView(
+          key: textKey,
+          is11Choice5: false,
+          isOpenLotteryList: isLookLotteryTitle,
+          playRemark: this.playRemark,
+          openLotteryTime: openLotteryTime,
+          openLotteryDrawIssue: openLotteryDrawIssue,
+          openLotteryListBeen: openLotteryListBeen,
+        ),
+        CommonView().commonLine_NoMarginChange(context, 10.0),
+
+        new Column(
+          children: <Widget>[
+            // 200
+//            LotteryNumListView(
+//              isLookLotteryList: isLookLotteryList,
+//              openLotteryListBeen: openLotteryListBeen,
+//            ),
+            //187 头部   + 60 标题
+            //45 + 24 + 40 + 40 + 15 + 1 = 165(单个)
+            _numTypeChoiceView(),
+
+            /// 奖金调节
+            BonusAdjustmentView(
+              key: adjustmentKey,
+              adjustmentInterface: this,
+              multipleNum: bettingMultipleNum,
+              segmentedIndex: _segmentedIndex,
+              sliderValue: this.sliderValue,
+            ),
+
+          ],
+        ),
+
+
+      ],
+    );
+  }
+
 
   /// 407  玩法选择  开奖时间  投注号码选择
   Widget _separatedWidget() {
@@ -328,6 +388,7 @@ class _VietnamHanoiOneLotteryBettingView extends BaseController<VietnamHanoiOneL
               }
 
             });
+
             textKey.currentState.onSetRefreshLotteryState(isLookLotteryTitle, playRemark, openLotteryListBeen);
             break;
         }
@@ -384,11 +445,24 @@ class _VietnamHanoiOneLotteryBettingView extends BaseController<VietnamHanoiOneL
           playMoneyAward = playBeen.money_award;
           _getPlayModeChoiceNumList(playBeen);
           _initGroupCpNum();
-          setState(() {
+          if(mounted) {
+            setState(() {
 
-          });
+            });
+          }
+
+          if (numAndOperationStateViewKey != null) {
+            calculationBettingNumBeen = new CalculationBettingNumDataBeen(new List(),0,"0.00","0.00","0.00");//注数 和 金额
+            numAndOperationStateViewKey.currentState.setCalculationBettingNumData(calculationBettingNumBeen);
+          }
           currentPlayBeen = playBeen;
           textKey.currentState.onSetRefreshLotteryState(isLookLotteryTitle, playRemark, openLotteryListBeen);
+
+          if (_isDragonTiger) {
+            if (dragonTigerStateKey != null && dragonTigerStateKey.currentState != null) {
+              dragonTigerStateKey.currentState.cleanDragonTigerChoiceNum();
+            }
+          }
 
         },color: Color(ColorUtil.whiteColor),
           child: new Text(name
@@ -449,7 +523,7 @@ class _VietnamHanoiOneLotteryBettingView extends BaseController<VietnamHanoiOneL
         /// 非任选
         if (_isDragonTiger) {
           // 新龙虎
-          listView.add(DragonTigerSumView(dragonTigerStateKey));
+          listView.add(DragonTigerSumView(dragonTigerStateKey, this));
         } else {
 
           if (_sumValue) {
@@ -465,7 +539,6 @@ class _VietnamHanoiOneLotteryBettingView extends BaseController<VietnamHanoiOneL
             _initGroupCpNum();
 
           }
-          print("_groupTitleList $_groupTitleList");
           for(int i = 0; i < _choiceTypeGroupNum; i++) {
             listView.add(Choose11And5View(key:listCpNumKey[i],choose11and5interface: this, typeIndex: _typeIndexList[i],
               cpNumIndex: groupCpNumList[i], isClickType: isClickType,
@@ -480,7 +553,7 @@ class _VietnamHanoiOneLotteryBettingView extends BaseController<VietnamHanoiOneL
       /// 单式
       if (isCurrentOptionalCp) {
         /// 任选 单式
-        listView.add(OptionalSingleFormView(singleFormStateKey));
+        listView.add(OptionalSingleFormView(singleFormStateKey,this));
       } else {
         listView.add(BettingNumSingleFormEditView(
           editContent: editContentSingle,
@@ -550,6 +623,7 @@ class _VietnamHanoiOneLotteryBettingView extends BaseController<VietnamHanoiOneL
       /// 非任选
       isCurrentOptionalCp = false;
     }
+
     HanoiPlayModelChoiceUtils.getInstance().getPlayModeChoiceNumList(playBeen, this);
   }
 
@@ -561,10 +635,10 @@ class _VietnamHanoiOneLotteryBettingView extends BaseController<VietnamHanoiOneL
       if (isCurrentOptionalCp) {
         singleFormStateKey.currentState.randomEditAndCheckState(currentPlayBeen.id
             , HanoiPlayModelChoiceUtils.getInstance().getGamePlayModelSingleRandomBase(currentPlayBeen));
+        _sendBettingNumRequest(2000);
       } else {
         _randomSingleFormEditGetCpNum(HanoiPlayModelChoiceUtils.getInstance().getGamePlayModelSingleRandomBase(currentPlayBeen));
       }
-
     } else {
       _initGroupCpNum();
 
@@ -589,30 +663,41 @@ class _VietnamHanoiOneLotteryBettingView extends BaseController<VietnamHanoiOneL
         h = h + 26;
       }
 
-      Future.delayed(Duration(milliseconds: 1000)).then((e) {
+      Future.delayed(Duration(milliseconds: 500)).then((e) {
 
         if (isCurrentOptionalCp) {
           //是任选
           if (_choiceTypeGroupNum > 1) {
             for (int i = 0; i < listCpNumKey.length; i++) {
               GlobalKey<Choose11And5StateView> chooseCpNumKey = listCpNumKey[i];
-              chooseCpNumKey.currentState.randomChoiceCpNum(HanoiPlayModelChoiceUtils.getInstance().getGamePlayModelRandomBase(currentPlayBeen));
-            }
+              chooseCpNumKey.currentState.randomChoiceCpNum(currentPlayBeen.id,
+                  HanoiPlayModelChoiceUtils.getInstance().getGamePlayModelRandomBase(currentPlayBeen));
+              if (h < 0) {
+                h = h * (-1);
+              }
+              scrollController.animateTo( h.toDouble() ,
+                  duration: Duration(milliseconds: 1000),
+                  curve: Curves.ease
+              );
 
+            }
           } else {
             //组选
             optionalGroupFormKey.currentState.randomOptionalGroupNumView(currentPlayBeen);
           }
 
+          _sendBettingNumRequest(2000);
         } else {
 
           if (_isDragonTiger) {
             // 龙虎和
             dragonTigerStateKey.currentState.randomDragonTigerChoiceNum();
+            _sendBettingDragonTiger(2000);
           } else {
             for (int i = 0; i < listCpNumKey.length; i++) {
               GlobalKey<Choose11And5StateView> chooseCpNumKey = listCpNumKey[i];
-              chooseCpNumKey.currentState.randomChoiceCpNum(HanoiPlayModelChoiceUtils.getInstance().getGamePlayModelRandomBase(currentPlayBeen));
+              chooseCpNumKey.currentState.randomChoiceCpNum(currentPlayBeen.id
+                  ,HanoiPlayModelChoiceUtils.getInstance().getGamePlayModelRandomBase(currentPlayBeen));
               /// 滚动到对应位置 187 头部   + 80 标题
               if (h < 0) {
                 h = h * (-1);
@@ -622,9 +707,10 @@ class _VietnamHanoiOneLotteryBettingView extends BaseController<VietnamHanoiOneL
                   curve: Curves.ease
               );
             }
+            _sendBettingNumRequest(2000);
           }
 
-          _sendBettingNumRequest(2000);
+
         }
 
 
@@ -640,6 +726,48 @@ class _VietnamHanoiOneLotteryBettingView extends BaseController<VietnamHanoiOneL
           || currentPlayBeen.id == 232) {
         groupBitsList = optionalGroupFormKey.currentState.getGroupBitsList();
       }
+      if (currentPlayBeen.id == 227 || currentPlayBeen.id == 230) {
+        groupBitsList = singleFormStateKey.currentState.getThousandsOfBitsStateStr();
+      }
+    }
+
+  }
+
+  /// 非单式 是 获取选中的号码
+  _getChoiceCpNumList() {
+    if (_isSingle) {
+      return;
+    }
+    bool getNumBool = false;
+    choiceCpNumList.clear();
+    if (isCurrentOptionalCp) {
+
+      if(_choiceTypeGroupNum > 1) {
+        getNumBool = true;
+      } else {
+        if (optionalGroupFormKey != null && optionalGroupFormKey.currentState != null) {
+          choiceCpNumList.add(optionalGroupFormKey.currentState.getOptionalGroupCpNumList());
+        }
+      }
+
+    } else {
+//      for (int i = 0; i < listCpNumKey.length; i++) {
+//        GlobalKey<Choose11And5StateView> chooseCpNumKey = listCpNumKey[i];
+//        if (chooseCpNumKey != null) {
+//          choiceCpNumList.add(chooseCpNumKey.currentState.getChoiceCpNumList());
+//        }
+//      }
+      getNumBool = true;
+    }
+
+    if (getNumBool) {
+      for (int i = 0; i < listCpNumKey.length; i++) {
+        GlobalKey<Choose11And5StateView> chooseCpNumKey = listCpNumKey[i];
+        if (chooseCpNumKey != null) {
+          choiceCpNumList.add(chooseCpNumKey.currentState.getChoiceCpNumList());
+        }
+
+      }
     }
 
   }
@@ -648,7 +776,21 @@ class _VietnamHanoiOneLotteryBettingView extends BaseController<VietnamHanoiOneL
   _sendBettingNumRequest(int milliseconds) {
     Future.delayed(Duration(milliseconds: milliseconds)).then((e) {
       _getOptionalGroupBitsList();
+      _getChoiceCpNumList();
       HanoiPlayModelChoiceUtils.getInstance().getGameHttpBettingNum(currentPlayBeen, choiceCpNumList, groupBitsList, this);
+
+    });
+  }
+
+  /// 虎 龙 和
+  _sendBettingDragonTiger(int milliseconds) {
+    groupBitsList.clear();
+    if (_isDragonTiger) {
+      groupBitsList = dragonTigerStateKey.currentState.getRandomDragonTigerList();
+    }
+    Future.delayed(Duration(milliseconds: milliseconds)).then((e) {
+
+      HanoiPlayModelChoiceUtils.getInstance().getGameHttpBettingNumDragonTiger(currentPlayBeen, groupBitsList, this);
 
     });
   }
@@ -666,11 +808,10 @@ class _VietnamHanoiOneLotteryBettingView extends BaseController<VietnamHanoiOneL
     setSingleNum.forEach((value){
       stringBuffer.write(value);
     });
+    //choiceCpNumList.add(new List<String>()..add(stringBuffer.toString()));
     editContent11Choose5Handle("${stringBuffer.toString()},");
     /// 发送请求注数
-    Future.delayed(Duration(milliseconds: 1000)).then((e) {
-
-    });
+    //_sendBettingNumRequest(500);
 
   }
 
@@ -727,22 +868,6 @@ class _VietnamHanoiOneLotteryBettingView extends BaseController<VietnamHanoiOneL
     adjustmentKey.currentState.bonusAdjustmentRefreshState(_segmentedIndex,sliderValue, bettingMultipleNum);
   }
 
-  /// 清空所有的选项
-  _cleanChoiceState() {
-    groupCpNumList.forEach((cpNumList){
-      List<int> numList = cpNumList;
-      for (var i = 0; i < numList.length; i++) {
-        numList[i] = -1;
-      }
-    });
-
-    _typeIndexList.forEach((value){
-      value = -1;
-    });
-    setState(() {
-
-    });
-  }
 
   /**
    * Choose11And5Interface
@@ -764,11 +889,13 @@ class _VietnamHanoiOneLotteryBettingView extends BaseController<VietnamHanoiOneL
     isClickType = false;
     _typeIndexList[viewOnClickIndex] = 5;
     if (isCurrentOptionalCp && _choiceTypeGroupNum == 1) {
-      optionalGroupFormKey.currentState.optionalGroupCpNumViewListTypeIndexRefresh(groupCpNum, _typeIndexList[viewOnClickIndex], isClickType);
+      optionalGroupFormKey.currentState.optionalGroupCpNumViewListTypeIndexRefresh(groupCpNum
+          , _typeIndexList[viewOnClickIndex], isClickType, viewOnClickIndex);
     } else {
       GlobalKey<Choose11And5StateView> cpNumKey = listCpNumKey[viewOnClickIndex];
       if(cpNumKey != null) {
-        cpNumKey.currentState.chooseCpNumViewListTypeIndexRefresh(groupCpNum, _typeIndexList[viewOnClickIndex], isClickType);
+        cpNumKey.currentState.chooseCpNumViewListTypeIndexRefresh(groupCpNum,
+            _typeIndexList[viewOnClickIndex], isClickType, viewOnClickIndex);
       }
 
     }
@@ -781,13 +908,20 @@ class _VietnamHanoiOneLotteryBettingView extends BaseController<VietnamHanoiOneL
     isClickType = false;
 
     List<int> cpNumList = groupCpNumList[viewOnClickIndex];
-    cpNumList[index] = cpNumList[index] == 0 ? -1 : 0;
+    //cpNumList[index] = cpNumList[index] == 0 ? -1 : 0;
     if (isCurrentOptionalCp && _choiceTypeGroupNum == 1) {
-      optionalGroupFormKey.currentState.optionalGroupCpNumViewListRefresh(cpNumList, isClickType);
+      optionalGroupFormKey.currentState.optionalGroupCpNumViewListRefresh(cpNumList, isClickType, index );
     } else {
+
       GlobalKey<Choose11And5StateView> cpNumKey = listCpNumKey[viewOnClickIndex];
-      if (cpNumKey != null) {
-        cpNumKey.currentState.chooseCpNumViewListRefresh(cpNumList, isClickType);
+      if (cpNumKey != null && cpNumKey.currentState != null) {
+        if(currentPlayBeen.id == 180 || currentPlayBeen.id == 198 || currentPlayBeen.id == 203) {
+          // 包胆 只能选择一个
+          cpNumKey.currentState.chooseCpNumViewListPlayBraveryRefresh(currentPlayBeen.id, cpNumList, isClickType, index);
+        } else {
+          cpNumKey.currentState.chooseCpNumViewListRefresh(cpNumList, isClickType, index);
+        }
+
       }
 
     }
@@ -823,10 +957,30 @@ class _VietnamHanoiOneLotteryBettingView extends BaseController<VietnamHanoiOneL
   @override
   void editContent11Choose5Handle(String strContent) {
     this.editContentSingle = strContent;
-    /// 只刷新局部
-    if(mounted)
-      setState(() {
-      });
+    if (!TextUtil.isEmpty(strContent)) {
+      choiceCpNumList.clear();
+      var randomBase = HanoiPlayModelChoiceUtils.getInstance().getGamePlayModelSingleRandomBase(currentPlayBeen);
+      var splitSingleNumStr = editContentSingle.split(",");
+      List<String> strNumList = new List();
+      for (int sp = 0; sp < splitSingleNumStr.length; sp++) {
+        var splitSingleNum = splitSingleNumStr[sp];
+        if(splitSingleNum.length == randomBase) {
+          strNumList.add(splitSingleNum);
+        }
+
+      }
+      choiceCpNumList.add(strNumList);
+      /// 发送请求注数
+      _sendBettingNumRequest(100);
+      if (!isCurrentOptionalCp) {
+        /// 只刷新局部
+        if(mounted)
+          setState(() {
+          });
+      }
+    }
+
+
   }
 
   @override
@@ -849,6 +1003,7 @@ class _VietnamHanoiOneLotteryBettingView extends BaseController<VietnamHanoiOneL
     _cpChoiceNum = cpChoiceNum;
     _choiceTypeGroupNum = cpChoiceNum;
     //_groupTitleList = groupTitleList;
+    _groupTitleList.clear();
     groupTitleList.forEach((value){
       _groupTitleList.add(value);
     });
@@ -880,11 +1035,19 @@ class _VietnamHanoiOneLotteryBettingView extends BaseController<VietnamHanoiOneL
   ///
   @override
   void getCalculationBettingNumData(CalculationBettingNumDataBeen data) {
-
+    this.calculationBettingNumBeen = data;
+    Future.delayed(Duration(milliseconds: 300)).then((e) {
+      numAndOperationStateViewKey.currentState.setCalculationBettingNumData(calculationBettingNumBeen);
+    });
   }
 
   @override
   // TODO: implement wantKeepAlive
   bool get wantKeepAlive => true;
+
+  @override
+  void setDragonTigerSumHandler(List<String> choiceCpNumList) {
+    _sendBettingDragonTiger(1000);
+  }
 
 }

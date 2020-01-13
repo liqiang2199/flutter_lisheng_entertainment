@@ -1,6 +1,6 @@
 class UrlUtil {
 
-  static const BaseUrl = "http://kwnng8.natappfree.cc/";
+  static const BaseUrl = "http://ie25rx.natappfree.cc/";
 
   static const login = "api/login/login";
   /// 退出登录
@@ -97,11 +97,11 @@ class UrlUtil {
   static const orderAdd = "api/guangdong/orderAdd";
 
   /**
-   * 越南 河内一分彩
+   * 越南河内一分彩
    */
-  ///
+  /// 玩法获取
   static const hanoiOneGetPlay = "api/Ylhlyfc/getPlay";
-  /// 计算注数
+  ///计算注数
   static const hanoiOneGetGDBets = "api/Ylhlyfc/gdBets";
 
 

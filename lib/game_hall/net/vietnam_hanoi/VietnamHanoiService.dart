@@ -30,7 +30,33 @@ class VietnamHanoiService {
       numStr.write(value);
       numStr.write(",");
     });
-    return numStr.toString();
+    String numS = "";
+    if (numStr.length > 0) {
+      numS = numStr.toString().substring(0, numStr.length - 1);
+    }
+    return numS;
+  }
+
+  // 单式 计算 加 ，
+  String _stringSingleAppend(List<String> list) {
+    StringBuffer numStr = new StringBuffer();
+    list.forEach((value){
+      var length = value.length;
+      for (int i = 0; i < length; i++) {
+        numStr.write(value.substring(i, i + 1));
+        if (i != length - 1) {
+          numStr.write(",");
+        }
+
+      }
+
+      numStr.write(";");
+    });
+    String numS = "";
+    if (numStr.length > 0) {
+      numS = numStr.toString().substring(0, numStr.length - 1);
+    }
+    return numS;
   }
 
 
@@ -143,9 +169,7 @@ class VietnamHanoiService {
     openAccountHttpBeen.token = SpUtil.getString(Constant.TOKEN);
     openAccountHttpBeen.play_id = playID;
 
-//    oneNum = oneNum.replaceAll(",", ";");
-//
-//    openAccountHttpBeen.data_num = oneNum;
+    openAccountHttpBeen.data_num = _stringSingleAppend(oneNum);
 
     ApiService apiService = RetrofitManager.instance.createApiService();
     apiService.setHandler(hanoiBettingHandler);
@@ -203,7 +227,7 @@ class VietnamHanoiService {
    */
   ///
   void hanoiOneGetGDBetsOptionalGroup(VietnamHanoiBettingHandler hanoiBettingHandler, List<String> oneNum
-      , List<String> bitsNum,  String playID) {
+      , List<String> bitsNum,  String playID, bool isSingle) {
     CalculationBettingNumDataBeen calculationBettingNumBeen = new CalculationBettingNumDataBeen(new List(),0,"0.00","0.00","0.00");//注数 和 金额
     if (oneNum.length <= 0) {
       hanoiBettingHandler.getCalculationBettingNumData(calculationBettingNumBeen);
@@ -219,7 +243,12 @@ class VietnamHanoiService {
     openAccountHttpBeen.token = SpUtil.getString(Constant.TOKEN);
     openAccountHttpBeen.play_id = playID;
 
-    openAccountHttpBeen.data_num = _stringAppend(oneNum);
+    if (isSingle) {
+      openAccountHttpBeen.data_num = _stringSingleAppend(oneNum);
+    } else {
+      openAccountHttpBeen.data_num = _stringAppend(oneNum);
+    }
+
     openAccountHttpBeen.data_address = _stringAppend(bitsNum);
 
 
@@ -252,6 +281,29 @@ class VietnamHanoiService {
 
     openAccountHttpBeen.data_num = _stringAppend(oneNum);
     openAccountHttpBeen.data_address = _stringAppend(bitsNum);
+
+
+    ApiService apiService = RetrofitManager.instance.createApiService();
+    apiService.setHandler(hanoiBettingHandler);
+    apiService.hanoiOneGetGDBets(openAccountHttpBeen);
+
+  }
+
+  /**
+   * 新龙虎
+   */
+  ///
+  void hanoiOneGetGDBetsDragonTiger(VietnamHanoiBettingHandler hanoiBettingHandler, List<String> dragonTiger,  String playID) {
+    CalculationBettingNumDataBeen calculationBettingNumBeen = new CalculationBettingNumDataBeen(new List(),0,"0.00","0.00","0.00");//注数 和 金额
+    if (dragonTiger.length <= 0) {
+      hanoiBettingHandler.getCalculationBettingNumData(calculationBettingNumBeen);
+      return;
+    }
+
+
+    VietnamHanoiHttpBeen openAccountHttpBeen = new VietnamHanoiHttpBeen();
+    openAccountHttpBeen.token = SpUtil.getString(Constant.TOKEN);
+    openAccountHttpBeen.play_id = playID;
 
 
     ApiService apiService = RetrofitManager.instance.createApiService();
