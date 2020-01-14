@@ -26,7 +26,7 @@ class DragonTigerSumView extends StatefulWidget{
 class DragonTigerSumStateView extends BaseController<DragonTigerSumView> {
 
   List<bool> cpNumBool = [false, false, false];
-  List<String> cpNumStr = ["龙", " 虎", "和"];
+  List<String> cpNumStr = ["龙", "虎", "和"];
   int typeIndex;
   List<int> cpNumIndex = [-1, -1, -1];
   List<String> choiceCpNumList = new List();//选中list 的集合
@@ -195,7 +195,13 @@ class DragonTigerSumStateView extends BaseController<DragonTigerSumView> {
   }
 
   List<String> getRandomDragonTigerList() {
-
+    if (choiceCpNumList.length <= 0) {
+      for (int i = 0; i < cpNumBool.length; i++) {
+        if (cpNumBool[i]) {
+          choiceCpNumList.add("${cpNumStr[i]}");
+        }
+      }
+    }
     return this.choiceCpNumList;
   }
 

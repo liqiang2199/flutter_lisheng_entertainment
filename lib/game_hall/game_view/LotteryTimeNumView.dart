@@ -27,7 +27,7 @@ class LotteryTimeNumView extends StatefulWidget {
 
   const LotteryTimeNumView({
     Key key,
-    this.is11Choice5,
+    this.is11Choice5 = true,
     this.isOpenLotteryList = true,
     this.playRemark,
     this.openLotteryListBeen,
@@ -59,6 +59,7 @@ class LotteryTimeNumChildView extends BaseController<LotteryTimeNumView> {
   String openLotteryTime;
   String openLotteryDrawIssue;
   List<OpenLotteryListTwoDataListBeen> openLotteryListBeen;
+  bool isOpeningLottery = false;//是否正在开奖
 
   String _timeOpenLotteryTitle = "开奖还剩:";//开奖时间标题
   int openLotteryTitleColor = ColorUtil.textColor_333333;//开奖时间标题颜色
@@ -107,7 +108,7 @@ class LotteryTimeNumChildView extends BaseController<LotteryTimeNumView> {
   void onSetRefreshState(String time, String qs) {
     this.openLotteryTime = time;
     this.openLotteryDrawIssue = qs;
-
+    isOpeningLottery = false;
     if (mounted)
       setState(() {
 
@@ -120,12 +121,28 @@ class LotteryTimeNumChildView extends BaseController<LotteryTimeNumView> {
   void onBeginTimeOpenLottery(bool isBegin) {
     if (isBegin) {
       _timeOpenLotteryTitle = "正在开奖";
+      this.openLotteryTime = "";
       openLotteryTitleColor = ColorUtil.textColor_FF8814;
     } else {
       _timeOpenLotteryTitle = "开奖还剩:";
       openLotteryTitleColor = ColorUtil.textColor_333333;
     }
 
+  }
+
+  /// 状态切换改变
+  void onBeginTimeOpenLotteryStatusChange(bool isBegin, String qs) {
+    if (isBegin) {
+      isOpeningLottery = true;
+      this.openLotteryDrawIssue = qs;
+      _timeOpenLotteryTitle = "正在开奖";
+      this.openLotteryTime = "";
+      openLotteryTitleColor = ColorUtil.textColor_FF8814;
+    }
+    if (mounted)
+      setState(() {
+
+      });
   }
 
   int _timerIndex = 1;
@@ -150,7 +167,7 @@ class LotteryTimeNumChildView extends BaseController<LotteryTimeNumView> {
     String titleIssue = "0";
     if (openLotteryDrawIssue != null || openLotteryDrawIssue.length > 0) {
       var length = openLotteryDrawIssue.length;
-      titleIssue = "${openLotteryDrawIssue.substring(length - 2, length)}期";
+      titleIssue = "${openLotteryDrawIssue.substring(length - 3, length)}期";
     }
     return new Container(
       padding: EdgeInsets.only(top: 8.0,bottom: 8.0,),
@@ -215,6 +232,33 @@ class LotteryTimeNumChildView extends BaseController<LotteryTimeNumView> {
           children: <Widget>[
             _num("当期暂无开奖"),
 
+          ],
+        ),
+      );
+    }
+    if (isOpeningLottery) {
+      String titleIssue = "0";
+      if (openLotteryDrawIssue != null || openLotteryDrawIssue.length > 0) {
+        var length = openLotteryDrawIssue.length;
+        titleIssue = "${openLotteryDrawIssue.substring(length - 3, length)}";
+        if (titleIssue != null) {
+          titleIssue = "${(int.parse(titleIssue) + 1)}";
+        }
+        if(titleIssue.length == 1) {
+          titleIssue = "00$titleIssue";
+        }
+        if(titleIssue.length == 2) {
+          titleIssue = "0$titleIssue";
+        }
+      }
+      return new Container(
+        padding: EdgeInsets.only(bottom: 8.0,),
+        color: Colors.white,
+        child: new Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            _num("$titleIssue期"),
+            _num("正在开奖"),
           ],
         ),
       );

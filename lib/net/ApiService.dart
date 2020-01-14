@@ -3,6 +3,7 @@ import 'dart:math';
 
 import 'package:dio/dio.dart';
 import 'package:flustars/flustars.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_lisheng_entertainment/Util/Constant.dart';
 import 'package:flutter_lisheng_entertainment/agent/net/AgencyBonusHandler.dart';
 import 'package:flutter_lisheng_entertainment/agent/net/LinkManagerHandler.dart';
@@ -79,6 +80,7 @@ import 'package:flutter_lisheng_entertainment/model/json/recharge/RechargeTypeLi
 import 'package:flutter_lisheng_entertainment/model/json/set/SetLoginOutBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/json/system_notice/SystemNoticeListBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/json/user_report/UserReportBeen.dart';
+import 'package:flutter_lisheng_entertainment/model/json/vietnam_hanoi/VietnamHanoiLotteryTimeBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/json/withdraw/WithdrawListDataBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/json/withdraw/user_record/UserWithdrawRecordBeen.dart';
 import 'package:flutter_lisheng_entertainment/net/BaseHandler.dart';
@@ -94,6 +96,7 @@ import 'package:flutter_lisheng_entertainment/user/net/SetCashPasswordHandler.da
 import 'package:flutter_lisheng_entertainment/user/net/SetHandler.dart';
 import 'package:flutter_lisheng_entertainment/user/net/UserWithdrawRecordHandler.dart';
 import 'package:flutter_lisheng_entertainment/user/net/WithdrawHandler.dart';
+import 'package:flutter_lisheng_entertainment/view/common/loading.dart';
 import 'package:retrofit/retrofit.dart';
 import 'dart:convert';
 
@@ -103,9 +106,13 @@ import 'GetBettingRecordListHandler.dart';
 @RestApi(baseUrl: UrlUtil.BaseUrl)
 abstract class ApiService<T> {
 
+  BuildContext context;
   factory ApiService(Dio dio, {String baseUrl}) = _ApiService<T>;
 
   setHandler(T _baseHandler);
+  setBuildContext(BuildContext context) {
+    this.context = context;
+  }
 
   @POST(UrlUtil.login)
   void login(@Body() LoginHttpBeen task);
@@ -250,6 +257,14 @@ abstract class ApiService<T> {
   @POST(UrlUtil.hanoiOneGetGDBets)
   void hanoiOneGetGDBets(@Body() VietnamHanoiHttpBeen openAccountHttpBeen);
 
+  /// 投注
+  @POST(UrlUtil.hanoiOneGetOrderAdd)
+  void hanoiOneGetOrderAdd(@Body() VietnamHanoiHttpBeen openAccountHttpBeen);
+
+  /// 获取下期开奖时间
+  @POST(UrlUtil.hanoiOneGetKjTime)
+  void hanoiOneGetKjTime(@Body() BaseTokenHttpBeen openAccountHttpBeen);
+
   /**
    * 个人中心
    */
@@ -280,6 +295,7 @@ class _ApiService<T> implements ApiService<T> {
 
   T _baseHandler;
   String baseUrl;
+  BuildContext context;
 
   _getHeaders () {
     return {
@@ -293,12 +309,18 @@ class _ApiService<T> implements ApiService<T> {
     this._baseHandler = _baseHandler;
   }
 
+  @override
+  setBuildContext(BuildContext context) {
+    this.context = context;
+  }
+
   /**
    * 发送Post 网络请求
    * jsonData 传入的 json 数据
    */
   @override
   Future<Map<String, dynamic>> responseResult(Map<String, dynamic> jsonData, String path) async {
+    _showLoadingDialog();//弹出弹窗
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _data = <String, dynamic>{};
@@ -310,17 +332,23 @@ class _ApiService<T> implements ApiService<T> {
             headers: _getHeaders (),
             extra: _extra,
             baseUrl: UrlUtil.BaseUrl),
-        data: _data);
-//    .catchError((error) {
-//    switch (error.runtimeType) {
-//    case DioError:
-//    // Here's the sample to get the failed response error code and message
-//    final res = (error as DioError).response;
-//    //print("Got error : ${res.statusCode} -> ${res.statusMessage}");
-//    break;
-//    default:
-//    }
-//    })
+        data: _data)
+        .catchError((error) {
+          if (context != null) {
+            Navigator.pop(context);
+          }
+
+//          switch (error.runtimeType) {
+//            case DioError:
+//            // Here's the sample to get the failed response error code and message
+//              final res = (error as DioError).response;
+//              //print("Got error : ${res.statusCode} -> ${res.statusMessage}");
+//              break;
+//            default:
+//          }
+    })
+    ;
+
 
 
     if (_result.data != null) {
@@ -329,6 +357,19 @@ class _ApiService<T> implements ApiService<T> {
 
     return _result.data;
   }
+  /// 加载弹窗 提示 弹窗
+  _showLoadingDialog() {
+    if (context == null) {
+      return;
+    }
+    showDialog<Null>(
+        context: context, //BuildContext对象
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return new LoadingDialog();
+        });
+  }
+
 
   @override
   void login(LoginHttpBeen task) {
@@ -1051,6 +1092,38 @@ class _ApiService<T> implements ApiService<T> {
       VietnamHanoiBettingHandler linkManagerHandler = _baseHandler as VietnamHanoiBettingHandler;
       if (bettingNum.code == 1) {
         linkManagerHandler.getCalculationBettingNumData(bettingNum.data);
+      } else {
+        linkManagerHandler.showToast(bettingNum.msg);
+      }
+    });
+  }
+
+  /// 河内一分彩 下注
+  @override
+  void hanoiOneGetOrderAdd(VietnamHanoiHttpBeen openAccountHttpBeen) {
+    ArgumentError.checkNotNull(openAccountHttpBeen, '参数为空');
+    ArgumentError.checkNotNull(_baseHandler, '_baseHandler为空');
+    responseResult(openAccountHttpBeen.toJson(), UrlUtil.hanoiOneGetOrderAdd).then((onValue) {
+      var bettingNum = CalculationBettingNumBeen.fromJson(onValue);
+      VietnamHanoiBettingHandler linkManagerHandler = _baseHandler as VietnamHanoiBettingHandler;
+      if (bettingNum.code == 1) {
+        linkManagerHandler.bettingSuccessResult();
+      } else {
+        linkManagerHandler.showToast(bettingNum.msg);
+      }
+    });
+  }
+
+  /// 获取下期开奖时间
+  @override
+  void hanoiOneGetKjTime(BaseTokenHttpBeen openAccountHttpBeen) {
+    ArgumentError.checkNotNull(openAccountHttpBeen, '参数为空');
+    ArgumentError.checkNotNull(_baseHandler, '_baseHandler为空');
+    responseResult(openAccountHttpBeen.toJson(), UrlUtil.hanoiOneGetKjTime).then((onValue) {
+      VietnamHanoiBettingHandler linkManagerHandler = _baseHandler as VietnamHanoiBettingHandler;
+      var bettingNum = VietnamHanoiLotteryTimeBeen.fromJson(onValue);
+      if (bettingNum.code == 1) {
+        linkManagerHandler.openVietnamHanoiLotteryTime(bettingNum.data.kj_time, bettingNum.data.qishu);
       } else {
         linkManagerHandler.showToast(bettingNum.msg);
       }

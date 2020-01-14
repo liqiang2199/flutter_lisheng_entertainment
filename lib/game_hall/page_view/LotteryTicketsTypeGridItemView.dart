@@ -118,7 +118,7 @@ class _LotteryTicketsTypeGridItemView extends BaseController<LotteryTicketsTypeG
               break;
             case 15:
               //越南 河内1分彩
-              Navigator.pushNamed(context, RouteUtil.vietnamHanoiOneLotteryController);
+              Navigator.pushNamed(context, RouteUtil.vietnamHanoiOneLotteryController, arguments: {"ColorVarietyID": index});
               break;
             case -1:
               // 添加常玩彩种

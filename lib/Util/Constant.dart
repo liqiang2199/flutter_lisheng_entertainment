@@ -5,6 +5,8 @@ class Constant {
 
   //Intent 传值的 key
   static const INTENT_VALUE_USER_INFO = "UserInfo";
+  // 彩种ID
+  static const COLOR_VARIETY_ID = "ColorVarietyID";
 
   // Sp Key
   static const TOKEN = "Token";

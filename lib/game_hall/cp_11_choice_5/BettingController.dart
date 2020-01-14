@@ -128,7 +128,7 @@ class _BettingController extends BaseController<BettingController> with SingleTi
 
   Widget _pageViewIndex(var index) {
     if (index == 0) {
-      return LotteryNum11Choice5Controller();
+      return LotteryNum11Choice5Controller("9");
     }
     if (index == 1) {
       /// 走势图
@@ -138,7 +138,7 @@ class _BettingController extends BaseController<BettingController> with SingleTi
       return BettingView();
     }
     if (index == 3) {
-      return Record11Choice5Controller();
+      return Record11Choice5Controller("9");
     }
     return GameHallView();
   }

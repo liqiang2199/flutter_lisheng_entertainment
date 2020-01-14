@@ -2,12 +2,13 @@
 import 'package:flustars/flustars.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_lisheng_entertainment/Util/ColorUtil.dart';
+import 'package:flutter_lisheng_entertainment/base/BaseController.dart';
 import 'package:flutter_lisheng_entertainment/model/json/gd_11_5/OpenLotteryListTwoDataListBeen.dart';
 
 /**
  * 开奖 列表 View
  */
-class LotteryNumListView extends StatelessWidget {
+class LotteryNumListView extends StatefulWidget {
 
   final bool is11Choice5;
   final bool isLookLotteryList;//是否是下拉查看开奖号码
@@ -20,6 +21,29 @@ class LotteryNumListView extends StatelessWidget {
     this.openLotteryListBeen,
 
   }) : super(key: key);// 是否是 11 选 5
+
+  @override
+  State<StatefulWidget> createState() {
+    // TODO: implement createState
+    return LotteryNumListStateView(is11Choice5: this.is11Choice5,
+        isLookLotteryList: this.isLookLotteryList,
+        openLotteryListBeen: this.openLotteryListBeen
+    );
+  }
+
+}
+class LotteryNumListStateView extends BaseController<LotteryNumListView> {
+
+  bool is11Choice5 = true;
+  bool isLookLotteryList;//是否是下拉查看开奖号码
+  List<OpenLotteryListTwoDataListBeen> openLotteryListBeen;
+
+  LotteryNumListStateView({
+    this.is11Choice5,
+    this.isLookLotteryList = false,
+    this.openLotteryListBeen,
+
+  });// 是否是 11 选 5
 
   @override
   Widget build(BuildContext context) {
@@ -132,6 +156,16 @@ class LotteryNumListView extends StatelessWidget {
         textAlign: TextAlign.center,
       ),
     );
+  }
+
+  void onSetRefreshLotteryNumList( bool isOpenLotteryList, List<OpenLotteryListTwoDataListBeen> openLotteryListBeen) {
+    this.isLookLotteryList = isOpenLotteryList;
+    this.openLotteryListBeen = openLotteryListBeen;
+
+    if (mounted)
+      setState(() {
+
+      });
   }
 
 }

@@ -15,17 +15,24 @@ import 'package:flutter_lisheng_entertainment/view/common/CommonView.dart';
  * 11 选 5 开奖列表
  */
 class LotteryNum11Choice5Controller extends StatefulWidget {
+
+  String colorVariety;
+  LotteryNum11Choice5Controller(this.colorVariety);
+
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
-    return _LotteryNum11Choice5Controller();
+    return _LotteryNum11Choice5Controller(colorVariety);
   }
 
 }
 
 class _LotteryNum11Choice5Controller extends BaseRefreshController<LotteryNum11Choice5Controller> with AutomaticKeepAliveClientMixin  implements LotteryNum11Choice5Handler{
 
+  String colorVariety;
   List<OpenLotteryListTwoDataListBeen> openLotteryListBeen = new List();
+
+  _LotteryNum11Choice5Controller(this.colorVariety);
 
   @override
   void initState() {
@@ -47,7 +54,7 @@ class _LotteryNum11Choice5Controller extends BaseRefreshController<LotteryNum11C
   @override
   void onRefreshData() {
     page = 1;
-    GameService.instance.kjlogList("9","$page", this);
+    GameService.instance.kjlogList(colorVariety,"$page", this);
   }
 
   @override

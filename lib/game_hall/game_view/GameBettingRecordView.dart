@@ -18,16 +18,23 @@ import 'package:flutter_lisheng_entertainment/view/view_interface/SelectionTimeC
  * 游戏里面 -》 投注记录
  */
 class GameBettingRecordView extends StatefulWidget {
+
+  String _colorVariety;
+  GameBettingRecordView(this._colorVariety);
+
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
-    return _GameBettingRecordView();
+    return _GameBettingRecordView(this._colorVariety);
   }
 
 }
 
 class _GameBettingRecordView extends BaseRefreshController<GameBettingRecordView>
     implements SelectionTimeCallBack,GetBettingRecordListHandler,ChoiceBettingStatusInterface {
+
+  String _colorVariety;
+  _GameBettingRecordView(this._colorVariety);
 
   String startTime = "";
   String endTime = "";
@@ -41,7 +48,7 @@ class _GameBettingRecordView extends BaseRefreshController<GameBettingRecordView
     super.initState();
     startTime = DateUtil.getDateStrByDateTime(DateTime.now(),format: DateFormat.YEAR_MONTH_DAY);
     endTime = DateUtil.getDateStrByDateTime(DateTime.now(),format: DateFormat.YEAR_MONTH_DAY);
-    GameService.instance.bettingList(this, "9", "0", startTime, endTime);
+    GameService.instance.bettingList(this, "$_colorVariety", "0", startTime, endTime);
   }
 
   @override
@@ -103,12 +110,22 @@ class _GameBettingRecordView extends BaseRefreshController<GameBettingRecordView
       }
     }
 
+    String cpFindName = "";
+    if (_colorVariety == "9") {
+      cpFindName = "广东11选5";
+    } else {
+      if (_colorVariety == "15") {
+        cpFindName = "河内一分彩";
+      }
+
+    }
+
     return new Container(
       padding: EdgeInsets.only(left: 15.0,right: 15.0),
       child: new Column(
         children: <Widget>[
 
-          _itemTopCpFind("广东11选5","${!TextUtil.isEmpty(dataListBeen.pre_draw_issue) ? dataListBeen.pre_draw_issue : ""}"),
+          _itemTopCpFind(cpFindName,"${!TextUtil.isEmpty(dataListBeen.pre_draw_issue) ? dataListBeen.pre_draw_issue : ""}"),
           _recordBottomList("玩法：", "${!TextUtil.isEmpty(dataListBeen.play) ? dataListBeen.play : ""}"),
           _recordBottomList("开奖号码：", "${!TextUtil.isEmpty(dataListBeen.kj_num) ? dataListBeen.kj_num : ""}"),
           _recordBottomList("订单编号：", "${!TextUtil.isEmpty(dataListBeen.ordercode) ? dataListBeen.ordercode : ""}"),

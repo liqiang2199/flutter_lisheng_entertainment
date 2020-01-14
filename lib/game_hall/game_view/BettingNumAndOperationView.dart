@@ -50,7 +50,11 @@ class BettingNumAndOperationStateView extends BaseController<BettingNumAndOperat
   BettingNumAndOperationHandler operationHandler;
   String playMoneyAward;//玩法奖金
   int bettingNum;// 投注倍数
+  int _bettingNumCount = 0;// 投注 注数
+  String _bettingNumCountMoney = "0.00";// 投注 注数 金额
   int moneyCompany;// 钱的单位 0 元 1 角 2 分 3 厘
+  bool _isDragonTiger = false;// 是否是新龙虎
+  List<String> _dragonTigerMoney = ["","",""];//保存玩法金额
 
 
   BettingNumAndOperationStateView(
@@ -91,7 +95,7 @@ class BettingNumAndOperationStateView extends BaseController<BettingNumAndOperat
           new Row(
             children: <Widget>[
 
-              new Expanded(child: _bettingNumTotalText()),
+              new Expanded(child: _bettingNumTotalText(_moneyCompanyMultiple)),
               new Expanded(child: _bettingCanMoneyText()),
 
             ],
@@ -106,7 +110,7 @@ class BettingNumAndOperationStateView extends BaseController<BettingNumAndOperat
     );
   }
 
-  Widget _bettingNumTotalText() {
+  Widget _bettingNumTotalText(int company) {
 
     return new Container(
       child: new Row(
@@ -120,9 +124,10 @@ class BettingNumAndOperationStateView extends BaseController<BettingNumAndOperat
             ),
           ),
 
-          _numText("${calculationBettingNumBeen.count}","注"),
+          _numText("${_bettingNumCount}","注"),
           SpaceViewUtil.pading_Left(12.0),
-          _numText("${double.parse(calculationBettingNumBeen.money) * calculationBettingNumBeen.count * bettingNum}","元"),
+          //_numText("${(double.parse(calculationBettingNumBeen.money) * calculationBettingNumBeen.count * bettingNum)/company}","元"),
+          _numText("${(double.parse(_bettingNumCountMoney) * _bettingNumCount * bettingNum)/company}","元"),
 
         ],
       ),
@@ -155,14 +160,33 @@ class BettingNumAndOperationStateView extends BaseController<BettingNumAndOperat
   Widget _bettingBonusText(int multiple) {
 
     var playMoneyAwarText = "0.00";
-    if(!TextUtil.isEmpty(playMoneyAward)) {
-      playMoneyAwarText = playMoneyAward;
-    }
-//    var parse = num.parse("").toDouble();
-    //var multipleAward = double.parse(this.playMoneyAward) / multiple;
-    var multipleAward = double.parse(playMoneyAwarText) * bettingNum;
+    var multipleAwardStr = "0.00";
 
-    var multipleAwardStr = formatNum(multipleAward, 4);
+    if (_isDragonTiger) {
+      StringBuffer  stringBuffer = new StringBuffer();
+      _dragonTigerMoney.forEach((value){
+        if (!TextUtil.isEmpty(value)) {
+          var multipleAward = (double.parse(value) * bettingNum) / multiple ;
+          stringBuffer.write(formatNum(multipleAward, 2));
+          stringBuffer.write("/");
+        }
+
+      });
+      if (stringBuffer.toString().length > 0) {
+        multipleAwardStr = stringBuffer.toString().substring(0, stringBuffer.toString().length - 1);
+      }
+
+    } else {
+
+      if(!TextUtil.isEmpty(calculationBettingNumBeen.money_award)) {
+        playMoneyAwarText = calculationBettingNumBeen.money_award;
+      }
+//    var parse = num.parse("").toDouble();
+      //var multipleAward = double.parse(this.playMoneyAward) / multiple;
+      var multipleAward = (double.parse(playMoneyAwarText) * bettingNum) / multiple ;
+      multipleAwardStr = formatNum(multipleAward, 4);
+    }
+
     return new Container(
       margin: EdgeInsets.only(top: 5.0),
       child: new Row(
@@ -332,6 +356,72 @@ class BettingNumAndOperationStateView extends BaseController<BettingNumAndOperat
 
   setCalculationBettingNumData(CalculationBettingNumDataBeen calculationBettingNumBeen) {
     this.calculationBettingNumBeen = calculationBettingNumBeen;
+    _bettingNumCount = calculationBettingNumBeen.count;
+    _bettingNumCountMoney = calculationBettingNumBeen.money;
+    _isDragonTiger = false;
+    if (mounted)
+      setState(() {
+
+      });
+  }
+
+  /// 新龙虎 isDragonTiger
+  setCalculationBettingNumDataToDragonTiger(CalculationBettingNumDataBeen calculationBettingNumBeen, bool isDragonTiger) {
+    this.calculationBettingNumBeen = calculationBettingNumBeen;
+    this._isDragonTiger = isDragonTiger;
+    _bettingNumCount++;
+    _bettingNumCountMoney = calculationBettingNumBeen.money;
+
+    if (!TextUtil.isEmpty(calculationBettingNumBeen.play_name)) {
+      var length = calculationBettingNumBeen.play_name.length;
+      var substring = calculationBettingNumBeen.play_name.substring(length-1, length);
+      switch(substring) {
+        case "龙":
+          _dragonTigerMoney[0] = "${calculationBettingNumBeen.money_award}";
+          break;
+        case "虎":
+          _dragonTigerMoney[1] = "${calculationBettingNumBeen.money_award}";
+          break;
+        case "和":
+          _dragonTigerMoney[2] = "${calculationBettingNumBeen.money_award}";
+          break;
+      }
+    }
+
+    if (mounted)
+      setState(() {
+
+      });
+  }
+
+  /// 清空状态值
+  cleanDragonTigerStatusText() {
+
+    _dragonTigerMoney[0] = "";
+    _dragonTigerMoney[1] = "";
+    _dragonTigerMoney[2] = "";
+
+    _bettingNumCount = 0;
+    _bettingNumCountMoney = "0.00";
+
+    if (mounted)
+      setState(() {
+
+      });
+  }
+
+  /// 投注倍数
+  setBettingNum(int num) {
+    this.bettingNum = num;
+    if (mounted)
+      setState(() {
+
+      });
+  }
+
+  setBettingNumAndSlideValue(int num, int slideValueCompany) {
+    this.bettingNum = num;
+    this.moneyCompany = slideValueCompany;
     if (mounted)
       setState(() {
 

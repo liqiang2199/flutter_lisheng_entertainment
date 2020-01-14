@@ -2,6 +2,7 @@
 import 'package:flutter_lisheng_entertainment/game_hall/net/GameService.dart';
 import 'package:flutter_lisheng_entertainment/game_hall/net/vietnam_hanoi/VietnamHanoiBettingHandler.dart';
 import 'package:flutter_lisheng_entertainment/game_hall/net/vietnam_hanoi/VietnamHanoiService.dart';
+import 'package:flutter_lisheng_entertainment/model/json/gd_11_5/CalculationBettingNumDataBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/json/gd_11_5/Play11Choice5DataPlayBeen.dart';
 
 import 'HanoiPlayModelChoiceInterface.dart';
@@ -127,6 +128,7 @@ class HanoiPlayModelChoiceUtils {
       cpChoiceNum = 1;
       cpChoiceTitle = "组选和值";
       isGroupSumNum = true;//组选和值
+      sumValue = true;
       _choiceOneTitleTip(cpChoiceTitle);
     }
     if (playBeen.id == 157) {
@@ -228,6 +230,7 @@ class HanoiPlayModelChoiceUtils {
       cpChoiceNum = 1;
       cpChoiceTitle = "组选和值";
       isGroupSumNum = true;//组选和值
+      sumValue = true;
       _choiceOneTitleTip(cpChoiceTitle);
     }
     if (playBeen.id == 180) {
@@ -288,6 +291,7 @@ class HanoiPlayModelChoiceUtils {
       cpChoiceNum = 1;
       cpChoiceTitle = "组选和值";
       isGroupSumNum = true;//组选和值
+      sumValue = true;
       _choiceOneTitleTip(cpChoiceTitle);
     }
     if (playBeen.id == 203) {
@@ -337,16 +341,18 @@ class HanoiPlayModelChoiceUtils {
       cpChoiceTitle = "组六";
       _choiceOneTitleTip(cpChoiceTitle);
     }
-    if (playBeen.id == 197) {
-      //混合组选
-      isSingle = true;
-      cpChoiceNum = 0;
-    }
     if (playBeen.id == 198) {
+      //组选包胆
+      cpChoiceNum = 1;
+      cpChoiceTitle = "组选包胆";
+      _choiceOneTitleTip(cpChoiceTitle);
+    }
+    if (playBeen.id == 197) {
       //组选和值
       cpChoiceNum = 1;
       cpChoiceTitle = "组选和值";
       isGroupSumNum = true;//组选和值
+      sumValue = true;
       _choiceOneTitleTip(cpChoiceTitle);
     }
   }
@@ -512,7 +518,7 @@ class HanoiPlayModelChoiceUtils {
    */
   /// 请求投注数量
   getGameHttpBettingNum(Play11Choice5DataPlayBeen playBeen, List<List<String>> choiceCpNumList
-      , List<String> groupBitsList, VietnamHanoiBettingHandler hanoiBettingHandler) {
+      , List<String> groupBitsList, VietnamHanoiBettingHandler hanoiBettingHandler, bool isBetting, int multiple) {
     switch(playBeen.id) {
       case 147:
       case 160:
@@ -522,7 +528,7 @@ class HanoiPlayModelChoiceUtils {
         //后三/后三直选/复式（计算注数）
         if (choiceCpNumList.length >= 3) {
           VietnamHanoiService.instance.hanoiOneGetGDBets(hanoiBettingHandler, choiceCpNumList[0]
-              , choiceCpNumList[1], choiceCpNumList[2],"${ playBeen.id}", false);
+              , choiceCpNumList[1], choiceCpNumList[2],"${ playBeen.id}", false, isBetting, multiple);
         }
 
         break;
@@ -534,7 +540,7 @@ class HanoiPlayModelChoiceUtils {
       case 191://前二/直选/单试（计算注数）
         if (choiceCpNumList.length >= 1) {
           VietnamHanoiService.instance.hanoiOneGetGDBetsEditSingle(hanoiBettingHandler, choiceCpNumList[0]
-              ,"${ playBeen.id}");
+              ,"${ playBeen.id}", isBetting, multiple);
         }
 
         break;
@@ -576,7 +582,7 @@ class HanoiPlayModelChoiceUtils {
       case 221://不定胆/三星不定胆二码/后三（计算注数）
         if (choiceCpNumList.length >= 1) {
           VietnamHanoiService.instance.hanoiOneGetGDBetsSpan(hanoiBettingHandler, choiceCpNumList[0]
-              ,"${ playBeen.id}");
+              ,"${ playBeen.id}", isBetting, multiple);
         }
 
         break;
@@ -586,7 +592,7 @@ class HanoiPlayModelChoiceUtils {
         //后二/直选/复试（计算注数）
         if (choiceCpNumList.length >= 2) {
           VietnamHanoiService.instance.hanoiOneGetGDBets(hanoiBettingHandler, choiceCpNumList[0]
-              , choiceCpNumList[1], choiceCpNumList[0],"${ playBeen.id}", true);
+              , choiceCpNumList[1], choiceCpNumList[0],"${ playBeen.id}", true, isBetting, multiple);
         }
 
         break;
@@ -595,7 +601,7 @@ class HanoiPlayModelChoiceUtils {
       case 206://定位胆/定位胆/定位胆（计算注数）
         if (choiceCpNumList.length >= 5) {
           VietnamHanoiService.instance.hanoiOneGetGDBetsOptional(hanoiBettingHandler, choiceCpNumList[0]
-              , choiceCpNumList[1], choiceCpNumList[2], choiceCpNumList[3], choiceCpNumList[4],"${ playBeen.id}");
+              , choiceCpNumList[1], choiceCpNumList[2], choiceCpNumList[3], choiceCpNumList[4],"${ playBeen.id}", isBetting, multiple);
         }
 
         break;
@@ -603,7 +609,7 @@ class HanoiPlayModelChoiceUtils {
       case 230://任选/任三/单式（计算注数）
         if (choiceCpNumList.length >= 1) {
           VietnamHanoiService.instance.hanoiOneGetGDBetsOptionalGroup(hanoiBettingHandler, choiceCpNumList[0]
-              , groupBitsList,"${ playBeen.id}", true);
+              , groupBitsList,"${ playBeen.id}", true, isBetting, multiple);
         }
 
         break;
@@ -612,7 +618,7 @@ class HanoiPlayModelChoiceUtils {
       case 232://任选/任三/组六（计算注数）
         if (choiceCpNumList.length >= 1) {
           VietnamHanoiService.instance.hanoiOneGetGDBetsOptionalGroup(hanoiBettingHandler, choiceCpNumList[0]
-              , groupBitsList,"${ playBeen.id}", false);
+              , groupBitsList,"${ playBeen.id}", false, isBetting, multiple);
         }
 
         break;
@@ -621,23 +627,32 @@ class HanoiPlayModelChoiceUtils {
 
   /// 新龙虎
   getGameHttpBettingNumDragonTiger(Play11Choice5DataPlayBeen playBeen
-      , List<String> dragonTigerList, VietnamHanoiBettingHandler hanoiBettingHandler) {
+      , List<String> dragonTigerList, VietnamHanoiBettingHandler hanoiBettingHandler, bool isBetting, int multiple) {
+    if (!isBetting) {
+      hanoiBettingHandler.cleanDragonTigerStatus(true);
+    }
     var playIdIndex = 0;
     switch(playBeen.id) {
       case 240:// 新龙虎/新龙虎/1v2/和（计算注数）
         if (dragonTigerList.length > 0) {
-          var dragonTigerStr = dragonTigerList[0];
-          switch(dragonTigerStr) {
-            case "龙":
-              playIdIndex = 250;
-              break;
-            case "虎":
-              playIdIndex = 251;
-              break;
-            case "和":
-              playIdIndex = 252;
-              break;
+
+          for (int i = 0; i < dragonTigerList.length; i++) {
+            var dragonTigerStr = dragonTigerList[i];
+            switch(dragonTigerStr) {
+              case "龙":
+                playIdIndex = 250;
+
+                break;
+              case "虎":
+                playIdIndex = 251;
+                break;
+              case "和":
+                playIdIndex = 252;
+                break;
+            }
+            VietnamHanoiService.instance.hanoiOneGetGDBetsDragonTiger(hanoiBettingHandler, dragonTigerList, "$playIdIndex", isBetting, multiple);
           }
+
 
         }
 
@@ -736,7 +751,6 @@ class HanoiPlayModelChoiceUtils {
         break;
 
     }
-    VietnamHanoiService.instance.hanoiOneGetGDBetsDragonTiger(hanoiBettingHandler, dragonTigerList, "$playIdIndex");
   }
 
 }
