@@ -25,6 +25,9 @@ class VietnamHanoiHttpBeen {
   /// 任选/单式 组选（计算注数） 万,千,百,十,个
   String data_address;
 
+  /// 投注
+  int multiple;
+
   VietnamHanoiHttpBeen();
   factory VietnamHanoiHttpBeen.fromJson(Map<String, dynamic> json) => _$VietnamHanoiHttpBeenFromJson(json);
 

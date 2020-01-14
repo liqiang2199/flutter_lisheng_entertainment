@@ -1,6 +1,6 @@
 class UrlUtil {
 
-  static const BaseUrl = "http://ie25rx.natappfree.cc/";
+  static const BaseUrl = "http://96pisb.natappfree.cc/";
 
   static const login = "api/login/login";
   /// 退出登录
@@ -103,6 +103,10 @@ class UrlUtil {
   static const hanoiOneGetPlay = "api/Ylhlyfc/getPlay";
   ///计算注数
   static const hanoiOneGetGDBets = "api/Ylhlyfc/gdBets";
+  /// 下注
+  static const hanoiOneGetOrderAdd = "api/Ylhlyfc/orderAdd";
+  /// 下期开奖时间
+  static const hanoiOneGetKjTime = "api/Ylhlyfc/getKjtime";
 
 
 

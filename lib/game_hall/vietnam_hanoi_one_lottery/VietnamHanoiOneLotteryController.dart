@@ -1,6 +1,7 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_lisheng_entertainment/Util/Constant.dart';
 import 'package:flutter_lisheng_entertainment/base/BaseController.dart';
 import 'package:flutter_lisheng_entertainment/game_hall/cp_11_choice_5/LotteryNum11Choice5Controller.dart';
 import 'package:flutter_lisheng_entertainment/game_hall/cp_11_choice_5/Record11Choice5Controller.dart';
@@ -12,6 +13,7 @@ import 'hanoi_view/VietnamHanoiOneLotteryBettingView.dart';
  * 越南 河内一分彩
  */
 class VietnamHanoiOneLotteryController extends StatefulWidget{
+
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
@@ -25,6 +27,7 @@ class _VietnamHanoiOneLotteryController extends BaseController<VietnamHanoiOneLo
   // 显示那个 对应的界面 initialPage
   PageController mPageController = PageController(initialPage: 2);
   var isPageCanChanged = true;
+  String _colorVarietyID = "15";
 
   TabController mTabController;
 
@@ -55,6 +58,18 @@ class _VietnamHanoiOneLotteryController extends BaseController<VietnamHanoiOneLo
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
+
+    Map args = ModalRoute.of(context).settings.arguments;
+    print("arg= $args");
+    if (args.containsKey(Constant.COLOR_VARIETY_ID)) {
+
+      args.forEach((k,v){
+        if (k.toString() == Constant.COLOR_VARIETY_ID) {
+          //ColorVarietyID 彩种ID
+          _colorVarietyID = "$v";
+        }
+      });
+    }
 
     return new Scaffold(
       resizeToAvoidBottomInset: false,
@@ -126,7 +141,7 @@ class _VietnamHanoiOneLotteryController extends BaseController<VietnamHanoiOneLo
 
   Widget _pageViewIndex(var index) {
     if (index == 0) {
-      return LotteryNum11Choice5Controller();
+      return LotteryNum11Choice5Controller("$_colorVarietyID");
     }
     if (index == 1) {
       /// 走势图
@@ -136,9 +151,9 @@ class _VietnamHanoiOneLotteryController extends BaseController<VietnamHanoiOneLo
       return VietnamHanoiOneLotteryBettingView();
     }
     if (index == 3) {
-      return Record11Choice5Controller();
+      return Record11Choice5Controller("$_colorVarietyID");
     }
-    return LotteryNum11Choice5Controller();
+    return LotteryNum11Choice5Controller("$_colorVarietyID");
   }
 
 

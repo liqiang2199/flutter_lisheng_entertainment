@@ -5,4 +5,13 @@ import 'package:flutter_lisheng_entertainment/net/BaseHandler.dart';
 abstract class VietnamHanoiBettingHandler extends BaseHandler{
 
   void getCalculationBettingNumData( CalculationBettingNumDataBeen data);
+
+  /// 清空新 龙  虎 状态
+  void cleanDragonTigerStatus(bool result);
+
+  /// 下次开奖 时间 numberPeriods 开奖期数
+  void openVietnamHanoiLotteryTime(String time, String numberPeriods);
+
+  /// 下注成功
+  void bettingSuccessResult();
 }

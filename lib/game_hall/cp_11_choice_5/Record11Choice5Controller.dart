@@ -13,16 +13,20 @@ import 'package:flutter_lisheng_entertainment/view/common/CommonView.dart';
  * 11 选 5 记录界面
  */
 class Record11Choice5Controller extends StatefulWidget {
+  String colorVariety;
+  Record11Choice5Controller(this.colorVariety);
+
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
-    return _Record11Choice5Controller();
+    return _Record11Choice5Controller(this.colorVariety);
   }
 
 }
 
 class _Record11Choice5Controller extends BaseRefreshTabController<Record11Choice5Controller, TabTitle> with AutomaticKeepAliveClientMixin {
-
+  String colorVariety;
+  _Record11Choice5Controller(this.colorVariety);
 
   @override
   void initState() {
@@ -89,12 +93,6 @@ class _Record11Choice5Controller extends BaseRefreshTabController<Record11Choice
         controller: this.mTabController,
         children:  _tabListItem());
 
-//    return TabBarView(
-//      controller: this.mTabController,
-//      children:  tabList.map((item) {
-//        _tabIndexView(item.id);
-//      }).toList(),
-//    );
   }
 
   List<Widget> _tabListItem() {
@@ -106,26 +104,10 @@ class _Record11Choice5Controller extends BaseRefreshTabController<Record11Choice
     return tabList;
   }
 
-//  Widget _pageView() {
-//
-//    return PageView.builder(
-//      itemCount: tabList.length,
-//      onPageChanged: (index) {
-//        if (isPageCanChanged) {//由于pageview切换是会回调这个方法,又会触发切换tabbar的操作,所以定义一个flag,控制pageview的回调
-//          onPageChange(index);
-//        }
-//      },
-//      controller: mPageController,
-//      itemBuilder: (BuildContext context, int index) {
-//        return _tabIndexView(index);
-//      },
-//    );
-//  }
-
   _tabIndexView(int index) {
     if (index == 0) {
       /// 投注记录
-      return new GameBettingRecordView();
+      return new GameBettingRecordView("$colorVariety");
     }
 
     if (index == 1) {
@@ -137,7 +119,7 @@ class _Record11Choice5Controller extends BaseRefreshTabController<Record11Choice
       /// 账变记录
       return new AccountChangeRecordView();
     }
-    return new GameBettingRecordView();
+    return new GameBettingRecordView("$colorVariety");
   }
 
   @override
