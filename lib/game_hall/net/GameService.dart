@@ -7,6 +7,8 @@ import 'package:flutter_lisheng_entertainment/model/http/game/OpenLotteryListHtt
 import 'package:flutter_lisheng_entertainment/model/http/gd_11_5/CpOpenLotteryInfoHttp.dart';
 import 'package:flutter_lisheng_entertainment/model/http/user_record/UserAccountChangeRecordHttpBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/http/vietnam_hanoi/VietnamHanoiHttpBeen.dart';
+import 'package:flutter_lisheng_entertainment/model/http/vietnam_hanoi/hanoi_trend/HanoiOneLotteryMoreTrendHttpBeen.dart';
+import 'package:flutter_lisheng_entertainment/model/http/vietnam_hanoi/hanoi_trend/HanoiOneLotterySingleTrendHttpBeen.dart';
 import 'package:flutter_lisheng_entertainment/net/AccountChangeRecordHandler.dart';
 import 'package:flutter_lisheng_entertainment/net/ApiService.dart';
 import 'package:flutter_lisheng_entertainment/net/GetBettingRecordListHandler.dart';
@@ -14,6 +16,7 @@ import 'package:flutter_lisheng_entertainment/net/RetrofitManager.dart';
 
 import 'GameHallHandler.dart';
 import 'PlayMode11Choice5Handler.dart';
+import 'TrendHanoiOneLotteryHandler.dart';
 import 'game_gd_11_5/LotteryNum11Choice5Handler.dart';
 import 'vietnam_hanoi/VietnamHanoiBettingHandler.dart';
 
@@ -114,6 +117,31 @@ class GameService {
     BaseTokenHttpBeen baseTokenHttpBeen = new BaseTokenHttpBeen(SpUtil.getString(Constant.TOKEN));
     apiService.setHandler(playMode11Choice5Handler);
     apiService.hanoiOneGetPlay(baseTokenHttpBeen);
+  }
+
+  /// 单号走势
+  void hanoiOneOddNumber(TrendHanoiOneLotteryHandler trendHanoiOneLotteryHandler, String limit, String address) {
+
+    HanoiOneLotterySingleTrendHttpBeen openAccountHttpBeen = new HanoiOneLotterySingleTrendHttpBeen();
+    openAccountHttpBeen.token = SpUtil.getString(Constant.TOKEN);
+    openAccountHttpBeen.limmit = limit;
+    openAccountHttpBeen.address = address;
+
+    ApiService apiService = RetrofitManager.instance.createApiService();
+    apiService.setHandler(trendHanoiOneLotteryHandler);
+    apiService.hanoiOneOddNumber(openAccountHttpBeen);
+  }
+
+  ///多号走势
+  void hanoiOneMultipleNumbers(TrendHanoiOneLotteryHandler trendHanoiOneLotteryHandler, String limit, String address) {
+    HanoiOneLotteryMoreTrendHttpBeen openAccountHttpBeen = new HanoiOneLotteryMoreTrendHttpBeen();
+    openAccountHttpBeen.token = SpUtil.getString(Constant.TOKEN);
+    openAccountHttpBeen.limmit = limit;
+    openAccountHttpBeen.address = address;
+    ApiService apiService = RetrofitManager.instance.createApiService();
+    apiService.setHandler(trendHanoiOneLotteryHandler);
+    apiService.hanoiOneMultipleNumbers(openAccountHttpBeen);
+
   }
 
 

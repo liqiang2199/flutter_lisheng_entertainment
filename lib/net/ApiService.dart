@@ -17,6 +17,7 @@ import 'package:flutter_lisheng_entertainment/agent/net/TeamRechargeRecordHandle
 import 'package:flutter_lisheng_entertainment/agent/net/TeamReportFormHandler.dart';
 import 'package:flutter_lisheng_entertainment/game_hall/net/GameHallHandler.dart';
 import 'package:flutter_lisheng_entertainment/game_hall/net/PlayMode11Choice5Handler.dart';
+import 'package:flutter_lisheng_entertainment/game_hall/net/TrendHanoiOneLotteryHandler.dart';
 import 'package:flutter_lisheng_entertainment/game_hall/net/game_gd_11_5/CalculationBettingNumHandler.dart';
 import 'package:flutter_lisheng_entertainment/game_hall/net/game_gd_11_5/LotteryNum11Choice5Handler.dart';
 import 'package:flutter_lisheng_entertainment/game_hall/net/vietnam_hanoi/VietnamHanoiBettingHandler.dart';
@@ -46,6 +47,8 @@ import 'package:flutter_lisheng_entertainment/model/http/set_cash_pass/SetPaypwd
 import 'package:flutter_lisheng_entertainment/model/http/user_info_center/UserInfoCenterHttpBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/http/user_record/UserAccountChangeRecordHttpBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/http/vietnam_hanoi/VietnamHanoiHttpBeen.dart';
+import 'package:flutter_lisheng_entertainment/model/http/vietnam_hanoi/hanoi_trend/HanoiOneLotteryMoreTrendHttpBeen.dart';
+import 'package:flutter_lisheng_entertainment/model/http/vietnam_hanoi/hanoi_trend/HanoiOneLotterySingleTrendHttpBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/http/withdraw/UserWithdrawHttpBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/http/withdraw/record/UserWithdrawRecordHttpBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/json/BaseJson.dart';
@@ -72,6 +75,8 @@ import 'package:flutter_lisheng_entertainment/model/json/gd_11_5/CpOpenLotteryIn
 import 'package:flutter_lisheng_entertainment/model/json/gd_11_5/CpOpenLotteryInfoDataBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/json/gd_11_5/OpenLotteryListDataBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/json/home_json/GetBannerListDataBeen.dart';
+import 'package:flutter_lisheng_entertainment/model/json/vietnam_hanoi/trend_json_single/TrendHanoiOneLotterySingleBeen.dart';
+import 'package:flutter_lisheng_entertainment/model/json/vietnam_hanoi/trend_json_more/TrendHanoiOneLotteryMoreBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/json/login/LoginBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/json/lottery_center/LotteryCenterBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/json/lottery_record/GetBettingRecordBeen.dart';
@@ -81,6 +86,7 @@ import 'package:flutter_lisheng_entertainment/model/json/set/SetLoginOutBeen.dar
 import 'package:flutter_lisheng_entertainment/model/json/system_notice/SystemNoticeListBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/json/user_report/UserReportBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/json/vietnam_hanoi/VietnamHanoiLotteryTimeBeen.dart';
+import 'package:flutter_lisheng_entertainment/model/json/vietnam_hanoi/trend_json_single/TrendHanoiOneLotterySingleReDataBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/json/withdraw/WithdrawListDataBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/json/withdraw/user_record/UserWithdrawRecordBeen.dart';
 import 'package:flutter_lisheng_entertainment/net/BaseHandler.dart';
@@ -265,6 +271,14 @@ abstract class ApiService<T> {
   @POST(UrlUtil.hanoiOneGetKjTime)
   void hanoiOneGetKjTime(@Body() BaseTokenHttpBeen openAccountHttpBeen);
 
+  ///单号走势
+  @POST(UrlUtil.hanoiOneOddNumber)
+  void hanoiOneOddNumber(@Body() HanoiOneLotterySingleTrendHttpBeen openAccountHttpBeen);
+
+  ///单号走势
+  @POST(UrlUtil.hanoiOneMultipleNumbers)
+  void hanoiOneMultipleNumbers(@Body() HanoiOneLotteryMoreTrendHttpBeen openAccountHttpBeen);
+
   /**
    * 个人中心
    */
@@ -333,11 +347,11 @@ class _ApiService<T> implements ApiService<T> {
             extra: _extra,
             baseUrl: UrlUtil.BaseUrl),
         data: _data)
-        .catchError((error) {
-          if (context != null) {
-            Navigator.pop(context);
-          }
-
+//        .catchError((error) {
+//          if (context != null) {
+//            Navigator.pop(context);
+//          }
+//
 //          switch (error.runtimeType) {
 //            case DioError:
 //            // Here's the sample to get the failed response error code and message
@@ -346,7 +360,7 @@ class _ApiService<T> implements ApiService<T> {
 //              break;
 //            default:
 //          }
-    })
+//    })
     ;
 
 
@@ -354,7 +368,9 @@ class _ApiService<T> implements ApiService<T> {
     if (_result.data != null) {
       print(_result.data);
     }
-
+    if (context != null) {
+      Navigator.pop(context);
+    }
     return _result.data;
   }
   /// 加载弹窗 提示 弹窗
@@ -1126,6 +1142,45 @@ class _ApiService<T> implements ApiService<T> {
         linkManagerHandler.openVietnamHanoiLotteryTime(bettingNum.data.kj_time, bettingNum.data.qishu);
       } else {
         linkManagerHandler.showToast(bettingNum.msg);
+      }
+    });
+  }
+
+  /// 单号走势
+  void hanoiOneOddNumber(HanoiOneLotterySingleTrendHttpBeen openAccountHttpBeen){
+    ArgumentError.checkNotNull(openAccountHttpBeen, '参数为空');
+    ArgumentError.checkNotNull(_baseHandler, '_baseHandler为空');
+    responseResult(openAccountHttpBeen.toJson(), UrlUtil.hanoiOneOddNumber).then((onValue) {
+      TrendHanoiOneLotteryHandler linkManagerHandler = _baseHandler as TrendHanoiOneLotteryHandler;
+      var  trendHanoiBeen = TrendHanoiOneLotterySingleBeen.fromJson(onValue);
+      if (trendHanoiBeen.code == 1) {
+        linkManagerHandler.setTrendSingleOneLotteryBeen(trendHanoiBeen.data);
+      } else {
+        linkManagerHandler.showToast(trendHanoiBeen.msg);
+      }
+    });
+  }
+
+  ///多号走势
+  void hanoiOneMultipleNumbers( HanoiOneLotteryMoreTrendHttpBeen openAccountHttpBeen) {
+    ArgumentError.checkNotNull(openAccountHttpBeen, '参数为空');
+    ArgumentError.checkNotNull(_baseHandler, '_baseHandler为空');
+    responseResult(openAccountHttpBeen.toJson(), UrlUtil.hanoiOneMultipleNumbers).then((onValue) {
+      TrendHanoiOneLotteryHandler linkManagerHandler = _baseHandler as TrendHanoiOneLotteryHandler;
+      var  trendHanoiBeen = TrendHanoiOneLotteryMoreBeen.fromJson(onValue);
+      if (trendHanoiBeen.code == 1) {
+        List<TrendHanoiOneLotterySingleReDataBeen> dataTrendHanoi = new List();
+        trendHanoiBeen.data?.forEach((moreBeen) {
+          TrendHanoiOneLotterySingleReDataBeen reDataBeen = new TrendHanoiOneLotterySingleReDataBeen();
+          reDataBeen.pre_draw_issue = moreBeen.pre_draw_issue;
+          reDataBeen.pre_draw_code = moreBeen.pre_draw_code;
+          reDataBeen.pre_draw_time = moreBeen.pre_draw_time;
+          dataTrendHanoi.add(reDataBeen);
+        });
+
+        linkManagerHandler.setTrendSingleOneLotteryBeen(dataTrendHanoi);
+      } else {
+        linkManagerHandler.showToast(trendHanoiBeen.msg);
       }
     });
   }
