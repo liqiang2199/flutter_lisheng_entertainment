@@ -1,6 +1,6 @@
 class UrlUtil {
 
-  static const BaseUrl = "http://96pisb.natappfree.cc/";
+  static const BaseUrl = "http://wgnrn8.natappfree.cc/";
 
   static const login = "api/login/login";
   /// 退出登录
@@ -107,6 +107,10 @@ class UrlUtil {
   static const hanoiOneGetOrderAdd = "api/Ylhlyfc/orderAdd";
   /// 下期开奖时间
   static const hanoiOneGetKjTime = "api/Ylhlyfc/getKjtime";
+  /// 单号走势
+  static const hanoiOneOddNumber = "api/Ylhlyfc/oddNumber";
+  /// 多号走势
+  static const hanoiOneMultipleNumbers = "api/Ylhlyfc/multipleNumbers";
 
 
 
