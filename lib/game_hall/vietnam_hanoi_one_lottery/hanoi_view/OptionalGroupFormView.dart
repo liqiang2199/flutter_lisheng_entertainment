@@ -151,6 +151,12 @@ class OptionalGroupFormStateView extends BaseController<OptionalGroupFormView> i
 
   }
 
+  /// 清空选择状态
+  cleanOptionalGroupNum() {
+    _bitsStateViewKey.currentState.cleanThousandsOfBitsState();
+    _chooseCpNumViewKey.currentState.cleanChoiceState();
+  }
+
   /// 彩票数量
   List<String> getOptionalGroupCpNumList() {
     return _chooseCpNumViewKey.currentState.getChoiceCpNumList();
