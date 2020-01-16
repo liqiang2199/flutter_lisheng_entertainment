@@ -1175,6 +1175,7 @@ class _ApiService<T> implements ApiService<T> {
           reDataBeen.pre_draw_issue = moreBeen.pre_draw_issue;
           reDataBeen.pre_draw_code = moreBeen.pre_draw_code;
           reDataBeen.pre_draw_time = moreBeen.pre_draw_time;
+          reDataBeen.moreNum = moreBeen.num;
           dataTrendHanoi.add(reDataBeen);
         });
 
