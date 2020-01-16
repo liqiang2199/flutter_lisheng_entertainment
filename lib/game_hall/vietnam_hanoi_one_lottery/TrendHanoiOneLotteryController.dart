@@ -127,10 +127,20 @@ class _TrendHanoiOneLotteryController extends BaseController<TrendHanoiOneLotter
             numberOfPeriodsNum[i] = false;
           }
 
+          if (index == 0) {
+            _limitStr = "30";
+          }
+          if (index == 1) {
+            _limitStr = "50";
+          }
+          if (index == 2) {
+            _limitStr = "100";
+          }
           numberOfPeriodsNum[index] = true;
-          setState(() {
+          if (mounted)
+            setState(() {
 
-          });
+            });
 
         },color: Color(numberOfPeriodsNum[index] ? ColorUtil.butColor: ColorUtil.whiteColor),
           child: new Text(
@@ -245,7 +255,7 @@ class _TrendHanoiOneLotteryController extends BaseController<TrendHanoiOneLotter
         var substringL1 = pre_draw_issue.substring(4, pre_draw_issue.length);
         var substringL2 = substringL1.substring(substringL1.length - 4, substringL1.length);
         var substringL3 = substringL1.substring(0, substringL1.length-4);
-        list.add( _trendMoreContentView(ColorUtil.whiteColor, i, "$i", "$substringL2-$substringL3期"));
+        list.add( _trendMoreContentView(ColorUtil.whiteColor, i, "$i", "$substringL2-$substringL3期", dataTrendOneLottery[i].moreNum));
       }
     }
 
@@ -296,7 +306,7 @@ class _TrendHanoiOneLotteryController extends BaseController<TrendHanoiOneLotter
   }
 
   /// 走势图的 (多号走势)
-  Widget _trendMoreContentView(int color, int index, String title, String qs) {
+  Widget _trendMoreContentView(int color, int index, String title, String qs, List<String> numStr) {
 
 
     return new Container(
@@ -309,16 +319,13 @@ class _TrendHanoiOneLotteryController extends BaseController<TrendHanoiOneLotter
             child: new Row(
               children: <Widget>[
                 _trendNumberOfPeriodsContent(index, qs),
-                _trendContentExp(1,index, title),
-                _trendContentExp(1,index, title),
-                _trendContentExp(1,index, title),
-                _trendContentExp(1,index, title),
-                _trendContentExp(1,index, title),
-                _trendContentExp(1,index, title),
-                _trendContentExp(1,index, title),
-                _trendContentExp(1,index, title),
-                _trendContentExp(1,index, title),
-                _trendContentExp(1,index, title),
+
+                new Expanded(
+                    child: new Row(
+                      children: _trendMoreContentNumListView(color, index, title, numStr),
+                    ),
+                ),
+
 
               ],
             ),
@@ -331,10 +338,37 @@ class _TrendHanoiOneLotteryController extends BaseController<TrendHanoiOneLotter
     );
   }
 
+  List<Widget> _trendMoreContentNumListView(int color, int index, String title,List<String> numStr) {
+    List<Widget> _trendMoreContentList = new List();
+    var length = numStr.length;
+    for (int i = 0; i < 10; i++) {
+      bool vi = false;
+      for (int n = 0; n < length; n++) {
+        var numS = numStr[n];
+        if ("$i" == numS) {
+          vi = true;
+          break;
+        }
+      }
+
+      _trendMoreContentList.add(_trendContentExpStack(1,index, title,vi));
+    }
+
+    return _trendMoreContentList;
+  }
+
   Widget _trendContentExp(int flex, int index, String title) {
 
     return new Expanded(
-        child: _trendContent(index, title),
+        child: _trendContent(index, title, false),
+      flex: flex,
+    );
+  }
+
+  Widget _trendContentExpStack(int flex, int index, String title, bool visible) {
+
+    return new Expanded(
+      child: _trendContent(index, title, visible),
       flex: flex,
     );
   }
@@ -366,7 +400,7 @@ class _TrendHanoiOneLotteryController extends BaseController<TrendHanoiOneLotter
 
 
   /// 每格内容
-  Widget _trendContent(int index, String title) {
+  Widget _trendContent(int index, String title, bool visible) {
 
     return new Row(
       children: <Widget>[
@@ -387,7 +421,7 @@ class _TrendHanoiOneLotteryController extends BaseController<TrendHanoiOneLotter
                   ),
 
 
-                  _trendMarkContent(title, false),
+                  _trendMarkContent(title, visible),
 
                 ],
               ),

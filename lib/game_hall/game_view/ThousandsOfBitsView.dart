@@ -184,4 +184,15 @@ class ThousandsOfBitsStateView extends BaseController<ThousandsOfBitsView> {
 
   }
 
+  /// 清空选择状态
+  cleanThousandsOfBitsState() {
+    for (int s = 0; s <  _checkStateList.length; s++) {
+      _checkStateList[s] = false;
+    }
+    if (mounted)
+      setState(() {
+
+      });
+  }
+
 }
