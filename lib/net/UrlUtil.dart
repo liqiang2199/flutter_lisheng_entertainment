@@ -1,6 +1,6 @@
 class UrlUtil {
 
-  static const BaseUrl = "http://wgnrn8.natappfree.cc/";
+  static const BaseUrl = "http://bxazru.natappfree.cc/";
 
   static const login = "api/login/login";
   /// 退出登录

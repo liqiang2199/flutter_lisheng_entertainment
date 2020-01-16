@@ -297,7 +297,9 @@ class _VietnamHanoiOneLotteryBettingView extends BaseController<VietnamHanoiOneL
 
   /// 407  玩法选择  开奖时间  投注号码选择
   Widget _separatedWidget() {
-    return new Column(
+    return new ListView(
+      physics: NeverScrollableScrollPhysics(),
+      shrinkWrap: true,
       children: <Widget>[
         // 53
         _getRightArrowView("玩法选择", ImageUtil.imgLotteryCenterCqSSC, 1),
@@ -316,14 +318,6 @@ class _VietnamHanoiOneLotteryBettingView extends BaseController<VietnamHanoiOneL
           openLotteryListBeen: openLotteryListBeen,
         ),
         CommonView().commonLine_NoMarginChange(context, 10.0),
-
-//        new Column(
-//          children: <Widget>[
-//            // 200
-//
-//
-//          ],
-//        ),
 
         LotteryNumListView(
           key: lotteryNumListStateViewKey,
@@ -1122,6 +1116,45 @@ class _VietnamHanoiOneLotteryBettingView extends BaseController<VietnamHanoiOneL
   @override
   void bettingSuccessResult() {
     /// 清空界面
+    if (_isSingle) {
+      //单式
+      if (isCurrentOptionalCp) {
+        singleFormStateKey.currentState.cleanEditText();
+      } else {
+
+      }
+    } else {
+
+      if (isCurrentOptionalCp) {
+        //是任选
+        if (_choiceTypeGroupNum > 1) {
+          for (int i = 0; i < listCpNumKey.length; i++) {
+            GlobalKey<Choose11And5StateView> chooseCpNumKey = listCpNumKey[i];
+            chooseCpNumKey.currentState.cleanChoiceState();
+
+          }
+        } else {
+          //组选
+          optionalGroupFormKey.currentState.cleanOptionalGroupNum();
+        }
+      } else {
+
+        if (_isDragonTiger) {
+          // 龙虎和
+          dragonTigerStateKey.currentState.cleanDragonTigerChoiceNum();
+
+        } else {
+          for (int i = 0; i < listCpNumKey.length; i++) {
+            GlobalKey<Choose11And5StateView> chooseCpNumKey = listCpNumKey[i];
+            chooseCpNumKey.currentState.cleanChoiceState();
+
+          }
+        }
+
+
+      }
+
+    }
 
   }
 
