@@ -289,6 +289,17 @@ class OptionalSingleFormStateView extends BaseController<OptionalSingleFormView>
       });
   }
 
+  /// 清空输入
+  cleanEditText() {
+    if (contentHandle != null) {
+      contentHandle.editContent11Choose5Handle("");
+    }
+    if (mounted)
+      setState(() {
+
+      });
+  }
+
   /// 获取 万千
   getThousandsOfBitsStateStr() {
 

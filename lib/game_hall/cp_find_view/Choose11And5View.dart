@@ -518,6 +518,21 @@ class Choose11And5StateView extends BaseController<Choose11And5View> {
       });
   }
 
+  //清空状态
+  cleanChoiceState() {
+    var length = cpNumIndex.length;
+    for (var i = 0; i < length; i++) {
+      cpNumIndex[i] = -1;
+    }
+    this.typeIndex = 5;
+    this.isClickType = false;
+    _cleanAllSelection();
+    if (mounted)
+      setState(() {
+
+      });
+  }
+
   /// 获取选择列表
   getChoiceCpNumList() {
     return choiceCpNumList;
