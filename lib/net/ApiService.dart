@@ -75,6 +75,9 @@ import 'package:flutter_lisheng_entertainment/model/json/gd_11_5/CpOpenLotteryIn
 import 'package:flutter_lisheng_entertainment/model/json/gd_11_5/CpOpenLotteryInfoDataBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/json/gd_11_5/OpenLotteryListDataBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/json/home_json/GetBannerListDataBeen.dart';
+import 'package:flutter_lisheng_entertainment/model/json/vietnam_hanoi/tren_various_sum/VariousSumBeen.dart';
+import 'package:flutter_lisheng_entertainment/model/json/vietnam_hanoi/trend_dragon_tiger/DragonTigerBeen.dart';
+import 'package:flutter_lisheng_entertainment/model/json/vietnam_hanoi/trend_five/TrendFiveSumBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/json/vietnam_hanoi/trend_json_single/TrendHanoiOneLotterySingleBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/json/vietnam_hanoi/trend_json_more/TrendHanoiOneLotteryMoreBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/json/login/LoginBeen.dart';
@@ -87,6 +90,8 @@ import 'package:flutter_lisheng_entertainment/model/json/system_notice/SystemNot
 import 'package:flutter_lisheng_entertainment/model/json/user_report/UserReportBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/json/vietnam_hanoi/VietnamHanoiLotteryTimeBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/json/vietnam_hanoi/trend_json_single/TrendHanoiOneLotterySingleReDataBeen.dart';
+import 'package:flutter_lisheng_entertainment/model/json/vietnam_hanoi/trend_json_single_double/TrendSingleDoubleBeen.dart';
+import 'package:flutter_lisheng_entertainment/model/json/vietnam_hanoi/trend_json_single_double/TrendSingleDoubleDataNumBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/json/withdraw/WithdrawListDataBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/json/withdraw/user_record/UserWithdrawRecordBeen.dart';
 import 'package:flutter_lisheng_entertainment/net/BaseHandler.dart';
@@ -275,9 +280,34 @@ abstract class ApiService<T> {
   @POST(UrlUtil.hanoiOneOddNumber)
   void hanoiOneOddNumber(@Body() HanoiOneLotterySingleTrendHttpBeen openAccountHttpBeen);
 
-  ///单号走势
+  ///多号走势
   @POST(UrlUtil.hanoiOneMultipleNumbers)
   void hanoiOneMultipleNumbers(@Body() HanoiOneLotteryMoreTrendHttpBeen openAccountHttpBeen);
+
+  ///单双走势
+  @POST(UrlUtil.hanoiOneSingleDouble)
+  void hanoiOneSingleDouble(@Body() HanoiOneLotteryMoreTrendHttpBeen openAccountHttpBeen);
+
+  ///大小走势
+  @POST(UrlUtil.hanoiOneMaxMin)
+  void hanoiOneMaxMin(@Body() HanoiOneLotteryMoreTrendHttpBeen openAccountHttpBeen);
+
+  ///五星和值
+  @POST(UrlUtil.hanoiOneFiveValue)
+  void hanoiOneFiveValue(@Body() BaseTokenHttpBeen openAccountHttpBeen);
+
+  ///各类和值
+  @POST(UrlUtil.hanoiOneVariousSum)
+  void hanoiOneVariousSum(@Body() HanoiOneLotteryMoreTrendHttpBeen openAccountHttpBeen);
+
+  ///各类跨度
+  @POST(UrlUtil.hanoiOneVariousSpan)
+  void hanoiOneVariousSpan(@Body() HanoiOneLotteryMoreTrendHttpBeen openAccountHttpBeen);
+
+
+  ///龙虎和
+  @POST(UrlUtil.hanoiOneDragonTiger)
+  void hanoiOneDragonTiger(@Body() BaseTokenHttpBeen openAccountHttpBeen);
 
   /**
    * 个人中心
@@ -1176,6 +1206,196 @@ class _ApiService<T> implements ApiService<T> {
           reDataBeen.pre_draw_code = moreBeen.pre_draw_code;
           reDataBeen.pre_draw_time = moreBeen.pre_draw_time;
           reDataBeen.moreNum = moreBeen.num;
+          dataTrendHanoi.add(reDataBeen);
+        });
+
+        linkManagerHandler.setTrendSingleOneLotteryBeen(dataTrendHanoi);
+      } else {
+        linkManagerHandler.showToast(trendHanoiBeen.msg);
+      }
+    });
+  }
+
+  ///单双走势
+  void hanoiOneSingleDouble(HanoiOneLotteryMoreTrendHttpBeen openAccountHttpBeen) {
+    ArgumentError.checkNotNull(openAccountHttpBeen, '参数为空');
+    ArgumentError.checkNotNull(_baseHandler, '_baseHandler为空');
+    responseResult(openAccountHttpBeen.toJson(), UrlUtil.hanoiOneSingleDouble).then((onValue) {
+      TrendHanoiOneLotteryHandler linkManagerHandler = _baseHandler as TrendHanoiOneLotteryHandler;
+      var  trendHanoiBeen = TrendSingleDoubleBeen.fromJson(onValue);
+      if (trendHanoiBeen.code == 1) {
+        List<TrendHanoiOneLotterySingleReDataBeen> dataTrendHanoi = new List();
+        trendHanoiBeen.data?.forEach((moreBeen) {
+          TrendHanoiOneLotterySingleReDataBeen reDataBeen = new TrendHanoiOneLotterySingleReDataBeen();
+          reDataBeen.pre_draw_issue = moreBeen.pre_draw_issue;
+          reDataBeen.pre_draw_code = moreBeen.pre_draw_code;
+          reDataBeen.pre_draw_time = moreBeen.pre_draw_time;
+          List<TrendSingleDoubleDataNumBeen> num = moreBeen.num;
+          List<String> singleDoubleNumList = new List();
+          List<String> singleDoubleNumStr = new List();
+          num?.forEach((numStr) {
+            singleDoubleNumList.add(numStr.code);
+            singleDoubleNumStr.add(numStr.ds);
+          });
+          reDataBeen.singleDoubleNum = singleDoubleNumList;
+          reDataBeen.singleDoubleStr = singleDoubleNumStr;
+          dataTrendHanoi.add(reDataBeen);
+        });
+
+        linkManagerHandler.setTrendSingleOneLotteryBeen(dataTrendHanoi);
+      } else {
+        linkManagerHandler.showToast(trendHanoiBeen.msg);
+      }
+    });
+  }
+
+  ///大小走势
+  void hanoiOneMaxMin(HanoiOneLotteryMoreTrendHttpBeen openAccountHttpBeen) {
+    ArgumentError.checkNotNull(openAccountHttpBeen, '参数为空');
+    ArgumentError.checkNotNull(_baseHandler, '_baseHandler为空');
+    responseResult(openAccountHttpBeen.toJson(), UrlUtil.hanoiOneMaxMin).then((onValue) {
+      TrendHanoiOneLotteryHandler linkManagerHandler = _baseHandler as TrendHanoiOneLotteryHandler;
+      var  trendHanoiBeen = TrendSingleDoubleBeen.fromJson(onValue);
+      if (trendHanoiBeen.code == 1) {
+        List<TrendHanoiOneLotterySingleReDataBeen> dataTrendHanoi = new List();
+        trendHanoiBeen.data?.forEach((moreBeen) {
+          TrendHanoiOneLotterySingleReDataBeen reDataBeen = new TrendHanoiOneLotterySingleReDataBeen();
+          reDataBeen.pre_draw_issue = moreBeen.pre_draw_issue;
+          reDataBeen.pre_draw_code = moreBeen.pre_draw_code;
+          reDataBeen.pre_draw_time = moreBeen.pre_draw_time;
+          List<TrendSingleDoubleDataNumBeen> num = moreBeen.num;
+          List<String> singleDoubleNumList = new List();
+          List<String> singleDoubleNumStr = new List();
+          num?.forEach((numStr) {
+            singleDoubleNumList.add(numStr.code);
+            singleDoubleNumStr.add(numStr.dx);
+          });
+          reDataBeen.singleDoubleNum = singleDoubleNumList;
+          reDataBeen.singleDoubleStr = singleDoubleNumStr;
+          dataTrendHanoi.add(reDataBeen);
+        });
+
+        linkManagerHandler.setTrendSingleOneLotteryBeen(dataTrendHanoi);
+      } else {
+        linkManagerHandler.showToast(trendHanoiBeen.msg);
+      }
+    });
+  }
+
+  ///五星和值
+  void hanoiOneFiveValue(BaseTokenHttpBeen openAccountHttpBeen) {
+    ArgumentError.checkNotNull(openAccountHttpBeen, '参数为空');
+    ArgumentError.checkNotNull(_baseHandler, '_baseHandler为空');
+    responseResult(openAccountHttpBeen.toJson(), UrlUtil.hanoiOneFiveValue).then((onValue) {
+      TrendHanoiOneLotteryHandler linkManagerHandler = _baseHandler as TrendHanoiOneLotteryHandler;
+      var  trendHanoiBeen = TrendFiveSumBeen.fromJson(onValue);
+      if (trendHanoiBeen.code == 1) {
+        List<TrendHanoiOneLotterySingleReDataBeen> dataTrendHanoi = new List();
+        trendHanoiBeen.data?.forEach((moreBeen) {
+          TrendHanoiOneLotterySingleReDataBeen reDataBeen = new TrendHanoiOneLotterySingleReDataBeen();
+          reDataBeen.pre_draw_issue = moreBeen.pre_draw_issue;
+          reDataBeen.pre_draw_code = moreBeen.pre_draw_code;
+          reDataBeen.pre_draw_time = moreBeen.pre_draw_time;
+          reDataBeen.sum = "${moreBeen.sum}";
+          reDataBeen.dx = moreBeen.dx;
+          reDataBeen.ds = moreBeen.ds;
+
+          dataTrendHanoi.add(reDataBeen);
+        });
+
+        linkManagerHandler.setTrendSingleOneLotteryBeen(dataTrendHanoi);
+      } else {
+        linkManagerHandler.showToast(trendHanoiBeen.msg);
+      }
+    });
+  }
+
+  ///各类和值
+  void hanoiOneVariousSum(HanoiOneLotteryMoreTrendHttpBeen openAccountHttpBeen) {
+    ArgumentError.checkNotNull(openAccountHttpBeen, '参数为空');
+    ArgumentError.checkNotNull(_baseHandler, '_baseHandler为空');
+    responseResult(openAccountHttpBeen.toJson(), UrlUtil.hanoiOneVariousSum).then((onValue) {
+      TrendHanoiOneLotteryHandler linkManagerHandler = _baseHandler as TrendHanoiOneLotteryHandler;
+      var  trendHanoiBeen = VariousSumBeen.fromJson(onValue);
+      if (trendHanoiBeen.code == 1) {
+        List<TrendHanoiOneLotterySingleReDataBeen> dataTrendHanoi = new List();
+        trendHanoiBeen.data?.forEach((moreBeen) {
+          TrendHanoiOneLotterySingleReDataBeen reDataBeen = new TrendHanoiOneLotterySingleReDataBeen();
+          reDataBeen.pre_draw_issue = moreBeen.pre_draw_issue;
+          reDataBeen.pre_draw_code = moreBeen.pre_draw_code;
+          reDataBeen.pre_draw_time = moreBeen.pre_draw_time;
+          reDataBeen.qe = "${moreBeen.qe}";
+          reDataBeen.qs = "${moreBeen.qs}";
+          reDataBeen.zs = "${moreBeen.zs}";
+          reDataBeen.hs = "${moreBeen.hs}";
+          reDataBeen.he = "${moreBeen.he}";
+
+          dataTrendHanoi.add(reDataBeen);
+        });
+
+        linkManagerHandler.setTrendSingleOneLotteryBeen(dataTrendHanoi);
+      } else {
+        linkManagerHandler.showToast(trendHanoiBeen.msg);
+      }
+    });
+  }
+
+  ///各类跨度
+  void hanoiOneVariousSpan(HanoiOneLotteryMoreTrendHttpBeen openAccountHttpBeen) {
+    ArgumentError.checkNotNull(openAccountHttpBeen, '参数为空');
+    ArgumentError.checkNotNull(_baseHandler, '_baseHandler为空');
+    responseResult(openAccountHttpBeen.toJson(), UrlUtil.hanoiOneVariousSpan).then((onValue) {
+      TrendHanoiOneLotteryHandler linkManagerHandler = _baseHandler as TrendHanoiOneLotteryHandler;
+      var  trendHanoiBeen = VariousSumBeen.fromJson(onValue);
+      if (trendHanoiBeen.code == 1) {
+        List<TrendHanoiOneLotterySingleReDataBeen> dataTrendHanoi = new List();
+        trendHanoiBeen.data?.forEach((moreBeen) {
+          TrendHanoiOneLotterySingleReDataBeen reDataBeen = new TrendHanoiOneLotterySingleReDataBeen();
+          reDataBeen.pre_draw_issue = moreBeen.pre_draw_issue;
+          reDataBeen.pre_draw_code = moreBeen.pre_draw_code;
+          reDataBeen.pre_draw_time = moreBeen.pre_draw_time;
+          reDataBeen.qe = "${moreBeen.qe}";
+          reDataBeen.qs = "${moreBeen.qs}";
+          reDataBeen.zs = "${moreBeen.zs}";
+          reDataBeen.hs = "${moreBeen.hs}";
+          reDataBeen.he = "${moreBeen.he}";
+
+          dataTrendHanoi.add(reDataBeen);
+        });
+
+        linkManagerHandler.setTrendSingleOneLotteryBeen(dataTrendHanoi);
+      } else {
+        linkManagerHandler.showToast(trendHanoiBeen.msg);
+      }
+    });
+  }
+
+
+  ///龙虎和
+  void hanoiOneDragonTiger(BaseTokenHttpBeen openAccountHttpBeen) {
+    ArgumentError.checkNotNull(openAccountHttpBeen, '参数为空');
+    ArgumentError.checkNotNull(_baseHandler, '_baseHandler为空');
+    responseResult(openAccountHttpBeen.toJson(), UrlUtil.hanoiOneDragonTiger).then((onValue) {
+      TrendHanoiOneLotteryHandler linkManagerHandler = _baseHandler as TrendHanoiOneLotteryHandler;
+      var  trendHanoiBeen = DragonTigerBeen.fromJson(onValue);
+      if (trendHanoiBeen.code == 1) {
+        List<TrendHanoiOneLotterySingleReDataBeen> dataTrendHanoi = new List();
+        trendHanoiBeen.data?.forEach((moreBeen) {
+          TrendHanoiOneLotterySingleReDataBeen reDataBeen = new TrendHanoiOneLotterySingleReDataBeen();
+          reDataBeen.pre_draw_issue = moreBeen.pre_draw_issue;
+          reDataBeen.pre_draw_code = moreBeen.pre_draw_code;
+          reDataBeen.pre_draw_time = moreBeen.pre_draw_time;
+          reDataBeen.wq = "${moreBeen.wq}";
+          reDataBeen.wb = "${moreBeen.wb}";
+          reDataBeen.ws = "${moreBeen.ws}";
+          reDataBeen.wg = "${moreBeen.wg}";
+          reDataBeen.qb = "${moreBeen.qb}";
+          reDataBeen.qs = "${moreBeen.qs}";
+          reDataBeen.qg = "${moreBeen.qg}";
+          reDataBeen.bs = "${moreBeen.bs}";
+          reDataBeen.bg = "${moreBeen.bg}";
+          reDataBeen.sg = "${moreBeen.sg}";
+
           dataTrendHanoi.add(reDataBeen);
         });
 

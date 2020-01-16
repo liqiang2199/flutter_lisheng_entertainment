@@ -524,8 +524,10 @@ class Choose11And5StateView extends BaseController<Choose11And5View> {
     for (var i = 0; i < length; i++) {
       cpNumIndex[i] = -1;
     }
-    this.typeIndex = 5;
-    this.isClickType = false;
+
+    for (var i = 0; i < cpNumBool.length; i++) {
+      cpNumBool[i] = false;
+    }
     _cleanAllSelection();
     if (mounted)
       setState(() {

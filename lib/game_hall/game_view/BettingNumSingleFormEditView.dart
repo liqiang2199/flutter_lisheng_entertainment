@@ -131,6 +131,9 @@ class BettingNumSingleFormEditView extends StatelessWidget{
     if (TextUtil.isEmpty(str)) {
       //刷新界面
       textEditingController.clear();
+      if (contentHandle != null) {
+        contentHandle.editContent11Choose5Handle(str);
+      }
       return;
     }
 
@@ -272,9 +275,15 @@ class BettingNumSingleFormEditView extends StatelessWidget{
           }
         }
 
+      } else {
+        if (contentHandle != null) {
+          contentHandle.editContent11Choose5Handle(str);
+        }
       }
     }
 
   }
+
+
 
 }

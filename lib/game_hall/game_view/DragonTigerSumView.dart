@@ -130,8 +130,21 @@ class DragonTigerSumStateView extends BaseController<DragonTigerSumView> {
 
     return new GestureDetector(
       onTap: () {
-        cpNumIndex[index] = cpNumIndex[index] == 0 ? -1 : 0;
-        cpNumBool[index] = !cpNumBool[index];
+        if (cpNumBool[index]) {
+          cpNumBool[index] = !cpNumBool[index];
+          cpNumIndex[index] = cpNumIndex[index] == 0 ? -1 : 0;
+        } else {
+          for (int i = 0; i < cpNumBool.length; i++) {
+            cpNumBool[i] = false;
+          }
+          for (int i = 0; i < cpNumIndex.length; i++) {
+            cpNumIndex[i] = -1;
+          }
+          cpNumBool[index] = true;
+          cpNumIndex[index] = 0;
+        }
+
+
         if (mounted) {
           setState(() {
 

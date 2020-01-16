@@ -144,5 +144,65 @@ class GameService {
 
   }
 
+  ///单双走势
+  void hanoiOneSingleDouble(TrendHanoiOneLotteryHandler trendHanoiOneLotteryHandler, String limit, String address) {
+    HanoiOneLotteryMoreTrendHttpBeen openAccountHttpBeen = new HanoiOneLotteryMoreTrendHttpBeen();
+    openAccountHttpBeen.token = SpUtil.getString(Constant.TOKEN);
+    openAccountHttpBeen.limmit = limit;
+    openAccountHttpBeen.address = address;
 
+    ApiService apiService = RetrofitManager.instance.createApiService();
+    apiService.setHandler(trendHanoiOneLotteryHandler);
+    apiService.hanoiOneSingleDouble(openAccountHttpBeen);
+  }
+
+  ///大小走势
+  void hanoiOneMaxMin(TrendHanoiOneLotteryHandler trendHanoiOneLotteryHandler, String limit, String address) {
+    HanoiOneLotteryMoreTrendHttpBeen openAccountHttpBeen = new HanoiOneLotteryMoreTrendHttpBeen();
+    openAccountHttpBeen.token = SpUtil.getString(Constant.TOKEN);
+    openAccountHttpBeen.limmit = limit;
+    openAccountHttpBeen.address = address;
+
+    ApiService apiService = RetrofitManager.instance.createApiService();
+    apiService.setHandler(trendHanoiOneLotteryHandler);
+    apiService.hanoiOneMaxMin(openAccountHttpBeen);
+  }
+
+  ///五星和值
+  void hanoiOneFiveValue(TrendHanoiOneLotteryHandler trendHanoiOneLotteryHandler) {
+    BaseTokenHttpBeen openAccountHttpBeen = new BaseTokenHttpBeen(SpUtil.getString(Constant.TOKEN));
+    ApiService apiService = RetrofitManager.instance.createApiService();
+    apiService.setHandler(trendHanoiOneLotteryHandler);
+    apiService.hanoiOneFiveValue(openAccountHttpBeen);
+  }
+
+  ///各类和值
+  void hanoiOneVariousSum(TrendHanoiOneLotteryHandler trendHanoiOneLotteryHandler, String limit) {
+    HanoiOneLotteryMoreTrendHttpBeen openAccountHttpBeen = new HanoiOneLotteryMoreTrendHttpBeen();
+    openAccountHttpBeen.token = SpUtil.getString(Constant.TOKEN);
+    openAccountHttpBeen.limmit = limit;
+
+    ApiService apiService = RetrofitManager.instance.createApiService();
+    apiService.setHandler(trendHanoiOneLotteryHandler);
+    apiService.hanoiOneVariousSum(openAccountHttpBeen);
+  }
+
+  ///各类跨度
+  void hanoiOneVariousSpan(TrendHanoiOneLotteryHandler trendHanoiOneLotteryHandler, String limit){
+    HanoiOneLotteryMoreTrendHttpBeen openAccountHttpBeen = new HanoiOneLotteryMoreTrendHttpBeen();
+    openAccountHttpBeen.token = SpUtil.getString(Constant.TOKEN);
+    openAccountHttpBeen.limmit = limit;
+
+    ApiService apiService = RetrofitManager.instance.createApiService();
+    apiService.setHandler(trendHanoiOneLotteryHandler);
+    apiService.hanoiOneVariousSpan(openAccountHttpBeen);
+  }
+
+  ///龙虎和
+  void hanoiOneDragonTiger(TrendHanoiOneLotteryHandler trendHanoiOneLotteryHandler) {
+    BaseTokenHttpBeen openAccountHttpBeen = new BaseTokenHttpBeen(SpUtil.getString(Constant.TOKEN));
+    ApiService apiService = RetrofitManager.instance.createApiService();
+    apiService.setHandler(trendHanoiOneLotteryHandler);
+    apiService.hanoiOneDragonTiger(openAccountHttpBeen);
+  }
 }
