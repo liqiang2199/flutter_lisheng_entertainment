@@ -178,7 +178,6 @@ class _VietnamHanoiOneLotteryBettingView extends BaseController<VietnamHanoiOneL
     // TODO: implement build
 
     return new Column(
-      verticalDirection: VerticalDirection.down,
       children: <Widget>[
 
         new Expanded(
@@ -469,6 +468,11 @@ class _VietnamHanoiOneLotteryBettingView extends BaseController<VietnamHanoiOneL
             if (dragonTigerStateKey != null && dragonTigerStateKey.currentState != null) {
               dragonTigerStateKey.currentState.cleanDragonTigerChoiceNum();
             }
+          }
+
+          if (_isSingle && !isCurrentOptionalCp) {
+            // 是单式  非任选单式
+            editContent11Choose5Handle("");
           }
 
         },color: Color(ColorUtil.whiteColor),
@@ -994,6 +998,12 @@ class _VietnamHanoiOneLotteryBettingView extends BaseController<VietnamHanoiOneL
           setState(() {
           });
       }
+    } else {
+      calculationBettingNumBeen = new CalculationBettingNumDataBeen(new List(),0,"0.00","0.00","0.00");
+      numAndOperationStateViewKey.currentState.setCalculationBettingNumData(calculationBettingNumBeen);
+      if(mounted)
+        setState(() {
+        });
     }
 
 
@@ -1057,7 +1067,7 @@ class _VietnamHanoiOneLotteryBettingView extends BaseController<VietnamHanoiOneL
     if (_isDragonTiger) {
       /// 新龙虎
       Future.delayed(Duration(milliseconds: 300)).then((e) {
-        numAndOperationStateViewKey.currentState.setCalculationBettingNumDataToDragonTiger(calculationBettingNumBeen, true);
+        numAndOperationStateViewKey.currentState.setCalculationBettingNumData(calculationBettingNumBeen);
       });
     } else {
 
@@ -1116,15 +1126,24 @@ class _VietnamHanoiOneLotteryBettingView extends BaseController<VietnamHanoiOneL
   @override
   void bettingSuccessResult() {
     /// 清空界面
+    showToast("投注成功");
+    choiceCpNumList.clear();//清空这次选中的数字列表
+
+
+
     if (_isSingle) {
       //单式
       if (isCurrentOptionalCp) {
+        // 任选单选
+        calculationBettingNumBeen = new CalculationBettingNumDataBeen(new List(),0,"0.00","0.00","0.00");
+        numAndOperationStateViewKey.currentState.setCalculationBettingNumData(calculationBettingNumBeen);
         singleFormStateKey.currentState.cleanEditText();
       } else {
-
+        editContent11Choose5Handle("");
       }
     } else {
-
+      calculationBettingNumBeen = new CalculationBettingNumDataBeen(new List(),0,"0.00","0.00","0.00");
+      numAndOperationStateViewKey.currentState.setCalculationBettingNumData(calculationBettingNumBeen);
       if (isCurrentOptionalCp) {
         //是任选
         if (_choiceTypeGroupNum > 1) {

@@ -1,6 +1,6 @@
 class UrlUtil {
 
-  static const BaseUrl = "http://bxazru.natappfree.cc/";
+  static const BaseUrl = "http://ixc3v4.natappfree.cc/";
 
   static const login = "api/login/login";
   /// 退出登录
@@ -111,6 +111,18 @@ class UrlUtil {
   static const hanoiOneOddNumber = "api/Ylhlyfc/oddNumber";
   /// 多号走势
   static const hanoiOneMultipleNumbers = "api/Ylhlyfc/multipleNumbers";
+  /// 单双走势
+  static const hanoiOneSingleDouble = "api/Ylhlyfc/singleDouble";
+  /// 五星和值
+  static const hanoiOneFiveValue = "api/Ylhlyfc/fiveValue";
+  /// 各类和值
+  static const hanoiOneVariousSum = "api/Ylhlyfc/hzSum";
+  /// 各类跨度
+  static const hanoiOneVariousSpan = "api/Ylhlyfc/kd";
+  /// 龙虎和
+  static const hanoiOneDragonTiger = "api/Ylhlyfc/lhh";
+  /// 大小走势
+  static const hanoiOneMaxMin = "api/Ylhlyfc/maxMin";
 
 
 

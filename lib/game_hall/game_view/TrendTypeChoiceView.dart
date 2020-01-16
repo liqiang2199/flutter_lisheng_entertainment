@@ -5,7 +5,9 @@ import 'package:flutter_lisheng_entertainment/Util/ColorUtil.dart';
 import 'package:flutter_lisheng_entertainment/Util/SpaceViewUtil.dart';
 import 'package:flutter_lisheng_entertainment/base/BaseController.dart';
 import 'package:flutter_lisheng_entertainment/game_hall/game_bridge/TrendTypeChoiceDataUtils.dart';
+import 'package:flutter_lisheng_entertainment/game_hall/game_bridge/TrendTypeChoiceInterface.dart';
 import 'package:flutter_lisheng_entertainment/model/been/TrendTypeChoiceDataBeen.dart';
+import 'package:flutter_lisheng_entertainment/model/been/TrendTypeChoiceStateBeen.dart';
 import 'package:flutter_lisheng_entertainment/view/common/CommonView.dart';
 
 /**
@@ -13,10 +15,27 @@ import 'package:flutter_lisheng_entertainment/view/common/CommonView.dart';
  */
 ///
 class TrendTypeChoiceView extends StatefulWidget {
+
+  final String lotteryID;
+  final String indexPage;
+  final int trendTypeId;
+  final TrendTypeChoiceInterface choiceInterface;
+
+  const TrendTypeChoiceView(
+      {Key key,
+        this.lotteryID,
+        this.choiceInterface,
+        this.indexPage,
+        this.trendTypeId
+      }
+        ) : super(key: key);
+
+
+
   @override
   State<StatefulWidget> createState() {
 
-    return TrendTypeChoiceStateView();
+    return TrendTypeChoiceStateView(this.lotteryID, this.choiceInterface, this.indexPage, this.trendTypeId);
   }
 
 }
@@ -25,11 +44,29 @@ class TrendTypeChoiceStateView extends BaseController<TrendTypeChoiceView> {
 
   Map<String, List<TrendTypeChoiceDataBeen>> mapTrendType = new Map();
 
+  String lotteryID;
+  TrendTypeChoiceInterface choiceInterface;
+  String indexPage;
+  int trendTypeId;
+
+  TrendTypeChoiceStateView(this.lotteryID, this.choiceInterface, this.indexPage, this.trendTypeId);
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     TrendTypeChoiceDataUtils.vietnamHanoiMapData(mapTrendType);
+    mapTrendType?.forEach((modeK, modeV) {
+      List<TrendTypeChoiceDataBeen> typeName = modeV;
+      //bool isFlag = false;
+      for (int i = 0; i < typeName.length; i++) {
+        if ("${typeName[i].indexTrend}" == indexPage && typeName[i].type == trendTypeId) {
+          typeName[i].isChoice = true;
+          //isFlag = true;
+          break;
+        }
+      }
+    });
   }
 
   @override
@@ -127,17 +164,14 @@ class TrendTypeChoiceStateView extends BaseController<TrendTypeChoiceView> {
     List<Widget> gridListItem = new List();
 
     for (int i = 0; i < typeName.length; i++) {
-//      if (playModeBeen[i].isChoice == null) {
-//        playModeBeen[i].isChoice = false;
-//      }
       gridListItem.add(_playTypeItem(typeName[i].trendStr,
-          typeName[i].isChoice ? ColorUtil.textColor_FF8814 : ColorUtil.textColor_888888));
+          typeName[i].isChoice ? ColorUtil.textColor_FF8814 : ColorUtil.textColor_888888, typeName[i]));
     }
     return gridListItem;
   }
 
   // 走势 类型
-  Widget _playTypeItem(String name, int colorId) {
+  Widget _playTypeItem(String name, int colorId, TrendTypeChoiceDataBeen typeName) {
     return new Align(
       alignment: Alignment.centerLeft,
       child: new Container(
@@ -145,7 +179,73 @@ class TrendTypeChoiceStateView extends BaseController<TrendTypeChoiceView> {
         margin: EdgeInsets.only( right: 8.0,),
         child: new RaisedButton(onPressed: (){
           // 选中
+          mapTrendType?.forEach((modeK, modeV) {
+            List<TrendTypeChoiceDataBeen> typeName = modeV;
 
+            for (int i = 0; i < typeName.length; i++) {
+              typeName[i].isChoice = false;
+            }
+
+          });
+          typeName.isChoice = true;
+          if (choiceInterface != null) {
+            TrendTypeChoiceStateBeen stateBeen = new TrendTypeChoiceStateBeen();
+            stateBeen.isLineConnection = false;
+            stateBeen.isSingleDouble = false;
+            stateBeen.isFiveNum = false;
+            stateBeen.isVariousSum = false;
+            stateBeen.isVariousSpan = false;
+            stateBeen.isDragonTiger = false;
+            stateBeen.isMaxMin = false;
+            stateBeen.dragonTigerPage = 1;
+            stateBeen.indexPage = "0";
+            stateBeen.trendTitleStr = typeName.trendTitleStr;
+            stateBeen.trendTypeId = typeName.type;
+            stateBeen.indexPage = "${typeName.indexTrend}";
+            switch (typeName.type) {
+              case 1:
+                //单号走势
+                stateBeen.isLineConnection = true;
+                //stateBeen.indexPage = "${typeName.indexTrend}";
+                break;
+              case 2:
+                //多号走势
+                //stateBeen.indexPage = "${typeName.indexTrend}";
+                break;
+              case 3:
+                //大小走势
+                stateBeen.isMaxMin = true;
+                //stateBeen.indexPage = "${typeName.indexTrend}";
+                break;
+              case 4:
+                //单双走势
+                stateBeen.isSingleDouble = true;
+                //stateBeen.indexPage = "${typeName.indexTrend}";
+                break;
+              case 5:
+                //五星和值走势
+                stateBeen.isFiveNum = true;
+
+                break;
+              case 6:
+                //各类和值走势
+                stateBeen.isVariousSum = true;
+                break;
+              case 7:
+                //各类跨度走势
+                stateBeen.isVariousSpan = true;
+                break;
+              case 8:
+                //龙虎和走势
+                stateBeen.isDragonTiger = true;
+                stateBeen.dragonTigerPage = typeName.indexTrend;
+                break;
+            }
+
+            choiceInterface.setTrendTypeChoiceStateBeen(stateBeen);
+          }
+
+          Navigator.pop(context);
         },color: Color(ColorUtil.whiteColor),
           child: new Text(name
             , style: TextStyle(

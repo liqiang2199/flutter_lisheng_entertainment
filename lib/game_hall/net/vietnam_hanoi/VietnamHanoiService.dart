@@ -76,15 +76,27 @@ class VietnamHanoiService {
 
     CalculationBettingNumDataBeen calculationBettingNumBeen = new CalculationBettingNumDataBeen(new List(),0,"0.00","0.00","0.00");//注数 和 金额
     if (oneNum.length <= 0) {
+      if (isBetting) {
+        hanoiBettingHandler.showToast("你还没有选择号码或所选号码不全");
+        return;
+      }
       hanoiBettingHandler.getCalculationBettingNumData(calculationBettingNumBeen);
       return;
     }
     if (twoNum.length <= 0) {
+      if (isBetting) {
+        hanoiBettingHandler.showToast("你还没有选择号码或所选号码不全");
+        return;
+      }
       hanoiBettingHandler.getCalculationBettingNumData(calculationBettingNumBeen);
       return;
     }
     if (!isTwoListCpNum) {
       if (threeNum.length <= 0) {
+        if (isBetting) {
+          hanoiBettingHandler.showToast("你还没有选择号码或所选号码不全");
+          return;
+        }
         hanoiBettingHandler.getCalculationBettingNumData(calculationBettingNumBeen);
         return;
       }
@@ -125,6 +137,10 @@ class VietnamHanoiService {
   void hanoiOneGetGDBetsSpan(VietnamHanoiBettingHandler hanoiBettingHandler, List<String> oneNum, String playID, bool isBetting, int multiple) {
     CalculationBettingNumDataBeen calculationBettingNumBeen = new CalculationBettingNumDataBeen(new List(),0,"0.00","0.00","0.00");//注数 和 金额
     if (oneNum.length <= 0) {
+      if (isBetting) {
+        hanoiBettingHandler.showToast("你还没有选择号码或所选号码不全");
+        return;
+      }
       hanoiBettingHandler.getCalculationBettingNumData(calculationBettingNumBeen);
       return;
     }
@@ -150,6 +166,10 @@ class VietnamHanoiService {
   void hanoiOneGetGDBetsRandomSingle(VietnamHanoiBettingHandler hanoiBettingHandler,String oneNum, String playID, bool isBetting, int multiple) {
     CalculationBettingNumDataBeen calculationBettingNumBeen = new CalculationBettingNumDataBeen(new List(),0,"0.00","0.00","0.00");//注数 和 金额
     if (oneNum.length <= 0) {
+      if (isBetting) {
+        hanoiBettingHandler.showToast("你还没有选择号码或所选号码不全");
+        return;
+      }
       hanoiBettingHandler.getCalculationBettingNumData(calculationBettingNumBeen);
       return;
     }
@@ -178,6 +198,10 @@ class VietnamHanoiService {
   void hanoiOneGetGDBetsEditSingle(VietnamHanoiBettingHandler hanoiBettingHandler,List<String> oneNum, String playID, bool isBetting, int multiple) {
     CalculationBettingNumDataBeen calculationBettingNumBeen = new CalculationBettingNumDataBeen(new List(),0,"0.00","0.00","0.00");//注数 和 金额
     if (oneNum.length <= 0) {
+      if (isBetting) {
+        hanoiBettingHandler.showToast("你还没有选择号码或所选号码不全");
+        return;
+      }
       hanoiBettingHandler.getCalculationBettingNumData(calculationBettingNumBeen);
       return;
     }
@@ -207,22 +231,42 @@ class VietnamHanoiService {
       , List<String> twoNum, List<String> threeNum, List<String> four_num, List<String> five_num, String playID, bool isBetting, int multiple) {
     CalculationBettingNumDataBeen calculationBettingNumBeen = new CalculationBettingNumDataBeen(new List(),0,"0.00","0.00","0.00");//注数 和 金额
     if (oneNum.length <= 0) {
+      if (isBetting) {
+        hanoiBettingHandler.showToast("你还没有选择号码或所选号码不全");
+        return;
+      }
       hanoiBettingHandler.getCalculationBettingNumData(calculationBettingNumBeen);
       return;
     }
     if (twoNum.length <= 0) {
+      if (isBetting) {
+        hanoiBettingHandler.showToast("你还没有选择号码或所选号码不全");
+        return;
+      }
       hanoiBettingHandler.getCalculationBettingNumData(calculationBettingNumBeen);
       return;
     }
     if (threeNum.length <= 0) {
+      if (isBetting) {
+        hanoiBettingHandler.showToast("你还没有选择号码或所选号码不全");
+        return;
+      }
       hanoiBettingHandler.getCalculationBettingNumData(calculationBettingNumBeen);
       return;
     }
     if (four_num.length <= 0) {
+      if (isBetting) {
+        hanoiBettingHandler.showToast("你还没有选择号码或所选号码不全");
+        return;
+      }
       hanoiBettingHandler.getCalculationBettingNumData(calculationBettingNumBeen);
       return;
     }
     if (five_num.length <= 0) {
+      if (isBetting) {
+        hanoiBettingHandler.showToast("你还没有选择号码或所选号码不全");
+        return;
+      }
       hanoiBettingHandler.getCalculationBettingNumData(calculationBettingNumBeen);
       return;
     }
@@ -258,10 +302,18 @@ class VietnamHanoiService {
       , List<String> bitsNum,  String playID, bool isSingle, bool isBetting, int multiple) {
     CalculationBettingNumDataBeen calculationBettingNumBeen = new CalculationBettingNumDataBeen(new List(),0,"0.00","0.00","0.00");//注数 和 金额
     if (oneNum.length <= 0) {
+      if (isBetting) {
+        hanoiBettingHandler.showToast("你还没有选择号码或所选号码不全");
+        return;
+      }
       hanoiBettingHandler.getCalculationBettingNumData(calculationBettingNumBeen);
       return;
     }
     if (bitsNum.length <= 0) {
+      if (isBetting) {
+        hanoiBettingHandler.showToast("你还没有选择号码或所选号码不全");
+        return;
+      }
       hanoiBettingHandler.getCalculationBettingNumData(calculationBettingNumBeen);
       return;
     }
@@ -299,10 +351,18 @@ class VietnamHanoiService {
       , List<String> bitsNum,  String playID, bool isBetting, int multiple) {
     CalculationBettingNumDataBeen calculationBettingNumBeen = new CalculationBettingNumDataBeen(new List(),0,"0.00","0.00","0.00");//注数 和 金额
     if (oneNum.length <= 0) {
+      if (isBetting) {
+        hanoiBettingHandler.showToast("你还没有选择号码或所选号码不全");
+        return;
+      }
       hanoiBettingHandler.getCalculationBettingNumData(calculationBettingNumBeen);
       return;
     }
     if (bitsNum.length <= 0) {
+      if (isBetting) {
+        hanoiBettingHandler.showToast("你还没有选择号码或所选号码不全");
+        return;
+      }
       hanoiBettingHandler.getCalculationBettingNumData(calculationBettingNumBeen);
       return;
     }
@@ -335,6 +395,10 @@ class VietnamHanoiService {
       , bool isBetting, int multiple) {
     CalculationBettingNumDataBeen calculationBettingNumBeen = new CalculationBettingNumDataBeen(new List(),0,"0.00","0.00","0.00");//注数 和 金额
     if (dragonTiger.length <= 0) {
+      if (isBetting) {
+        hanoiBettingHandler.showToast("你还没有选择号码或所选号码不全");
+        return;
+      }
       hanoiBettingHandler.getCalculationBettingNumData(calculationBettingNumBeen);
       return;
     }

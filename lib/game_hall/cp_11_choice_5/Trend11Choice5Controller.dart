@@ -310,14 +310,14 @@ class _Trend11Choice5Controller extends BaseController<Trend11Choice5Controller>
    */
   _trendTypeChoiceDialog(BuildContext context) {
 
-    showDialog<Null>(
-      context: context,
-      builder: (BuildContext context) {
-        return new TrendTypeChoiceView();
-      },
-    ).then((val) {
-      print(val);
-    });
+//    showDialog<Null>(
+//      context: context,
+//      builder: (BuildContext context) {
+//        return new TrendTypeChoiceView();
+//      },
+//    ).then((val) {
+//      print(val);
+//    });
 
   }
 
