@@ -13,12 +13,14 @@ class LotteryNumListView extends StatefulWidget {
   final bool is11Choice5;
   final bool isLookLotteryList;//是否是下拉查看开奖号码
   final List<OpenLotteryListTwoDataListBeen> openLotteryListBeen;
+  final String lotteryID;
 
   const LotteryNumListView({
     Key key,
     this.is11Choice5,
     this.isLookLotteryList = false,
     this.openLotteryListBeen,
+    this.lotteryID = "9",
 
   }) : super(key: key);// 是否是 11 选 5
 
@@ -27,7 +29,8 @@ class LotteryNumListView extends StatefulWidget {
     // TODO: implement createState
     return LotteryNumListStateView(is11Choice5: this.is11Choice5,
         isLookLotteryList: this.isLookLotteryList,
-        openLotteryListBeen: this.openLotteryListBeen
+        openLotteryListBeen: this.openLotteryListBeen,
+        lotteryID: this.lotteryID
     );
   }
 
@@ -37,11 +40,13 @@ class LotteryNumListStateView extends BaseController<LotteryNumListView> {
   bool is11Choice5 = true;
   bool isLookLotteryList;//是否是下拉查看开奖号码
   List<OpenLotteryListTwoDataListBeen> openLotteryListBeen;
+  String lotteryID;
 
   LotteryNumListStateView({
     this.is11Choice5,
     this.isLookLotteryList = false,
     this.openLotteryListBeen,
+    this.lotteryID
 
   });// 是否是 11 选 5
 
@@ -90,6 +95,22 @@ class LotteryNumListStateView extends BaseController<LotteryNumListView> {
         ),
       );
     }
+
+    if (lotteryID == "15") {
+      return new Container(
+        color: Colors.white,
+        padding: EdgeInsets.only(left: 10.0),
+        child: new Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: <Widget>[
+            _num(TextUtil.isEmpty(openLotteryListBeen[index].pre_draw_issue)? "" : openLotteryListBeen[index].pre_draw_issue),
+            _numStrList(openLotteryListBeen[index]),
+            new Expanded(child: _numLotteryPlay(TextUtil.isEmpty(openLotteryListBeen[index].play)? "" : openLotteryListBeen[index].play),),
+          ],
+        ),
+      );
+    }
+
     return new Container(
       color: Colors.white,
       child: new Row(
@@ -105,9 +126,14 @@ class LotteryNumListStateView extends BaseController<LotteryNumListView> {
   /**
    * 11 选 5 的下拉开奖号码列表
    */
+  ///
   Widget _num(String title) {
     var length = title.length;
-    title = "${title.substring(length - 2, length)}期";
+    if (lotteryID == "15") {
+      title = "${title.substring(length - 3, length)}期";
+    } else {
+      title = "${title.substring(length - 2, length)}期";
+    }
     return new Container(
       margin: EdgeInsets.only(right: 10.0, top: 15.0),
       alignment: Alignment.center,
@@ -116,6 +142,20 @@ class LotteryNumListStateView extends BaseController<LotteryNumListView> {
         style: new TextStyle(
           color: Color(ColorUtil.textColor_333333),
           fontSize: 14.0,
+        ),
+      ),
+    );
+  }
+
+  Widget _numLotteryPlay(String title) {
+    return new Container(
+      margin: EdgeInsets.only(right: 10.0, top: 15.0),
+      alignment: Alignment.center,
+      child: new Text(
+        title,
+        style: new TextStyle(
+          color: Color(ColorUtil.textColor_333333),
+          fontSize: 12.0,
         ),
       ),
     );

@@ -4,6 +4,7 @@ class ImageUtil {
   static const imgLoginCustom = "${imgBaseUrl}icon_custom.png";
   static const imgLoginLogo = "${imgBaseUrl}icon_login_logo.png";
   static const imgBgSplash = "${imgBaseUrl}icon_splash.png";
+  static const imgBgHome = "${imgBaseUrl}icon_home_bg.png";
   //线路切换
   static const imgLoginChangeGroup = "${imgBaseUrl}icon_login_change_group.png";
   static const imgCloseDialog = "${imgBaseUrl}icon_close_dialog.png";

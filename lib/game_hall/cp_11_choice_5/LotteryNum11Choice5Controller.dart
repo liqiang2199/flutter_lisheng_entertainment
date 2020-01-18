@@ -54,6 +54,12 @@ class _LotteryNum11Choice5Controller extends BaseRefreshController<LotteryNum11C
   @override
   void onRefreshData() {
     page = 1;
+//    if (colorVariety == "15") {
+//      /// 河内一分彩
+//      GameService.instance.hanoi_kjlogList("$page", this);
+//    } else {
+//      GameService.instance.kjlogList(colorVariety,"$page", this);
+//    }
     GameService.instance.kjlogList(colorVariety,"$page", this);
   }
 
@@ -100,6 +106,25 @@ class _LotteryNum11Choice5Controller extends BaseRefreshController<LotteryNum11C
   }
 
   Widget _gameItem(OpenLotteryListTwoDataListBeen dataListBeen) {
+
+//    if(colorVariety == "15") {
+//      return new Container(
+//        margin: EdgeInsets.only(bottom: 15.0),
+//        padding: EdgeInsets.only(left: 15.0,),
+//        color: Colors.white,
+//        child: new Row(
+//          mainAxisAlignment: MainAxisAlignment.start,
+//          children: <Widget>[
+//            _num(dataListBeen.pre_draw_issue),
+//            _numStrList(dataListBeen),
+//
+//            new Expanded(child: _numHanoiOneLottery(dataListBeen.play),),
+//
+//          ],
+//        ),
+//      );
+//    }
+
     return new Container(
       margin: EdgeInsets.only(bottom: 15.0),
       padding: EdgeInsets.only(left: 15.0,),
@@ -131,9 +156,32 @@ class _LotteryNum11Choice5Controller extends BaseRefreshController<LotteryNum11C
   /**
    * 11 选 5 的下拉开奖号码列表
    */
+  ///
   Widget _num(String title) {
     var length = title.length;
-    title = "${title.substring(length - 2, length)}期";
+    if (colorVariety == "15") {
+      /// 河内一分彩
+      title = "${title.substring(length - 4, length)}期";
+    } else {
+      /// 11 选 5
+      title = "${title.substring(length - 2, length)}期";
+    }
+
+    return new Container(
+      margin: EdgeInsets.only(right: 10.0, top: 15.0),
+      alignment: Alignment.center,
+      child: new Text(
+        title,
+        style: new TextStyle(
+          color: Color(ColorUtil.textColor_333333),
+          fontSize: 14.0,
+        ),
+      ),
+    );
+  }
+
+  /// 河内一分彩
+  Widget _numHanoiOneLottery(String title) {
     return new Container(
       margin: EdgeInsets.only(right: 10.0, top: 15.0),
       alignment: Alignment.center,

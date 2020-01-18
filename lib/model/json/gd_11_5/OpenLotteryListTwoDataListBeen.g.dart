@@ -18,7 +18,8 @@ OpenLotteryListTwoDataListBeen _$OpenLotteryListTwoDataListBeenFromJson(
     json['createtime'] as int,
   )
     ..drawTime = json['drawTime'] as String
-    ..drawIssue = json['drawIssue'] as int;
+    ..drawIssue = json['drawIssue'] as int
+    ..play = json['play'] as String;
 }
 
 Map<String, dynamic> _$OpenLotteryListTwoDataListBeenToJson(
@@ -33,4 +34,5 @@ Map<String, dynamic> _$OpenLotteryListTwoDataListBeenToJson(
       'createtime': instance.createtime,
       'drawTime': instance.drawTime,
       'drawIssue': instance.drawIssue,
+      'play': instance.play,
     };

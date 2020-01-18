@@ -58,6 +58,7 @@ class LotteryTimeNumChildView extends BaseController<LotteryTimeNumView> {
   String playRemark;//玩法说明
   String openLotteryTime;
   String openLotteryDrawIssue;
+  String openLotteryDrawIssueOld;/// 记录一个之前的ID
   List<OpenLotteryListTwoDataListBeen> openLotteryListBeen;
   bool isOpeningLottery = false;//是否正在开奖
 
@@ -98,7 +99,7 @@ class LotteryTimeNumChildView extends BaseController<LotteryTimeNumView> {
     this.isOpenLotteryList = isOpenLotteryList;
     this.playRemark = playRemark;
     this.openLotteryListBeen = openLotteryListBeen;
-
+    isOpeningLottery = false;
     if (mounted)
       setState(() {
 
@@ -108,7 +109,7 @@ class LotteryTimeNumChildView extends BaseController<LotteryTimeNumView> {
   void onSetRefreshState(String time, String qs) {
     this.openLotteryTime = time;
     this.openLotteryDrawIssue = qs;
-    isOpeningLottery = false;
+
     if (mounted)
       setState(() {
 
@@ -135,6 +136,7 @@ class LotteryTimeNumChildView extends BaseController<LotteryTimeNumView> {
     if (isBegin) {
       isOpeningLottery = true;
       this.openLotteryDrawIssue = qs;
+      this.openLotteryDrawIssueOld = qs;
       _timeOpenLotteryTitle = "正在开奖";
       this.openLotteryTime = "";
       openLotteryTitleColor = ColorUtil.textColor_FF8814;
@@ -238,18 +240,18 @@ class LotteryTimeNumChildView extends BaseController<LotteryTimeNumView> {
     }
     if (isOpeningLottery) {
       String titleIssue = "0";
-      if (openLotteryDrawIssue != null || openLotteryDrawIssue.length > 0) {
-        var length = openLotteryDrawIssue.length;
-        titleIssue = "${openLotteryDrawIssue.substring(length - 3, length)}";
-        if (titleIssue != null) {
-          titleIssue = "${(int.parse(titleIssue) + 1)}";
-        }
-        if(titleIssue.length == 1) {
-          titleIssue = "00$titleIssue";
-        }
-        if(titleIssue.length == 2) {
-          titleIssue = "0$titleIssue";
-        }
+      if (openLotteryDrawIssueOld != null || openLotteryDrawIssueOld.length > 0) {
+        var length = openLotteryDrawIssueOld.length;
+        titleIssue = "${openLotteryDrawIssueOld.substring(length - 3, length)}";
+//        if (titleIssue != null) {
+//          titleIssue = "${(int.parse(titleIssue) + 1)}";
+//        }
+//        if(titleIssue.length == 1) {
+//          titleIssue = "00$titleIssue";
+//        }
+//        if(titleIssue.length == 2) {
+//          titleIssue = "0$titleIssue";
+//        }
       }
       return new Container(
         padding: EdgeInsets.only(bottom: 8.0,),
@@ -303,11 +305,20 @@ class LotteryTimeNumChildView extends BaseController<LotteryTimeNumView> {
   /**
    * 11 选 5 的下拉开奖号码列表
    */
+  ///
   Widget _num(String title) {
-    if (openLotteryListBeen != null || openLotteryListBeen.length > 0) {
-      var length = title.length;
-      title = "${title.substring(length - 2, length)}期";
+    if (!isOpeningLottery) {
+      if (openLotteryListBeen != null || openLotteryListBeen.length > 0) {
+        var length = title.length;
+        if (!is11Choice5) {
+          /// 河内一分彩
+          title = "${title.substring(length - 3, length)}期";
+        } else {
+          title = "${title.substring(length - 2, length)}期";
+        }
+      }
     }
+
     return new Container(
       margin: EdgeInsets.only(right: 10.0, top: 8.0),
       alignment: Alignment.center,

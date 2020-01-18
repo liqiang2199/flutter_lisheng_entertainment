@@ -45,6 +45,7 @@ class BonusAdjustmentStateView extends BaseController<BonusAdjustmentView> {
 
 
   TextEditingController textEditingController = new TextEditingController();
+  FocusNode _focusNode = FocusNode();
 
   BonusAdjustmentInterface adjustmentInterface; // 奖金调节回调接口
   int multipleNum;
@@ -57,6 +58,20 @@ class BonusAdjustmentStateView extends BaseController<BonusAdjustmentView> {
     this.segmentedIndex,
     this.sliderValue ,
   });
+
+  @override
+  void initState() {
+    // TODO: implement initState
+//    _focusNode?.addListener((){
+//      if (!_focusNode.hasFocus) {
+//        FocusScope.of(context).requestFocus(_focusNode);     // 获取焦点
+//      }
+//    });
+//    _focusNode.unfocus();
+    super.initState();
+
+
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -285,6 +300,7 @@ class BonusAdjustmentStateView extends BaseController<BonusAdjustmentView> {
       padding: EdgeInsets.only(left: 10.0,right: 10.0),
       child: new TextField(
         textAlign: TextAlign.center,
+        focusNode: _focusNode,
         style: TextStyle(fontSize: 14, color: Color(ColorUtil.textColor_333333)),
         decoration: InputDecoration(
           hintText: "",

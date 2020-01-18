@@ -276,6 +276,14 @@ abstract class ApiService<T> {
   @POST(UrlUtil.hanoiOneGetKjTime)
   void hanoiOneGetKjTime(@Body() BaseTokenHttpBeen openAccountHttpBeen);
 
+  /// 越南河内1分彩 开奖记录
+  @POST(UrlUtil.hanoiOneKjLog)
+  void hanoiOneKjLog(@Body() OpenLotteryListHttpBeen openAccountHttpBeen);
+
+  /// 越南河内1分彩 开奖记录
+  @POST(UrlUtil.hanoiOneKjLog)
+  void hanoiOneKjLog_LotteryList(@Body() OpenLotteryListHttpBeen openAccountHttpBeen);
+
   ///单号走势
   @POST(UrlUtil.hanoiOneOddNumber)
   void hanoiOneOddNumber(@Body() HanoiOneLotterySingleTrendHttpBeen openAccountHttpBeen);
@@ -294,7 +302,7 @@ abstract class ApiService<T> {
 
   ///五星和值
   @POST(UrlUtil.hanoiOneFiveValue)
-  void hanoiOneFiveValue(@Body() BaseTokenHttpBeen openAccountHttpBeen);
+  void hanoiOneFiveValue(@Body() HanoiOneLotteryMoreTrendHttpBeen openAccountHttpBeen);
 
   ///各类和值
   @POST(UrlUtil.hanoiOneVariousSum)
@@ -1176,6 +1184,40 @@ class _ApiService<T> implements ApiService<T> {
     });
   }
 
+  // 越南河内1分彩 开奖记录
+  void hanoiOneKjLog_LotteryList(OpenLotteryListHttpBeen openAccountHttpBeen) {
+    ArgumentError.checkNotNull(openAccountHttpBeen, '参数为空');
+    ArgumentError.checkNotNull(_baseHandler, '_baseHandler为空');
+    responseResult(openAccountHttpBeen.toJson(), UrlUtil.hanoiOneKjLog).then((onValue) {
+      var bettingNum = OpenLotteryListDataBeen.fromJson(onValue);
+      LotteryNum11Choice5Handler bettingRecordListHandler = _baseHandler as LotteryNum11Choice5Handler;
+
+      if (bettingNum.code == 1) {
+        bettingRecordListHandler.setOpenLotteryListData(bettingNum);
+      } else {
+        bettingRecordListHandler.showToast(bettingNum.msg);
+      }
+
+    });
+  }
+
+  /// 越南河内1分彩 开奖记录
+  void hanoiOneKjLog(OpenLotteryListHttpBeen openAccountHttpBeen) {
+    ArgumentError.checkNotNull(openAccountHttpBeen, '参数为空');
+    ArgumentError.checkNotNull(_baseHandler, '_baseHandler为空');
+    responseResult(openAccountHttpBeen.toJson(), UrlUtil.hanoiOneKjLog).then((onValue) {
+      var bettingNum = OpenLotteryListDataBeen.fromJson(onValue);
+      VietnamHanoiBettingHandler bettingRecordListHandler = _baseHandler as VietnamHanoiBettingHandler;
+
+      if (bettingNum.code == 1) {
+        bettingRecordListHandler.setAccountChangeRecord(bettingNum);
+      } else {
+        bettingRecordListHandler.showToast(bettingNum.msg);
+      }
+
+    });
+  }
+
   /// 单号走势
   void hanoiOneOddNumber(HanoiOneLotterySingleTrendHttpBeen openAccountHttpBeen){
     ArgumentError.checkNotNull(openAccountHttpBeen, '参数为空');
@@ -1283,7 +1325,7 @@ class _ApiService<T> implements ApiService<T> {
   }
 
   ///五星和值
-  void hanoiOneFiveValue(BaseTokenHttpBeen openAccountHttpBeen) {
+  void hanoiOneFiveValue(HanoiOneLotteryMoreTrendHttpBeen openAccountHttpBeen) {
     ArgumentError.checkNotNull(openAccountHttpBeen, '参数为空');
     ArgumentError.checkNotNull(_baseHandler, '_baseHandler为空');
     responseResult(openAccountHttpBeen.toJson(), UrlUtil.hanoiOneFiveValue).then((onValue) {

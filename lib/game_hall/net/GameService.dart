@@ -65,6 +65,14 @@ class GameService {
     apiService.kjlogList(openLotteryListHttpBeen);
   }
 
+  /// 河内一分彩
+  void hanoi_kjlogList( String page, LotteryNum11Choice5Handler num11choice5handler) {
+    OpenLotteryListHttpBeen openLotteryListHttpBeen = new OpenLotteryListHttpBeen(SpUtil.getString(Constant.TOKEN), "", "30", page);
+    ApiService apiService = RetrofitManager.instance.createApiService();
+    apiService.setHandler(num11choice5handler);
+    apiService.hanoiOneKjLog_LotteryList(openLotteryListHttpBeen);
+  }
+
   void kjlogList_Betting(String lottery_id, String page, LotteryNum11Choice5Handler num11choice5handler) {
     OpenLotteryListHttpBeen openLotteryListHttpBeen = new OpenLotteryListHttpBeen(SpUtil.getString(Constant.TOKEN), lottery_id, "5", page);
     ApiService apiService = RetrofitManager.instance.createApiService();
@@ -169,8 +177,11 @@ class GameService {
   }
 
   ///五星和值
-  void hanoiOneFiveValue(TrendHanoiOneLotteryHandler trendHanoiOneLotteryHandler) {
-    BaseTokenHttpBeen openAccountHttpBeen = new BaseTokenHttpBeen(SpUtil.getString(Constant.TOKEN));
+  void hanoiOneFiveValue(TrendHanoiOneLotteryHandler trendHanoiOneLotteryHandler, String limit) {
+    HanoiOneLotteryMoreTrendHttpBeen openAccountHttpBeen = new HanoiOneLotteryMoreTrendHttpBeen();
+    openAccountHttpBeen.token = SpUtil.getString(Constant.TOKEN);
+    openAccountHttpBeen.limmit = limit;
+
     ApiService apiService = RetrofitManager.instance.createApiService();
     apiService.setHandler(trendHanoiOneLotteryHandler);
     apiService.hanoiOneFiveValue(openAccountHttpBeen);

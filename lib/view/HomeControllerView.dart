@@ -1,6 +1,7 @@
 
 import 'dart:math';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_pro/carousel_pro.dart';
 import 'package:event_bus/event_bus.dart';
 import 'package:flustars/flustars.dart';
@@ -24,8 +25,8 @@ import 'package:flutter_lisheng_entertainment/model/json/game_hall/LotteryTypeDa
 import 'package:flutter_lisheng_entertainment/model/json/home_json/GetBannerListDataBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/json/login/LoginUserInfoBeen.dart';
 import 'package:flutter_lisheng_entertainment/net/UrlUtil.dart';
-import 'package:flutter_banner_swiper/flutter_banner_swiper.dart';
 import 'package:flutter_lisheng_entertainment/view/common/CommonView.dart';
+import 'package:flutter_swiper/flutter_swiper.dart';
 
 class HomeControllerView extends StatefulWidget {
   
@@ -46,7 +47,7 @@ class _HomeControllerView extends BaseController<HomeControllerView> implements 
   void initState() {
     super.initState();
     /// 获取banner
-//    HomeService.instance.getBannerList(SpUtil.getString(Constant.TOKEN), this);
+    HomeService.instance.getBannerList(SpUtil.getString(Constant.TOKEN), this);
 
     List<LotteryTypeDataListLotteryBeen> lottery = new List();
     typeDataListBeen = new LotteryTypeDataListBeen(9, "常玩彩种",lottery);
@@ -176,7 +177,7 @@ class _HomeControllerView extends BaseController<HomeControllerView> implements 
 
   /// 顶部背景图片
   Widget _topBgImg() {
-    return Image.asset(ImageUtil.imgHomeTopBg,
+    return Image.asset(ImageUtil.imgBgHome,
       height: 220.0,
       repeat: ImageRepeat.repeat,
     );
@@ -480,74 +481,50 @@ class _HomeControllerView extends BaseController<HomeControllerView> implements 
   List<String> bannerList = [ImageUtil.imgBanner, ImageUtil.imgBanner, ImageUtil.imgBanner];
 
   /// Banner 广告位
-  /// /**
+  /// /**new NetworkImage('http://img02.tooopen.com/images/20150928/tooopen_sy_143912755726.jpg'),
+  //          new NetworkImage('http://img02.tooopen.com/images/20150928/tooopen_sy_143912755726.jpg'),
+  //          new NetworkImage('http://img02.tooopen.com/images/20150928/tooopen_sy_143912755726.jpg'),
   //_getImageList(imgListStr)
+
   Widget _bannerHome() {
-    return new SizedBox(
-      height: 180.0,
-      child: new Carousel(
-        images: [
-          new NetworkImage('http://img02.tooopen.com/images/20150928/tooopen_sy_143912755726.jpg'),
-          new NetworkImage('http://img02.tooopen.com/images/20150928/tooopen_sy_143912755726.jpg'),
-          new NetworkImage('http://img02.tooopen.com/images/20150928/tooopen_sy_143912755726.jpg'),
-        ].map((netImage)=> new Image(
-          image: netImage,fit: BoxFit.fitWidth,height: 180.0,width: ScreenUtil.getScreenW(context),
-        )).toList(),
-
-        animationDuration: new Duration(
-          seconds: 5000,
-        ),
-        dotSize: 4.0,
-        dotSpacing: 15.0,
-        dotColor: Colors.white,
-        indicatorBgPadding: 5.0,
-        dotBgColor: Colors.transparent,
-        //borderRadius: true,
-      ),
-    );
-//    return BannerSwiper(
+//    return new SizedBox(
+//      height: 180.0,
+//      child: new Carousel(
+//        images: imgList.map((netImage)=> new Image(
+//          image: netImage,fit: BoxFit.fitWidth,height: 180.0,width: ScreenUtil.getScreenW(context),
+//        )).toList(),
 //
-//      //width  和 height 是图片的高宽比  不用传具体的高宽   必传
-//      height: 108,
-//      width: 54,
-//      //轮播图数目 必传
-//      length: bannerList.length,
-////      normalWidget: ,//自定义 未选中指示器
-////      selectorWidget: ,//自定义 选中指示器
-//      //轮播的item  widget 必传
-//      getwidget: (index) {
-//        return new GestureDetector(
-//            //child:  Image.network(bannerList[index % bannerList.length].img,fit: BoxFit.cover,),
-//            child:  Image.asset(bannerList[index % bannerList.length],fit: BoxFit.fill,),
-//            onTap: () {
-//              //点击后todo
-//            });
-//      },
+//        animationDuration: new Duration(
+//          seconds: 5000,
+//        ),
+//        dotSize: 4.0,
+//        dotSpacing: 15.0,
+//        dotColor: Colors.white,
+//        indicatorBgPadding: 5.0,
+//        dotBgColor: Colors.transparent,
+//        //borderRadius: true,
+//      ),
 //    );
+    return new ConstrainedBox(
+      child: Swiper(
+        itemCount: imgListStr.length,
+        pagination: new SwiperPagination(),
+        //control: new SwiperControl(),
+        //轮播的item  widget 必传
+        itemBuilder: (BuildContext context,int index){
+          //return Image.network(imgListStr[index],fit: BoxFit.fill,);
+          return CachedNetworkImage(
+            imageUrl: imgListStr[index],
+            placeholder: (context, url) => CircularProgressIndicator(),
+            errorWidget: (context, url, error) => Icon(Icons.error),
+          );
+        },
+        autoplayDelay: 5000,
+        autoplay: imgListStr.length > 1,
+      ),
+        constraints:  new BoxConstraints.loose(new Size(MediaQuery.of(context).size.width, 180.0)),
+    );
 
-//    return new FutureBuilder(
-//      future: HomeService.instance.getBannerList(SpUtil.getString(Constant.TOKEN), this),
-//        // ignore: missing_return
-//        builder:   (BuildContext context, AsyncSnapshot<List> snapshot){
-//          switch (snapshot.connectionState) {
-//            case ConnectionState.none:
-//              return new Text('Input a URL to start');
-//            case ConnectionState.waiting:
-//              return new Center(child: new CircularProgressIndicator());
-//            case ConnectionState.active:
-//              return new Text('');
-//            case ConnectionState.done:
-//              if (snapshot.hasError) {
-////                return new Text(
-////                  '${snapshot.error}',
-////                  style: TextStyle(color: Colors.red),
-////                );
-//              } else {
-//                return _initBanner();
-//              }
-//          }
-//        }
-//    );
   }
 
   Widget _initBanner() {
@@ -589,8 +566,11 @@ class _HomeControllerView extends BaseController<HomeControllerView> implements 
     dataList.forEach((dataBeen) {
       imgListStr.add(UrlUtil.BaseUrl+dataBeen.image);
     });
+    _getImageList(imgListStr);
+    if (mounted)
+      setState(() {
 
-
+      });
   }
 
 }

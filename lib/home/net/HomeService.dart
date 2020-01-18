@@ -32,6 +32,7 @@ class HomeService {
   /**
    * getBannerList
    */
+  ///
   void getBannerList(String token, HomeHandler homeHandler) async{
 
     ApiService apiService = RetrofitManager.instance.createApiService();
@@ -43,6 +44,7 @@ class HomeService {
   /**
    * 获取网站公告
    */
+  ///
   void getSystemNoticeList(SystemNoticeHandler homeHandler) async{
 
     ApiService apiService = RetrofitManager.instance.createApiService();
@@ -54,6 +56,7 @@ class HomeService {
   /**
    * 网站活动列表
    */
+  ///
   void getActivityList(ActivePageHandler homeHandler) async{
 
     ApiService apiService = RetrofitManager.instance.createApiService();

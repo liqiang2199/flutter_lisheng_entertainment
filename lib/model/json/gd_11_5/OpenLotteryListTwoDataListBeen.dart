@@ -14,6 +14,7 @@ class OpenLotteryListTwoDataListBeen {
   int createtime;
   String drawTime;
   int drawIssue;//开奖期数
+  String play;// 河内一分彩
 
   OpenLotteryListTwoDataListBeen(this.id, this.lottery_id, this.pre_draw_issue,
       this.is_jiesuan, this.pre_draw_time, this.pre_draw_code, this.createtime);
