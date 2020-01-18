@@ -1,5 +1,6 @@
 
 import 'package:flutter_lisheng_entertainment/model/json/gd_11_5/CalculationBettingNumDataBeen.dart';
+import 'package:flutter_lisheng_entertainment/model/json/gd_11_5/OpenLotteryListDataBeen.dart';
 import 'package:flutter_lisheng_entertainment/net/BaseHandler.dart';
 
 abstract class VietnamHanoiBettingHandler extends BaseHandler{
@@ -14,4 +15,7 @@ abstract class VietnamHanoiBettingHandler extends BaseHandler{
 
   /// 下注成功
   void bettingSuccessResult();
+
+  /// 开奖列表
+  void setAccountChangeRecord(OpenLotteryListDataBeen changeRecordBeen) {}
 }

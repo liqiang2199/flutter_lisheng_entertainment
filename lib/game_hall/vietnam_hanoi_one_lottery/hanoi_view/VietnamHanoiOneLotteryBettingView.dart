@@ -6,6 +6,7 @@ import 'package:flustars/flustars.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_lisheng_entertainment/Util/ColorUtil.dart';
 import 'package:flutter_lisheng_entertainment/Util/DateUtils.dart';
+import 'package:flutter_lisheng_entertainment/Util/EventBusUtil.dart';
 import 'package:flutter_lisheng_entertainment/Util/ImageUtil.dart';
 import 'package:flutter_lisheng_entertainment/Util/RouteUtil.dart';
 import 'package:flutter_lisheng_entertainment/base/BaseController.dart';
@@ -27,6 +28,8 @@ import 'package:flutter_lisheng_entertainment/game_hall/net/vietnam_hanoi/Vietna
 import 'package:flutter_lisheng_entertainment/game_hall/vietnam_hanoi_one_lottery/hanoi_util/DragonTigerSumInterface.dart';
 import 'package:flutter_lisheng_entertainment/game_hall/vietnam_hanoi_one_lottery/hanoi_util/HanoiPlayModelChoiceInterface.dart';
 import 'package:flutter_lisheng_entertainment/game_hall/vietnam_hanoi_one_lottery/hanoi_util/HanoiPlayModelChoiceUtils.dart';
+import 'package:flutter_lisheng_entertainment/model/bus/BettingResultTabBettingRecordBus.dart';
+import 'package:flutter_lisheng_entertainment/model/json/account_change_record/AccountChangeRecordBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/json/gd_11_5/CalculationBettingNumDataBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/json/gd_11_5/CpOpenLotteryDataInfoBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/json/gd_11_5/OpenLotteryListDataBeen.dart';
@@ -51,7 +54,7 @@ class VietnamHanoiOneLotteryBettingView extends StatefulWidget{
 
 class _VietnamHanoiOneLotteryBettingView extends BaseController<VietnamHanoiOneLotteryBettingView> with AutomaticKeepAliveClientMixin implements BettingNumAndOperationHandler
 , BonusAdjustmentInterface,Choose11And5Interface, Choose11And5EditContentHandle, HanoiPlayModelChoiceInterface, VietnamHanoiBettingHandler
-,DragonTigerSumInterface, LotteryNum11Choice5Handler{
+,DragonTigerSumInterface{
 
   /// 彩票数
   List<String> cpNumStr = ["00","01","02","03","04","05","06","07","08","09"];
@@ -147,7 +150,7 @@ class _VietnamHanoiOneLotteryBettingView extends BaseController<VietnamHanoiOneL
     }
     _initGroupCpNum();
 
-    GameService.instance.kjlogList_Betting("15","5",this);
+    VietnamHanoiService.instance.hanoiOneKjLog(this, "1", "5");
     VietnamHanoiService.instance.hanoiOneGetKjTime(this);
   }
 
@@ -229,6 +232,7 @@ class _VietnamHanoiOneLotteryBettingView extends BaseController<VietnamHanoiOneL
     );
   }
 
+  ///_separatedWidget()
   Widget _singleView() {
 
     return new SingleChildScrollView(
@@ -268,10 +272,10 @@ class _VietnamHanoiOneLotteryBettingView extends BaseController<VietnamHanoiOneL
         new Column(
           children: <Widget>[
             // 200
-//            LotteryNumListView(
-//              isLookLotteryList: isLookLotteryList,
-//              openLotteryListBeen: openLotteryListBeen,
-//            ),
+            LotteryNumListView(
+              isLookLotteryList: isLookLotteryList,
+              openLotteryListBeen: openLotteryListBeen,
+            ),
             //187 头部   + 60 标题
             //45 + 24 + 40 + 40 + 15 + 1 = 165(单个)
             _numTypeChoiceView(),
@@ -322,6 +326,7 @@ class _VietnamHanoiOneLotteryBettingView extends BaseController<VietnamHanoiOneL
           key: lotteryNumListStateViewKey,
           isLookLotteryList: isLookLotteryList,
           openLotteryListBeen: openLotteryListBeen,
+          lotteryID: "15",
         ),
         //187 头部   + 60 标题
         //45 + 24 + 40 + 40 + 15 + 1 = 165(单个)
@@ -789,7 +794,7 @@ class _VietnamHanoiOneLotteryBettingView extends BaseController<VietnamHanoiOneL
     Future.delayed(Duration(milliseconds: milliseconds)).then((e) {
       _getOptionalGroupBitsList();
       _getChoiceCpNumList();
-      HanoiPlayModelChoiceUtils.getInstance().getGameHttpBettingNum(currentPlayBeen, choiceCpNumList, groupBitsList, this, isBetting, multiple);
+      HanoiPlayModelChoiceUtils.getInstance().getGameHttpBettingNum(context,currentPlayBeen, choiceCpNumList, groupBitsList, this, isBetting, multiple);
 
     });
   }
@@ -802,7 +807,7 @@ class _VietnamHanoiOneLotteryBettingView extends BaseController<VietnamHanoiOneL
     }
     Future.delayed(Duration(milliseconds: milliseconds)).then((e) {
 
-      HanoiPlayModelChoiceUtils.getInstance().getGameHttpBettingNumDragonTiger(currentPlayBeen, groupBitsList, this, isBetting, multiple);
+      HanoiPlayModelChoiceUtils.getInstance().getGameHttpBettingNumDragonTiger(context,currentPlayBeen, groupBitsList, this, isBetting, multiple);
 
     });
   }
@@ -1100,11 +1105,10 @@ class _VietnamHanoiOneLotteryBettingView extends BaseController<VietnamHanoiOneL
         _countdownTimer = null;
         this.openLotteryTime = "";//00:00:00
         textKey.currentState.onBeginTimeOpenLotteryStatusChange(true, openLotteryDrawIssue);
-        Future.delayed(Duration(milliseconds: 5000)).then((e) {
-
+        VietnamHanoiService.instance.hanoiOneGetKjTime(this);
+        Future.delayed(Duration(milliseconds: 8000)).then((e) {
           // 再次请求开奖时间
-          GameService.instance.kjlogList_Betting("15","5",this);
-          VietnamHanoiService.instance.hanoiOneGetKjTime(this);
+          VietnamHanoiService.instance.hanoiOneKjLog(this, "1", "5");
         });
 
       } else {
@@ -1129,7 +1133,7 @@ class _VietnamHanoiOneLotteryBettingView extends BaseController<VietnamHanoiOneL
     showToast("投注成功");
     choiceCpNumList.clear();//清空这次选中的数字列表
 
-
+    eventBus.fire(BettingResultTabBettingRecordBus());
 
     if (_isSingle) {
       //单式
@@ -1191,21 +1195,16 @@ class _VietnamHanoiOneLotteryBettingView extends BaseController<VietnamHanoiOneL
    */
   ///
   @override
-  void setOpenLotteryListData(OpenLotteryListDataBeen data) {
+  void setAccountChangeRecord(OpenLotteryListDataBeen changeRecordBeen) {
     // 开奖记录列表
     isLookLotteryList = false;
     isLookLotteryTitle = true;
-    var dataList = data.data;
+    var dataList = changeRecordBeen.data;
     var dataListBeen = dataList.data;
     this.openLotteryListBeen = dataListBeen;
     textKey.currentState.openLotteryListBeen = dataListBeen;
     textKey.currentState.onSetRefreshLotteryState(isLookLotteryTitle, playRemark, openLotteryListBeen);
     lotteryNumListStateViewKey.currentState.onSetRefreshLotteryNumList(isLookLotteryList, openLotteryListBeen);
-  }
-
-  @override
-  void setOpenLotteryListInfoData(CpOpenLotteryDataInfoBeen data) {
-
   }
 
 }

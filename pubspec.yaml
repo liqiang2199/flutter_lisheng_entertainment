@@ -29,7 +29,8 @@ dependencies:
   chewie: ^0.9.8+1
   #flutter_screenutil: ^0.6.1
   #轮播Banner
-  flutter_banner_swiper: ^0.1.4
+  #flutter_banner_swiper: ^0.1.4
+  flutter_swiper: ^1.1.6
   flutter_picker: ^1.1.0
   #轮播组件
   carousel_pro: ^1.0.0
@@ -69,6 +70,7 @@ dependencies:
   sqflite: ^1.2.0
   popup_windows: ^0.0.1
   event_bus: ^1.1.0
+  cached_network_image: ^2.0.0
 
 dev_dependencies:
   retrofit_generator: any
@@ -162,6 +164,7 @@ flutter:
     - resource/imgs/icon_gd_11_choice_5.png
     - resource/imgs/icon_often_playcolor_variety.png
     - resource/imgs/icon_choice_add_cp_type.png
+    - resource/imgs/icon_home_bg.png
 
 
   # An image asset can refer to one or more resolution-specific "variants", see

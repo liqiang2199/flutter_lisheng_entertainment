@@ -1,6 +1,6 @@
 class UrlUtil {
 
-  static const BaseUrl = "http://ixc3v4.natappfree.cc/";
+  static const BaseUrl = "http://pisi34.natappfree.cc/";
 
   static const login = "api/login/login";
   /// 退出登录
@@ -107,6 +107,8 @@ class UrlUtil {
   static const hanoiOneGetOrderAdd = "api/Ylhlyfc/orderAdd";
   /// 下期开奖时间
   static const hanoiOneGetKjTime = "api/Ylhlyfc/getKjtime";
+  /// 越南河内1分彩 开奖记录
+  static const hanoiOneKjLog = "api/Ylhlyfc/kjLog";
   /// 单号走势
   static const hanoiOneOddNumber = "api/Ylhlyfc/oddNumber";
   /// 多号走势

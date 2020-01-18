@@ -2,9 +2,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_lisheng_entertainment/Util/Constant.dart';
+import 'package:flutter_lisheng_entertainment/Util/EventBusUtil.dart';
 import 'package:flutter_lisheng_entertainment/base/BaseController.dart';
 import 'package:flutter_lisheng_entertainment/game_hall/cp_11_choice_5/LotteryNum11Choice5Controller.dart';
 import 'package:flutter_lisheng_entertainment/game_hall/cp_11_choice_5/Record11Choice5Controller.dart';
+import 'package:flutter_lisheng_entertainment/model/bus/BettingResultTabBettingRecordBus.dart';
 
 import 'TrendHanoiOneLotteryController.dart';
 import 'hanoi_view/VietnamHanoiOneLotteryBettingView.dart';
@@ -53,6 +55,12 @@ class _VietnamHanoiOneLotteryController extends BaseController<VietnamHanoiOneLo
     // TODO: implement initState
     super.initState();
     initTabPageController();
+
+    eventBus.on<BettingResultTabBettingRecordBus>().listen((event) {
+      if (mTabController != null) {
+        mTabController.animateTo(3);
+      }
+    });
   }
 
   @override
