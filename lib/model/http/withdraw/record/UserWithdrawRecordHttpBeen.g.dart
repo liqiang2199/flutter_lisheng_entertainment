@@ -14,7 +14,7 @@ UserWithdrawRecordHttpBeen _$UserWithdrawRecordHttpBeenFromJson(
     json['status'] as String,
     json['start_date'] as String,
     json['end_date'] as String,
-  );
+  )..page = json['page'] as int;
 }
 
 Map<String, dynamic> _$UserWithdrawRecordHttpBeenToJson(
@@ -22,6 +22,7 @@ Map<String, dynamic> _$UserWithdrawRecordHttpBeenToJson(
     <String, dynamic>{
       'token': instance.token,
       'limit': instance.limit,
+      'page': instance.page,
       'status': instance.status,
       'start_date': instance.start_date,
       'end_date': instance.end_date,

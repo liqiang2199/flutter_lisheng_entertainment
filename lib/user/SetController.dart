@@ -28,7 +28,7 @@ class SetController extends StatefulWidget {
 class _SetController extends BaseController<SetController> implements SetHandler{
 
   bool _lights = false; //switch 开关亮起来
-  bool _lightsSuspension = false; //switch 开关亮起来
+  bool _lightsSuspension = true; //switch 开关亮起来
 
   @override
   Widget build(BuildContext context) {
@@ -58,8 +58,8 @@ class _SetController extends BaseController<SetController> implements SetHandler
         elevation: 5.0,
         child: new Column(
           children: <Widget>[
-            _getSwitchView(StringUtil.fingerprintLogin, ImageUtil.imgFingerprint),
-            _line(),
+//            _getSwitchView(StringUtil.fingerprintLogin, ImageUtil.imgFingerprint),
+//            _line(),
             _getSuspensionSwitchView(StringUtil.lineSuspensionSwitch, ImageUtil.imgSwitch),
           ],
         ),
@@ -87,6 +87,8 @@ class _SetController extends BaseController<SetController> implements SetHandler
   //线路悬浮开关
   _getSuspensionSwitchView(String title, String icon) {
 
+    _lightsSuspension = SpUtil.getBool("LightsSuspension", defValue: true);
+
     return new ListStateItemView(
       title,
       isSwitch: true,
@@ -94,9 +96,10 @@ class _SetController extends BaseController<SetController> implements SetHandler
       isCupertino: _lightsSuspension,
       onChanged: (value){
         //value 是否开启
-        print(title);
+        //print(title);
         setState(() {
           _lightsSuspension = value;
+          SpUtil.putBool("LightsSuspension", value);
         });
       },
     );

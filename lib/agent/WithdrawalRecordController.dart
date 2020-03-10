@@ -162,6 +162,28 @@ class _WithdrawalRecordController extends BaseRefreshController<WithdrawalRecord
             ),
           ),
 
+          new Expanded(child: new Container(color: Color(ColorUtil.bgColor_DFDFDF),
+            width: 1.0, height: 50.0,), flex: 0,),
+
+          new Expanded(
+            flex: 4,
+            child: new Align(
+              alignment: Alignment.center,
+              child: new Container(
+                width: ScreenUtil.getScreenW(context),
+                padding: EdgeInsets.all(15.0),
+                child: new Text(
+                  "状态",
+                  style: TextStyle(
+                    fontSize: 14.0,
+                    color: Color(ColorUtil.whiteColor),
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                color: Color(ColorUtil.butColor),
+              ),
+            ),
+          ),
 
         ],
       ),
@@ -170,6 +192,21 @@ class _WithdrawalRecordController extends BaseRefreshController<WithdrawalRecord
 
 
   Widget _recordBottomList(TeamAccountChangeDataListBeen dataListBeen) {
+
+    String stateStr = "";
+    //1=待审核,2=通过,3=未通过 0为全部
+    var status = dataListBeen.status;
+    switch(status) {
+      case "1":
+        stateStr = "待审核";
+        break;
+      case "2":
+        stateStr = "通过";
+        break;
+      case "3":
+        stateStr = "未通过";
+        break;
+    }
 
     return new Container(
       height: 50.0,
@@ -207,6 +244,28 @@ class _WithdrawalRecordController extends BaseRefreshController<WithdrawalRecord
                 padding: EdgeInsets.all(5.0),
                 child: new Text(
                   dataListBeen.money,
+                  style: TextStyle(
+                    fontSize: 14.0,
+                    color: Color(ColorUtil.textColor_333333),
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            ),
+          ),
+
+          new Expanded(child: new Container(color: Color(ColorUtil.lineColor),
+            width: 1.0, height: 50.0,), flex: 0,),
+
+          new Expanded(
+            flex: 4,
+            child: new Align(
+              alignment: Alignment.center,
+              child: new Container(
+                width: ScreenUtil.getScreenW(context),
+                padding: EdgeInsets.all(5.0),
+                child: new Text(
+                  stateStr,
                   style: TextStyle(
                     fontSize: 14.0,
                     color: Color(ColorUtil.textColor_333333),

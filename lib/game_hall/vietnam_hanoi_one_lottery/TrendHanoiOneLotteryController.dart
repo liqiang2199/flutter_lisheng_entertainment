@@ -76,6 +76,8 @@ class _TrendHanoiOneLotteryController extends BaseController<TrendHanoiOneLotter
   List<TrendHanoiOneLotterySingleReDataBeen> dataTrendOneLottery = new List();
   int _itemCount = 0;
 
+  GlobalKey linePainterKey = GlobalKey();//测试画线
+
 
   @override
   void initState() {
@@ -93,7 +95,6 @@ class _TrendHanoiOneLotteryController extends BaseController<TrendHanoiOneLotter
 
   @override
   Widget build(BuildContext context) {
-    trendPointList.clear();
     screenW = (ScreenUtil.getScreenW(context) - numberOfPeriodsLength) / 10 ;
 
     return new Column(
@@ -173,6 +174,7 @@ class _TrendHanoiOneLotteryController extends BaseController<TrendHanoiOneLotter
           }
           _postHttpTrend();
           numberOfPeriodsNum[index] = true;
+          trendPointList.clear();
           if (mounted)
             setState(() {
 
@@ -205,7 +207,9 @@ class _TrendHanoiOneLotteryController extends BaseController<TrendHanoiOneLotter
       physics: BouncingScrollPhysics(),
       child: new Center(
         child: new CustomPaint(
+          key: linePainterKey,
           foregroundPainter: new LinePainter(trendPointList),
+          isComplex: true,
           child: new ListView(
             shrinkWrap: true,
             physics: new NeverScrollableScrollPhysics(),
@@ -586,12 +590,12 @@ class _TrendHanoiOneLotteryController extends BaseController<TrendHanoiOneLotter
   /// 走势图的头 （单号走势）
   Widget _trendContentView(int color, int index, String title, String qs) {
     if (index != -1) {
-      var randomNext = int.parse(dataTrendOneLottery[index].num);
-      var trendCoordinateBeen = new TrendCoordinateBeen(
-          screenW / 2 + (screenW * (randomNext) + numberOfPeriodsLength ) ,
-          10.0 + ((index) * 20.0));
-      trendCoordinateBeen.indexNum = "$randomNext";
-      trendPointList.add(trendCoordinateBeen);
+//      var randomNext = int.parse(dataTrendOneLottery[index].num);
+//      var trendCoordinateBeen = new TrendCoordinateBeen(
+//          screenW / 2 + (screenW * (randomNext) + numberOfPeriodsLength ) ,
+//          12.0 + ((index) * 25.0));
+//      trendCoordinateBeen.indexNum = "$randomNext";
+//      trendPointList.add(trendCoordinateBeen);
     }
 
 
@@ -805,10 +809,15 @@ class _TrendHanoiOneLotteryController extends BaseController<TrendHanoiOneLotter
     );
   }
 
+  String _currentMoreNumText = "-1";//多号时 表示当前的数字 每行 每列 的数字
+
   List<Widget> _trendMoreContentNumListView(int color, int index, String title,List<String> numStr) {
     List<Widget> _trendMoreContentList = new List();
+    //对应的位置
+    List<int> _trendMoreContentSmallInt = [0,0,0,0,0,0,0,0,0,0];
     var length = numStr.length;
     maximumOutputCurrentList = [-1,-1,-1,-1,-1,-1,-1,-1,-1,-1];
+    int _currentMoreNumPage = 1;
     for (int i = 0; i < 10; i++) {
       bool vi = false;
       String num = "0";
@@ -820,12 +829,30 @@ class _TrendHanoiOneLotteryController extends BaseController<TrendHanoiOneLotter
           occurrencesNum[i]++;//出现次数
           vi = true;
           num = numS;
+          // 对应次数
+          _trendMoreContentSmallInt[i]++;
           //break;
         }
       }
+      print("右上角的数字标志 _currentMoreNumText= $_currentMoreNumText  num = $num");
 
-      _trendMoreContentList.add(_trendContentExpStack(1,index, num,vi));
+      // 多号时 右上角的数字标志
+//      if (vi) {
+//        if (_currentMoreNumText == num) {
+//          _currentMoreNumPage++;
+//        } else {
+//          _currentMoreNumPage = 1;
+//        }
+//      } else {
+//
+//      }
+      _currentMoreNumPage = _trendMoreContentSmallInt[i];
+
+      this._currentMoreNumText = num;
+      _trendMoreContentList.add(_trendContentExpStack(1,index, num, "$_currentMoreNumPage",vi));
     }
+
+    print("右上角的数字标志 ##################################");
 
     // 最大连出
     for ( int mC = 0; mC < maximumOutputCurrentList.length; mC++) {
@@ -834,14 +861,6 @@ class _TrendHanoiOneLotteryController extends BaseController<TrendHanoiOneLotter
       if(maximumOmission[mC] != 0 && maximumOmissionC[mC] < maximumOmission[mC]) {
         maximumOmissionC[mC] = maximumOmission[mC];
       }
-
-//      if(maximumOutputOldList[mC] == parse) {
-//        maximumOutputOld[mC]++;
-//      } else {
-//        if (maximumOutputOldList[mC] <= 1) {
-//          maximumOutputOld[mC] = 1;
-//        }
-//      }
 
       if(parse != -1) {
         maximumOutputOld[mC]++;
@@ -860,24 +879,8 @@ class _TrendHanoiOneLotteryController extends BaseController<TrendHanoiOneLotter
       if (maximumOutputOld[mC] > maximumOutput[mC]) {
         maximumOutput[mC] = maximumOutputOld[mC];
       }
-//      if (parse == -1) {
-//        maximumOutputOldList[mC] = 0;
-//      } else {
-//        maximumOutputOldList[mC] = parse;
-//      }
 
     }
-
-//    for(int maxNum = 0; maxNum < maximumOmission.length; maxNum++) {
-//      if(maximumOmission[maxNum] != 0 && maximumOmissionC[maxNum] < maximumOmission[maxNum]) {
-//        maximumOmissionC[maxNum] = maximumOmission[maxNum];
-//      }
-//      if (i == maxNum) {
-//        maximumOmission[maxNum] = 0;
-//      } else {
-//        maximumOmission[maxNum]++;
-//      }
-//    }
 
     return _trendMoreContentList;
   }
@@ -1235,10 +1238,10 @@ class _TrendHanoiOneLotteryController extends BaseController<TrendHanoiOneLotter
   }
 
   /// 多号走势
-  Widget _trendContentExpStack(int flex, int index, String title, bool visible) {
+  Widget _trendContentExpStack(int flex, int index, String title, String secondText,bool visible) {
 
     return new Expanded(
-      child: _trendContentMore(index, title, visible),
+      child: _trendContentMore(index, title, secondText,visible),
       flex: flex,
     );
   }
@@ -1423,7 +1426,7 @@ class _TrendHanoiOneLotteryController extends BaseController<TrendHanoiOneLotter
   }
 
   /// 多号 每格内容
-  Widget _trendContentMore(int index, String title, bool visible) {
+  Widget _trendContentMore(int index, String title, String secondText, bool visible) {
 
     return new Row(
       children: <Widget>[
@@ -1447,7 +1450,9 @@ class _TrendHanoiOneLotteryController extends BaseController<TrendHanoiOneLotter
                 ),
               ),
 
-              _trendMarkContent(title, visible),
+              _trendMarkContent(title, 30.0, 30.0, 14.0, visible),
+              _trendMarkContentSmall(secondText, 12.0, 12.0, 8.0,
+                  TextUtil.isEmpty(secondText) ? false : int.parse(secondText) >= 2 ? true : false),//多号的小数字
 
             ],
           ),
@@ -1458,14 +1463,14 @@ class _TrendHanoiOneLotteryController extends BaseController<TrendHanoiOneLotter
   }
 
   /// 多选是显示期数
-  Widget _trendMarkContent(String num, bool visible) {
+  Widget _trendMarkContent(String num, double width, double height, double fontSize, bool visible) {
     return new Align(
       alignment: Alignment.center,
       child: new Visibility(
         visible: visible,
         child: new Container(
-          height: 30.0,
-          width: 30.0,
+          height: height,
+          width: width,
           alignment: Alignment.center,
           decoration: new BoxDecoration(
             shape: BoxShape.circle,
@@ -1479,7 +1484,39 @@ class _TrendHanoiOneLotteryController extends BaseController<TrendHanoiOneLotter
           child: new Text(
             num,
             style: TextStyle(
-              fontSize: 14.0,
+              fontSize: fontSize,
+              color: Colors.white,
+            ),
+            textAlign: TextAlign.center,
+          ),
+        ),
+      ),
+    );
+  }
+
+  /// 多选是显示期数 (小标题)
+  Widget _trendMarkContentSmall(String num, double width, double height, double fontSize, bool visible) {
+    return new Align(
+      alignment: Alignment.topRight,
+      child: new Visibility(
+        visible: visible,
+        child: new Container(
+          height: height,
+          width: width,
+          alignment: Alignment.center,
+          decoration: new BoxDecoration(
+            shape: BoxShape.circle,
+            color: Color(ColorUtil.textColor_1396DA),
+            border: new Border.all(
+              color: Color(ColorUtil.textColor_1396DA ),
+              width: 1,
+            ), // 边色与边宽度
+            //borderRadius: new BorderRadius.circular((24.0)), // 圆角度
+          ),
+          child: new Text(
+            num,
+            style: TextStyle(
+              fontSize: fontSize,
               color: Colors.white,
             ),
             textAlign: TextAlign.center,
@@ -1521,6 +1558,17 @@ class _TrendHanoiOneLotteryController extends BaseController<TrendHanoiOneLotter
   void setTrendSingleOneLotteryBeen(List<TrendHanoiOneLotterySingleReDataBeen> re_data) {
     _itemCount = re_data.length;
     dataTrendOneLottery = re_data;
+    if (isLineConnection) {
+      for (int i = 0; i < dataTrendOneLottery.length; i++) {
+        var randomNext = int.parse(dataTrendOneLottery[i].num);
+        var trendCoordinateBeen = new TrendCoordinateBeen(
+            screenW / 2 + (screenW * (randomNext) + numberOfPeriodsLength ) ,
+            12.0 + ((i) * 25.0));
+        trendCoordinateBeen.indexNum = "$randomNext";
+        trendPointList.add(trendCoordinateBeen);
+      }
+    }
+
     if (mounted)
       setState(() {
 
@@ -1547,10 +1595,18 @@ class _TrendHanoiOneLotteryController extends BaseController<TrendHanoiOneLotter
 
   }
 
+  @override
+  void onResumed() {
+    super.onResumed();
+    //当界面可见时 调用
+      _postHttpTrend();
+  }
+
   /// 请求
   _postHttpTrend() {
     //_cleanDataBeen();
     if (isLineConnection) {
+      trendPointList.clear();
       _starLastData();
       GameService.instance.hanoiOneOddNumber(this, _limitStr, _indexPage);///单号
     } else {
@@ -1632,36 +1688,41 @@ class LinePainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
+
+    //_paintH = size.height;
     if (trendPointList.length >= 2) {
-      _paint.color = Color(ColorUtil.butColor_EB303B);
-      canvas.drawCircle(Offset(trendPointList[0].dx, trendPointList[0].dy), 10, _paint);
-      paragraphBuilder.addText(trendPointList[0].indexNum);
-      paragraph = paragraphBuilder.build()
-        ..layout(ui.ParagraphConstraints(width: textWidth));
-      canvas.drawParagraph(paragraph, Offset(trendPointList[0].dx - textWidth /2,trendPointList[0].dy - 5));
 
-      for (int i = 0; i < trendPointList.length - 1; i++) {
+      for (int i = -1; i < trendPointList.length - 1; i++) {
 
-        canvas.drawCircle(Offset(trendPointList[i + 1].dx, trendPointList[i + 1].dy), 10, _paint);
-        print("坐标 数值 ： ${trendPointList[i].indexNum}");
+        double dx1 = trendPointList[i + 1].dx;
+        double dy1 = trendPointList[i + 1].dy;
+
+        _paint.color = Color(ColorUtil.butColor_EB303B);
+        canvas.drawCircle(Offset(dx1, dy1), 10, _paint);
+        print("坐标 数值 ： ${trendPointList[i + 1].indexNum}");
         _paint.color = Color(ColorUtil.whiteColor);
         paragraphBuilder.addText(trendPointList[i + 1].indexNum);
         paragraph = paragraphBuilder.build()
           ..layout(ui.ParagraphConstraints(width: textWidth));
-        canvas.drawParagraph(paragraph, Offset(trendPointList[i + 1].dx - textWidth /2,trendPointList[i + 1].dy - 5));
+        //paragraph.layout(ui.ParagraphConstraints(width: textWidth));
 
-        _paint.color = Color(ColorUtil.butColor_EB303B);
-        canvas.drawLine( Offset(trendPointList[i].dx , trendPointList[i].dy ),
-            Offset(trendPointList[i + 1].dx, trendPointList[i + 1].dy ), _paint);
+        canvas.drawParagraph(paragraph, Offset(dx1 - textWidth /2, dy1 - 5));
+
+        if (i >= 0) {
+          _paint.color = Color(ColorUtil.butColor_EB303B);
+          canvas.drawLine( Offset(trendPointList[i].dx , trendPointList[i].dy ),
+              Offset(dx1, dy1 ), _paint);
+        }
+
 
       }
     }
-
 
   }
 
   @override
   bool shouldRepaint(LinePainter oldDelegate) {
-    return false;
+    return true;
   }
 }
+

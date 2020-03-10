@@ -38,6 +38,7 @@ class RetrofitManager {
     options.responseType = ResponseType.plain;
     _clientDio = new Dio();
     _clientDio.options = options;
+    _clientDio.interceptors.add(LogInterceptor(responseBody: true)); //开启请求日志
   }
 
   _getHeaders () {

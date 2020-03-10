@@ -118,9 +118,10 @@ class _TeamOverviewController extends BaseController<TeamOverviewController> imp
   Widget _personalBalance() {
 
     return new Container(
-      padding: EdgeInsets.only(bottom: 15.0,),
+//      padding: EdgeInsets.only(bottom: 15.0,),
+    alignment: Alignment.center,
       child: new Column(
-        mainAxisAlignment: MainAxisAlignment.end,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           new Text(
             "团队余额(元)",
@@ -131,7 +132,7 @@ class _TeamOverviewController extends BaseController<TeamOverviewController> imp
           ),
 
           new Text(
-            "${data != null ? !TextUtil.isEmpty(data.teamAllMoney) ? data.teamAllMoney : "0.0000": "0.0000"}",
+            "${data != null ? !TextUtil.isEmpty(data.teamAllMoney) ? data.teamAllMoney : "0.00": "0.00"}",
             style: TextStyle(
               fontSize: 20.0,
               color: Color(ColorUtil.butColor_FF9728),
@@ -147,9 +148,9 @@ class _TeamOverviewController extends BaseController<TeamOverviewController> imp
   Widget _personalReturnPoint() {
 
     return new Container(
-      padding: EdgeInsets.only(bottom: 15.0,),
+//      padding: EdgeInsets.only(bottom: 15.0,),
       child: new Column(
-        mainAxisAlignment: MainAxisAlignment.end,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           new Text(
             "团队总人数",
@@ -176,9 +177,9 @@ class _TeamOverviewController extends BaseController<TeamOverviewController> imp
   Widget _onLineNum() {
 
     return new Container(
-      padding: EdgeInsets.only(bottom: 15.0,),
+//      padding: EdgeInsets.only(bottom: 15.0,),
       child: new Column(
-        mainAxisAlignment: MainAxisAlignment.end,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           new Text(
             "在线人数",
@@ -268,13 +269,13 @@ class _TeamOverviewController extends BaseController<TeamOverviewController> imp
               height: 48.0,
             ),
             CommonView().commonLine_NoMargin(context),
-            _teamDetailListItem("充值金额","${data != null ? !TextUtil.isEmpty("${data.teamCzMoney}") ? "${data.teamCzMoney}" : "0.0000": "0.0000"}"),
+            _teamDetailListItem("充值金额","${data != null ? !TextUtil.isEmpty("${data.teamCzMoney}") ? "${data.teamCzMoney}" : "0.00": "0.00"}"),
             CommonView().commonLine_NoMargin(context),
-            _teamDetailListItem("取款金额","${data != null ? !TextUtil.isEmpty("${data.teamTxMoney}") ? "${data.teamTxMoney}" : "0.0000": "0.0000"}"),
+            _teamDetailListItem("取款金额","${data != null ? !TextUtil.isEmpty("${data.teamTxMoney}") ? "${data.teamTxMoney}" : "0.00": "0.00"}"),
             CommonView().commonLine_NoMargin(context),
-            _teamDetailListItem("消费金额","${data != null ? !TextUtil.isEmpty("${data.teamXzMoney}") ? "${data.teamXzMoney}" : "0.0000": "0.0000"}"),
+            _teamDetailListItem("消费金额","${data != null ? !TextUtil.isEmpty("${data.teamXzMoney}") ? "${data.teamXzMoney}" : "0.00": "0.00"}"),
             CommonView().commonLine_NoMargin(context),
-            _teamDetailListItem("派奖金额","${data != null ? !TextUtil.isEmpty("${data.teamZjMoney}") ? "${data.teamZjMoney}" : "0.0000": "0.0000"}"),
+            _teamDetailListItem("派奖金额","${data != null ? !TextUtil.isEmpty("${data.teamZjMoney}") ? "${data.teamZjMoney}" : "0.00": "0.00"}"),
 
           ],
 

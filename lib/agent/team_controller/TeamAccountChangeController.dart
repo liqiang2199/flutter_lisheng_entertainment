@@ -252,6 +252,20 @@ class _TeamAccountChangeController extends BaseRefreshTabController<TeamAccountC
   Widget _recordBottom(TeamAccountChangeDataListBeen changeDataListBeen) {
 
     String type = _getType(changeDataListBeen.type);
+    var symbol = changeDataListBeen.t;//变动金额 符号
+    var money = changeDataListBeen.money;
+    var symbolMoney = "";
+    if (TextUtil.isEmpty(money)) {
+      money = "0.00";
+      symbolMoney = "0.00";
+    } else {
+      if (double.parse(money) > 1) {
+        symbolMoney = "$symbol$money";
+      } else {
+        symbolMoney = "$money";
+      }
+    }
+
 
     return new Offstage(
       /// 控制列表数据是否显示
@@ -270,7 +284,7 @@ class _TeamAccountChangeController extends BaseRefreshTabController<TeamAccountC
                   _recordBottomList("操作类型：", "$type"),
                   //_recordBottomList("业务类型：", "${!TextUtil.isEmpty(changeDataListBeen.relation)? changeDataListBeen.relation : ""}"),
                   _recordBottomList("下单时间：", "${!TextUtil.isEmpty(changeDataListBeen.createtime)? changeDataListBeen.createtime : ""}"),
-                  _recordBottomList("变动金额：", "${!TextUtil.isEmpty(changeDataListBeen.money)? changeDataListBeen.money : ""}"),
+                  _recordBottomList("变动金额：", "${!TextUtil.isEmpty(symbolMoney)? "$symbolMoney" : "0.00"}"),
                   _recordBottomList("金额：", "${!TextUtil.isEmpty(changeDataListBeen.all_money)? changeDataListBeen.all_money : ""}"),
                   _recordBottomList("备注：", "${!TextUtil.isEmpty(changeDataListBeen.remark)? changeDataListBeen.remark : ""}"),
                 ],

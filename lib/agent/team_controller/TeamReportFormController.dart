@@ -107,18 +107,19 @@ class _TeamReportFormController extends BaseRefreshController<TeamReportFormCont
               if (dataReportDataNum != null) {
                 if (dataReportDataNum > 0) {
                   // 有下级
-                  try {
-                    Navigator.of(context).pushAndRemoveUntil(new MaterialPageRoute(
-                      builder: (BuildContext context) => TeamReportFormController(),
-                      settings: RouteSettings(
-                        arguments: {"userIdDL" : "${dataReportData.id}"},
-                      ),
-                    ), (//跳转到主页
-                        // ignore: unrelated_type_equality_checks
-                        Route route) => route == RouteUtil.teamReportFormController);
-                  } catch (e) {
-
-                  }
+//                  try {
+//                    Navigator.of(context).pushAndRemoveUntil(new MaterialPageRoute(
+//                      builder: (BuildContext context) => TeamReportFormController(),
+//                      settings: RouteSettings(
+//                        arguments: {"userIdDL" : "${dataReportData.id}"},
+//                      ),
+//                    ), (//跳转到主页
+//                        // ignore: unrelated_type_equality_checks
+//                        Route route) => route == RouteUtil.teamReportFormController);
+//                  } catch (e) {
+//
+//                  }
+                  Navigator.of(context).pushNamed(RouteUtil.teamReportFormController, arguments: {"userIdDL" : "${dataReportData.id}"});
 
                 } else {
                   _showTip();

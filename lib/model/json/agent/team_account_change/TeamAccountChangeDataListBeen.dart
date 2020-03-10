@@ -9,6 +9,7 @@ class TeamAccountChangeDataListBeen {
   int user_id;
   String t;
   String money;
+  String status;
   String all_money;
   String type;
   String relation;

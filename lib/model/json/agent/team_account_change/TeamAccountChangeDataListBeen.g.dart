@@ -19,7 +19,7 @@ TeamAccountChangeDataListBeen _$TeamAccountChangeDataListBeenFromJson(
     json['createtime'] as String,
     json['remark'] as String,
     json['username'] as String,
-  );
+  )..status = json['status'] as String;
 }
 
 Map<String, dynamic> _$TeamAccountChangeDataListBeenToJson(
@@ -29,6 +29,7 @@ Map<String, dynamic> _$TeamAccountChangeDataListBeenToJson(
       'user_id': instance.user_id,
       't': instance.t,
       'money': instance.money,
+      'status': instance.status,
       'all_money': instance.all_money,
       'type': instance.type,
       'relation': instance.relation,

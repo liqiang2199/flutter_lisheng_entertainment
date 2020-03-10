@@ -1,13 +1,19 @@
+import 'dart:io';
+
 import 'package:flustars/flustars.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_lisheng_entertainment/Util/Constant.dart';
 import 'package:flutter_lisheng_entertainment/Util/bridge/ToastUtilBridge.dart';
+import 'package:flutter_lisheng_entertainment/base/handler/ModifyAvatarHandler.dart';
 import 'package:flutter_lisheng_entertainment/model/http/BaseTokenHttpBeen.dart';
+import 'package:flutter_lisheng_entertainment/model/http/CommonUploadHttpBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/http/GetBettingRecordListHttpBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/http/LoginHttpBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/http/UserReportHttpBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/http/bank/BindBankHttpBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/http/set_cash_pass/ModifyPaypwdHttpBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/http/set_cash_pass/SetPaypwdHttpBeen.dart';
+import 'package:flutter_lisheng_entertainment/model/http/user_info_center/ModifyAvatarHttpBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/http/user_info_center/UserInfoCenterHttpBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/http/user_record/UserAccountChangeRecordHttpBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/http/withdraw/UserWithdrawHttpBeen.dart';
@@ -233,9 +239,10 @@ class UserService extends ToastUtilBridge{
   }
 
   /// 获取提现记录
-  void withdraw(UserWithdrawRecordHandler userWithdrawRecordHandler, String status, String startTime, String endTime) {
+  void withdraw(UserWithdrawRecordHandler userWithdrawRecordHandler, String status, int page, String startTime, String endTime) {
     UserWithdrawRecordHttpBeen withdrawRecordHttpBeen = new UserWithdrawRecordHttpBeen(SpUtil.getString(Constant.TOKEN), "20", status, startTime, endTime);
 
+    withdrawRecordHttpBeen.page = page;
     ApiService apiService = RetrofitManager.instance.createApiService();
     apiService.setHandler(userWithdrawRecordHandler);
     apiService.withdraw(withdrawRecordHttpBeen);
@@ -251,6 +258,27 @@ class UserService extends ToastUtilBridge{
     ApiService apiService = RetrofitManager.instance.createApiService();
     apiService.setHandler(lotteryReportHandler);
     apiService.userReport(userReportHttpBeen);
+  }
+
+  void upload(File imgFile) {
+
+    CommonUploadHttpBeen uploadHttpBeen =  new CommonUploadHttpBeen(imgFile.path);
+    ApiService apiService = RetrofitManager.instance.createApiService();
+    apiService.upload(uploadHttpBeen);
+//    apiService.createNewTaskFromFile(imgFile).catchError((Object err) {
+//      print(err);
+//    });
+
+  }
+
+  /// 修改头像
+  void editAvatar(BuildContext context, ModifyAvatarHandler modifyAvatarHandler , String urlHeadImg) {
+
+    ModifyAvatarHttpBeen uploadHttpBeen = new ModifyAvatarHttpBeen(SpUtil.getString(Constant.TOKEN), urlHeadImg );
+    ApiService apiService = RetrofitManager.instance.createApiService();
+    apiService.setBuildContext(context);
+    apiService.setHandler(modifyAvatarHandler);
+    apiService.editAvatar(uploadHttpBeen);
   }
 
 }

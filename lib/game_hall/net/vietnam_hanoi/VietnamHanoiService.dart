@@ -9,9 +9,10 @@ import 'package:flutter_lisheng_entertainment/model/json/gd_11_5/CalculationBett
 import 'package:flutter_lisheng_entertainment/net/ApiService.dart';
 import 'package:flutter_lisheng_entertainment/net/RetrofitManager.dart';
 
+import '../GameCommonService.dart';
 import 'VietnamHanoiBettingHandler.dart';
 
-class VietnamHanoiService {
+class VietnamHanoiService{
   static VietnamHanoiService get instance => _getInstance();
   static VietnamHanoiService _instance;
 
@@ -73,8 +74,10 @@ class VietnamHanoiService {
    * 后二/直选/复试（计算注数）
    */
   ///
-  void hanoiOneGetGDBets(BuildContext context,VietnamHanoiBettingHandler hanoiBettingHandler, List<String> oneNum, List<String> twoNum,
-      List<String> threeNum, String playID, bool isTwoListCpNum, bool isBetting, int multiple) {
+  void hanoiOneGetGDBets(BuildContext context,VietnamHanoiBettingHandler hanoiBettingHandler
+      , List<String> oneNum, List<String> twoNum,
+      List<String> threeNum, String playID, bool isTwoListCpNum
+      , bool isBetting, int multiple, String colorVarietyID) {
 
     CalculationBettingNumDataBeen calculationBettingNumBeen = new CalculationBettingNumDataBeen(new List(),0,"0.00","0.00","0.00");//注数 和 金额
     if (oneNum.length <= 0) {
@@ -117,13 +120,15 @@ class VietnamHanoiService {
 
     ApiService apiService = RetrofitManager.instance.createApiService();
     apiService.setHandler(hanoiBettingHandler);
-    if (isBetting) {
-      openAccountHttpBeen.multiple = multiple;
-      apiService.setBuildContext(context);
-      apiService.hanoiOneGetOrderAdd(openAccountHttpBeen);
-    } else {
-      apiService.hanoiOneGetGDBets(openAccountHttpBeen);
-    }
+
+    _postLotteryBettingNum(context, openAccountHttpBeen, apiService, isBetting, multiple, colorVarietyID);
+//    if (isBetting) {
+//      openAccountHttpBeen.multiple = multiple;
+//      apiService.setBuildContext(context);
+//      apiService.hanoiOneGetOrderAdd(openAccountHttpBeen);
+//    } else {
+//      apiService.hanoiOneGetGDBets(openAccountHttpBeen);
+//    }
 
 
   }
@@ -137,7 +142,8 @@ class VietnamHanoiService {
    * 前三/前三其他 /和值尾数（计算注数）
    */
   ///
-  void hanoiOneGetGDBetsSpan(BuildContext context,VietnamHanoiBettingHandler hanoiBettingHandler, List<String> oneNum, String playID, bool isBetting, int multiple) {
+  void hanoiOneGetGDBetsSpan(BuildContext context,VietnamHanoiBettingHandler hanoiBettingHandler
+      , List<String> oneNum, String playID, bool isBetting, int multiple, String colorVarietyID) {
     CalculationBettingNumDataBeen calculationBettingNumBeen = new CalculationBettingNumDataBeen(new List(),0,"0.00","0.00","0.00");//注数 和 金额
     if (oneNum.length <= 0) {
       if (isBetting) {
@@ -157,17 +163,19 @@ class VietnamHanoiService {
 
     ApiService apiService = RetrofitManager.instance.createApiService();
     apiService.setHandler(hanoiBettingHandler);
-    if (isBetting) {
-      openAccountHttpBeen.multiple = multiple;
-      apiService.setBuildContext(context);
-      apiService.hanoiOneGetOrderAdd(openAccountHttpBeen);
-    } else {
-      apiService.hanoiOneGetGDBets(openAccountHttpBeen);
-    }
+    _postLotteryBettingNum(context, openAccountHttpBeen, apiService, isBetting, multiple, colorVarietyID);
+//    if (isBetting) {
+//      openAccountHttpBeen.multiple = multiple;
+//      apiService.setBuildContext(context);
+//      apiService.hanoiOneGetOrderAdd(openAccountHttpBeen);
+//    } else {
+//      apiService.hanoiOneGetGDBets(openAccountHttpBeen);
+//    }
   }
 
   /// 随机单式
-  void hanoiOneGetGDBetsRandomSingle(BuildContext context,VietnamHanoiBettingHandler hanoiBettingHandler,String oneNum, String playID, bool isBetting, int multiple) {
+  void hanoiOneGetGDBetsRandomSingle(BuildContext context,VietnamHanoiBettingHandler hanoiBettingHandler
+      ,String oneNum, String playID, bool isBetting, int multiple, String colorVarietyID) {
     CalculationBettingNumDataBeen calculationBettingNumBeen = new CalculationBettingNumDataBeen(new List(),0,"0.00","0.00","0.00");//注数 和 金额
     if (oneNum.length <= 0) {
       if (isBetting) {
@@ -189,18 +197,20 @@ class VietnamHanoiService {
 
     ApiService apiService = RetrofitManager.instance.createApiService();
     apiService.setHandler(hanoiBettingHandler);
-    if (isBetting) {
-      openAccountHttpBeen.multiple = multiple;
-      apiService.setBuildContext(context);
-      apiService.hanoiOneGetOrderAdd(openAccountHttpBeen);
-    } else {
-      apiService.hanoiOneGetGDBets(openAccountHttpBeen);
-    }
+    _postLotteryBettingNum(context, openAccountHttpBeen, apiService, isBetting, multiple, colorVarietyID);
+//    if (isBetting) {
+//      openAccountHttpBeen.multiple = multiple;
+//      apiService.setBuildContext(context);
+//      apiService.hanoiOneGetOrderAdd(openAccountHttpBeen);
+//    } else {
+//      apiService.hanoiOneGetGDBets(openAccountHttpBeen);
+//    }
 
   }
 
   /// 输入单式
-  void hanoiOneGetGDBetsEditSingle(BuildContext context,VietnamHanoiBettingHandler hanoiBettingHandler,List<String> oneNum, String playID, bool isBetting, int multiple) {
+  void hanoiOneGetGDBetsEditSingle(BuildContext context,VietnamHanoiBettingHandler hanoiBettingHandler
+      ,List<String> oneNum, String playID, bool isBetting, int multiple, String colorVarietyID) {
     CalculationBettingNumDataBeen calculationBettingNumBeen = new CalculationBettingNumDataBeen(new List(),0,"0.00","0.00","0.00");//注数 和 金额
     if (oneNum.length <= 0) {
       if (isBetting) {
@@ -219,63 +229,69 @@ class VietnamHanoiService {
 
     ApiService apiService = RetrofitManager.instance.createApiService();
     apiService.setHandler(hanoiBettingHandler);
-    if (isBetting) {
-      openAccountHttpBeen.multiple = multiple;
-      apiService.setBuildContext(context);
-      apiService.hanoiOneGetOrderAdd(openAccountHttpBeen);
-    } else {
-      apiService.hanoiOneGetGDBets(openAccountHttpBeen);
-    }
+    _postLotteryBettingNum(context, openAccountHttpBeen, apiService, isBetting, multiple, colorVarietyID);
+//    if (isBetting) {
+//      openAccountHttpBeen.multiple = multiple;
+//      apiService.setBuildContext(context);
+//      apiService.hanoiOneGetOrderAdd(openAccountHttpBeen);
+//    } else {
+//      apiService.hanoiOneGetGDBets(openAccountHttpBeen);
+//    }
 
   }
 
   /**
    *  任选复式
+   *  如果是定位胆 只要选中一注都能进行投注
    */
   ///
   void hanoiOneGetGDBetsOptional(BuildContext context,VietnamHanoiBettingHandler hanoiBettingHandler, List<String> oneNum
-      , List<String> twoNum, List<String> threeNum, List<String> four_num, List<String> five_num, String playID, bool isBetting, int multiple) {
+      , List<String> twoNum, List<String> threeNum, List<String> four_num, List<String> five_num
+      , String playID, bool isBetting, int multiple, String colorVarietyID) {
     CalculationBettingNumDataBeen calculationBettingNumBeen = new CalculationBettingNumDataBeen(new List(),0,"0.00","0.00","0.00");//注数 和 金额
-    if (oneNum.length <= 0) {
-      if (isBetting) {
-        hanoiBettingHandler.showToast("你还没有选择号码或所选号码不全");
+    if (playID != "206") {
+      if (oneNum.length <= 0) {
+        if (isBetting) {
+          hanoiBettingHandler.showToast("你还没有选择号码或所选号码不全");
+          return;
+        }
+        hanoiBettingHandler.getCalculationBettingNumData(calculationBettingNumBeen);
         return;
       }
-      hanoiBettingHandler.getCalculationBettingNumData(calculationBettingNumBeen);
-      return;
-    }
-    if (twoNum.length <= 0) {
-      if (isBetting) {
-        hanoiBettingHandler.showToast("你还没有选择号码或所选号码不全");
+      if (twoNum.length <= 0) {
+        if (isBetting) {
+          hanoiBettingHandler.showToast("你还没有选择号码或所选号码不全");
+          return;
+        }
+        hanoiBettingHandler.getCalculationBettingNumData(calculationBettingNumBeen);
         return;
       }
-      hanoiBettingHandler.getCalculationBettingNumData(calculationBettingNumBeen);
-      return;
-    }
-    if (threeNum.length <= 0) {
-      if (isBetting) {
-        hanoiBettingHandler.showToast("你还没有选择号码或所选号码不全");
+      if (threeNum.length <= 0) {
+        if (isBetting) {
+          hanoiBettingHandler.showToast("你还没有选择号码或所选号码不全");
+          return;
+        }
+        hanoiBettingHandler.getCalculationBettingNumData(calculationBettingNumBeen);
         return;
       }
-      hanoiBettingHandler.getCalculationBettingNumData(calculationBettingNumBeen);
-      return;
-    }
-    if (four_num.length <= 0) {
-      if (isBetting) {
-        hanoiBettingHandler.showToast("你还没有选择号码或所选号码不全");
+      if (four_num.length <= 0) {
+        if (isBetting) {
+          hanoiBettingHandler.showToast("你还没有选择号码或所选号码不全");
+          return;
+        }
+        hanoiBettingHandler.getCalculationBettingNumData(calculationBettingNumBeen);
         return;
       }
-      hanoiBettingHandler.getCalculationBettingNumData(calculationBettingNumBeen);
-      return;
-    }
-    if (five_num.length <= 0) {
-      if (isBetting) {
-        hanoiBettingHandler.showToast("你还没有选择号码或所选号码不全");
+      if (five_num.length <= 0) {
+        if (isBetting) {
+          hanoiBettingHandler.showToast("你还没有选择号码或所选号码不全");
+          return;
+        }
+        hanoiBettingHandler.getCalculationBettingNumData(calculationBettingNumBeen);
         return;
       }
-      hanoiBettingHandler.getCalculationBettingNumData(calculationBettingNumBeen);
-      return;
     }
+
 
     VietnamHanoiHttpBeen openAccountHttpBeen = new VietnamHanoiHttpBeen();
     openAccountHttpBeen.token = SpUtil.getString(Constant.TOKEN);
@@ -290,14 +306,14 @@ class VietnamHanoiService {
 
     ApiService apiService = RetrofitManager.instance.createApiService();
     apiService.setHandler(hanoiBettingHandler);
-
-    if (isBetting) {
-      openAccountHttpBeen.multiple = multiple;
-      apiService.setBuildContext(context);
-      apiService.hanoiOneGetOrderAdd(openAccountHttpBeen);
-    } else {
-      apiService.hanoiOneGetGDBets(openAccountHttpBeen);
-    }
+    _postLotteryBettingNum(context, openAccountHttpBeen, apiService, isBetting, multiple, colorVarietyID);
+//    if (isBetting) {
+//      openAccountHttpBeen.multiple = multiple;
+//      apiService.setBuildContext(context);
+//      apiService.hanoiOneGetOrderAdd(openAccountHttpBeen);
+//    } else {
+//      apiService.hanoiOneGetGDBets(openAccountHttpBeen);
+//    }
 
   }
 
@@ -306,7 +322,7 @@ class VietnamHanoiService {
    */
   ///
   void hanoiOneGetGDBetsOptionalGroup(BuildContext context,VietnamHanoiBettingHandler hanoiBettingHandler, List<String> oneNum
-      , List<String> bitsNum,  String playID, bool isSingle, bool isBetting, int multiple) {
+      , List<String> bitsNum,  String playID, bool isSingle, bool isBetting, int multiple, String colorVarietyID) {
     CalculationBettingNumDataBeen calculationBettingNumBeen = new CalculationBettingNumDataBeen(new List(),0,"0.00","0.00","0.00");//注数 和 金额
     if (oneNum.length <= 0) {
       if (isBetting) {
@@ -341,13 +357,14 @@ class VietnamHanoiService {
 
     ApiService apiService = RetrofitManager.instance.createApiService();
     apiService.setHandler(hanoiBettingHandler);
-    if (isBetting) {
-      openAccountHttpBeen.multiple = multiple;
-      apiService.setBuildContext(context);
-      apiService.hanoiOneGetOrderAdd(openAccountHttpBeen);
-    } else {
-      apiService.hanoiOneGetGDBets(openAccountHttpBeen);
-    }
+    _postLotteryBettingNum(context, openAccountHttpBeen, apiService, isBetting, multiple, colorVarietyID);
+//    if (isBetting) {
+//      openAccountHttpBeen.multiple = multiple;
+//      apiService.setBuildContext(context);
+//      apiService.hanoiOneGetOrderAdd(openAccountHttpBeen);
+//    } else {
+//      apiService.hanoiOneGetGDBets(openAccountHttpBeen);
+//    }
 
   }
 
@@ -356,7 +373,7 @@ class VietnamHanoiService {
    */
   ///
   void hanoiOneGetGDBetsOptionalSingle(BuildContext context,VietnamHanoiBettingHandler hanoiBettingHandler, List<String> oneNum
-      , List<String> bitsNum,  String playID, bool isBetting, int multiple) {
+      , List<String> bitsNum,  String playID, bool isBetting, int multiple, String colorVarietyID) {
     CalculationBettingNumDataBeen calculationBettingNumBeen = new CalculationBettingNumDataBeen(new List(),0,"0.00","0.00","0.00");//注数 和 金额
     if (oneNum.length <= 0) {
       if (isBetting) {
@@ -386,13 +403,14 @@ class VietnamHanoiService {
 
     ApiService apiService = RetrofitManager.instance.createApiService();
     apiService.setHandler(hanoiBettingHandler);
-    if (isBetting) {
-      openAccountHttpBeen.multiple = multiple;
-      apiService.setBuildContext(context);
-      apiService.hanoiOneGetOrderAdd(openAccountHttpBeen);
-    } else {
-      apiService.hanoiOneGetGDBets(openAccountHttpBeen);
-    }
+    _postLotteryBettingNum(context, openAccountHttpBeen, apiService, isBetting, multiple, colorVarietyID);
+//    if (isBetting) {
+//      openAccountHttpBeen.multiple = multiple;
+//      apiService.setBuildContext(context);
+//      apiService.hanoiOneGetOrderAdd(openAccountHttpBeen);
+//    } else {
+//      apiService.hanoiOneGetGDBets(openAccountHttpBeen);
+//    }
 
   }
 
@@ -400,8 +418,9 @@ class VietnamHanoiService {
    * 新龙虎
    */
   ///
-  void hanoiOneGetGDBetsDragonTiger(BuildContext context,VietnamHanoiBettingHandler hanoiBettingHandler, List<String> dragonTiger,  String playID
-      , bool isBetting, int multiple) {
+  void hanoiOneGetGDBetsDragonTiger(BuildContext context,VietnamHanoiBettingHandler hanoiBettingHandler
+      , List<String> dragonTiger,  String playID
+      , bool isBetting, int multiple, String colorVarietyID) {
     CalculationBettingNumDataBeen calculationBettingNumBeen = new CalculationBettingNumDataBeen(new List(),0,"0.00","0.00","0.00");//注数 和 金额
     if (dragonTiger.length <= 0) {
       if (isBetting) {
@@ -420,47 +439,67 @@ class VietnamHanoiService {
 
     ApiService apiService = RetrofitManager.instance.createApiService();
     apiService.setHandler(hanoiBettingHandler);
+
+    _postLotteryBettingNum(context, openAccountHttpBeen, apiService, isBetting, multiple, colorVarietyID);
+  }
+
+  _postLotteryBettingNum(BuildContext context,VietnamHanoiHttpBeen openAccountHttpBeen, ApiService apiService
+      , bool isBetting, int multiple, String colorVarietyID) {
     if (isBetting) {
       openAccountHttpBeen.multiple = multiple;
       apiService.setBuildContext(context);
-      apiService.hanoiOneGetOrderAdd(openAccountHttpBeen);
-    } else {
-      apiService.hanoiOneGetGDBets(openAccountHttpBeen);
-    }
+      if (colorVarietyID == "${Constant.GAME_NUM_VIETNAME_HANOI}") {
+        apiService.hanoiOneGetOrderAdd(openAccountHttpBeen);
+      }
+      if (colorVarietyID == "${Constant.GAME_NUM_VIETNAME_HANOI_8}") {
+        apiService.hanoi5GetOrderAdd(openAccountHttpBeen);
+      }
 
+    } else {
+      if (colorVarietyID == "${Constant.GAME_NUM_VIETNAME_HANOI}") {
+        apiService.hanoiOneGetGDBets(openAccountHttpBeen);
+      }
+      if (colorVarietyID == "${Constant.GAME_NUM_VIETNAME_HANOI_8}") {
+        apiService.hanoi5GetGDBets(openAccountHttpBeen);
+      }
+
+    }
   }
 
-//  /// 河内一分彩 下注
-//  void hanoiOneGetOrderAdd(VietnamHanoiBettingHandler hanoiBettingHandler, int multiple) {
-//
-//    VietnamHanoiHttpBeen openAccountHttpBeen = new VietnamHanoiHttpBeen();
-//    openAccountHttpBeen.token = SpUtil.getString(Constant.TOKEN);
-//    openAccountHttpBeen.multiple = multiple;
-//
-//    ApiService apiService = RetrofitManager.instance.createApiService();
-//    apiService.setHandler(hanoiBettingHandler);
-//    apiService.hanoiOneGetOrderAdd(openAccountHttpBeen);
-//
-//  }
 
   /// 获取开奖时间
-  void hanoiOneGetKjTime(VietnamHanoiBettingHandler hanoiBettingHandler) {
+  void hanoiOneGetKjTime(VietnamHanoiBettingHandler hanoiBettingHandler
+      , String colorVarietyID) {
 
     BaseTokenHttpBeen openAccountHttpBeen = new BaseTokenHttpBeen(SpUtil.getString(Constant.TOKEN));
 
     ApiService apiService = RetrofitManager.instance.createApiService();
     apiService.setHandler(hanoiBettingHandler);
-    apiService.hanoiOneGetKjTime(openAccountHttpBeen);
+
+    if (colorVarietyID == "${Constant.GAME_NUM_VIETNAME_HANOI}") {
+      apiService.hanoiOneGetKjTime(openAccountHttpBeen);
+    }
+    if (colorVarietyID == "${Constant.GAME_NUM_VIETNAME_HANOI_8}") {
+      apiService.hanoi5GetKjTime(openAccountHttpBeen);
+    }
+
 
   }
 
   /// 越南河内1分彩 开奖记录
-  void hanoiOneKjLog(VietnamHanoiBettingHandler bettingHandler, String page, String limit) {
+  void hanoiOneKjLog(VietnamHanoiBettingHandler bettingHandler, String page
+      , String limit, String colorVarietyID) {
     OpenLotteryListHttpBeen openAccountHttpBeen = new OpenLotteryListHttpBeen(SpUtil.getString(Constant.TOKEN), "", limit, page);
 
     ApiService apiService = RetrofitManager.instance.createApiService();
     apiService.setHandler(bettingHandler);
-    apiService.hanoiOneKjLog(openAccountHttpBeen);
+    if (colorVarietyID == "${Constant.GAME_NUM_VIETNAME_HANOI}") {
+      apiService.hanoiOneKjLog(openAccountHttpBeen);
+    }
+    if (colorVarietyID == "${Constant.GAME_NUM_VIETNAME_HANOI_8}") {
+      apiService.hanoi5KjLog(openAccountHttpBeen);
+    }
+
   }
 
 }

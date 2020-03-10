@@ -6,27 +6,27 @@ import 'package:flutter_lisheng_entertainment/Util/EventBusUtil.dart';
 import 'package:flutter_lisheng_entertainment/base/BaseController.dart';
 import 'package:flutter_lisheng_entertainment/game_hall/cp_11_choice_5/LotteryNum11Choice5Controller.dart';
 import 'package:flutter_lisheng_entertainment/game_hall/cp_11_choice_5/Record11Choice5Controller.dart';
+import 'package:flutter_lisheng_entertainment/game_hall/vietnam_hanoi_one_lottery/TrendHanoiOneLotteryController.dart';
 import 'package:flutter_lisheng_entertainment/model/bus/BettingResultTabBettingRecordBus.dart';
 
-import 'TrendHanoiOneLotteryController.dart';
-import 'hanoi_view/VietnamHanoiOneLotteryBettingView.dart';
+import 'tencent_cent_view/TencentLotteryBettingView.dart';
+
 
 /**
- * 越南 河内一分彩
+ * 腾讯分分彩
  */
 ///
-class VietnamHanoiOneLotteryController extends StatefulWidget{
+class TencentCentLotteryController extends StatefulWidget{
 
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
-    return _VietnamHanoiOneLotteryController();
+    return _TencentCentLotteryController();
   }
 
 }
 
-class _VietnamHanoiOneLotteryController extends BaseController<VietnamHanoiOneLotteryController>
-    with SingleTickerProviderStateMixin, AutomaticKeepAliveClientMixin{
+class _TencentCentLotteryController extends BaseController<TencentCentLotteryController> with SingleTickerProviderStateMixin{
   int _segmentedIndex = 2;//顶部菜单 切换
   // 显示那个 对应的界面 initialPage
   PageController mPageController = PageController(initialPage: 2);
@@ -82,7 +82,7 @@ class _VietnamHanoiOneLotteryController extends BaseController<VietnamHanoiOneLo
     }
 
     return new Scaffold(
-      resizeToAvoidBottomInset: true,
+      resizeToAvoidBottomInset: false,
       backgroundColor: Colors.white,
       appBar: new AppBar(
         centerTitle: true,
@@ -158,17 +158,13 @@ class _VietnamHanoiOneLotteryController extends BaseController<VietnamHanoiOneLo
       return TrendHanoiOneLotteryController();
     }
     if (index == 2) {
-      return VietnamHanoiOneLotteryBettingView(colorVarietyID: _colorVarietyID,);
+      return TencentLotteryBettingView("$_colorVarietyID");
     }
     if (index == 3) {
       return Record11Choice5Controller("$_colorVarietyID");
     }
     return LotteryNum11Choice5Controller("$_colorVarietyID");
   }
-
-  @override
-  // TODO: implement wantKeepAlive
-  bool get wantKeepAlive => true;
 
 
 

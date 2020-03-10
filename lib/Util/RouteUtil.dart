@@ -3,6 +3,7 @@ class RouteUtil {
 
   static const setController = "/SetController";
   static const loginActivity = "/LoginActivity";
+  static const webController = "/WebController";
 
   //充值
   static const rechargeController = "/RechargeController";
@@ -66,6 +67,17 @@ class RouteUtil {
   // 河内一分彩
   static const vietnamHanoiOneLotteryController = "/VietnamHanoiOneLotteryController";
   static const playModeHanoiOneLotteryController = "/PlayModeHanoiOneLotteryController";
+  // 腾讯分分彩
+  static const tencentCentLotteryController = "/TencentCentLotteryController";
+  // 腾讯分分彩 玩法选择
+  static const playModeTencentCentLotteryController = "/PlayModeTencentCentLotteryController";
+
+  // 奇趣一分彩
+  static const oddInterestLotteryController = "/OddInterestLotteryController";
+  // 奇趣一分彩 玩法选择
+  static const playModeOddInterestLotteryController = "/PlayModeOddInterestLotteryController";
+  // 幸运飞艇
+  static const luckyAirshipLotteryController = "/LuckyAirshipLotteryController";
 
 
   // 投注

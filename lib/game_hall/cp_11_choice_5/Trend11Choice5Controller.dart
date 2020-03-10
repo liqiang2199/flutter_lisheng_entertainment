@@ -36,7 +36,7 @@ class _Trend11Choice5Controller extends BaseController<Trend11Choice5Controller>
 
   @override
   Widget build(BuildContext context) {
-    trendPointList.clear();
+    //trendPointList.clear();
     screenW = (ScreenUtil.getScreenW(context) - numberOfPeriodsLength) / 11;
 
     return new Column(
@@ -54,6 +54,7 @@ class _Trend11Choice5Controller extends BaseController<Trend11Choice5Controller>
   /**
    * 走势类型选择
    */
+  ///
   Widget _trendTypeChoice() {
 
     return new Container(
@@ -90,6 +91,7 @@ class _Trend11Choice5Controller extends BaseController<Trend11Choice5Controller>
   /**
    * 期号选择按钮
    */
+  ///
   Widget _butNumberOfPeriods(String title, int index) {
     return new Align(
       alignment: Alignment.center,
@@ -366,26 +368,30 @@ class LinePainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     if (trendPointList.length >= 2) {
-      _paint.color = Color(ColorUtil.butColor_EB303B);
-      canvas.drawCircle(Offset(trendPointList[0].dx, trendPointList[0].dy), 10, _paint);
-      paragraphBuilder.addText(trendPointList[0].indexNum);
-      paragraph = paragraphBuilder.build()
-        ..layout(ui.ParagraphConstraints(width: textWidth));
-      canvas.drawParagraph(paragraph, Offset(trendPointList[0].dx - textWidth /2,trendPointList[0].dy - 5));
 
-      for (int i = 0; i < trendPointList.length - 1; i++) {
+//      _paint.color = Color(ColorUtil.butColor_EB303B);
+//      canvas.drawCircle(Offset(trendPointList[0].dx, trendPointList[0].dy), 10, _paint);
+//      paragraphBuilder.addText(trendPointList[0].indexNum);
+//      paragraph = paragraphBuilder.build()
+//        ..layout(ui.ParagraphConstraints(width: textWidth));
+//      canvas.drawParagraph(paragraph, Offset(trendPointList[0].dx - textWidth /2,trendPointList[0].dy - 5));
 
+      for (int i = -1; i < trendPointList.length - 1; i++) {
+
+        _paint.color = Color(ColorUtil.butColor_EB303B);
         canvas.drawCircle(Offset(trendPointList[i + 1].dx, trendPointList[i + 1].dy), 10, _paint);
-        print("坐标 数值 ： ${trendPointList[i].indexNum}");
+        print("坐标 数值 ： ${trendPointList[i + 1].indexNum}");
         _paint.color = Color(ColorUtil.whiteColor);
         paragraphBuilder.addText(trendPointList[i + 1].indexNum);
         paragraph = paragraphBuilder.build()
           ..layout(ui.ParagraphConstraints(width: textWidth));
         canvas.drawParagraph(paragraph, Offset(trendPointList[i + 1].dx - textWidth /2,trendPointList[i + 1].dy - 5));
 
-        _paint.color = Color(ColorUtil.butColor_EB303B);
-        canvas.drawLine( Offset(trendPointList[i].dx , trendPointList[i].dy ),
-            Offset(trendPointList[i + 1].dx, trendPointList[i + 1].dy ), _paint);
+        if (i >= 0) {
+          _paint.color = Color(ColorUtil.butColor_EB303B);
+          canvas.drawLine( Offset(trendPointList[i].dx , trendPointList[i].dy ),
+              Offset(trendPointList[i + 1].dx, trendPointList[i + 1].dy ), _paint);
+        }
 
       }
     }

@@ -6,6 +6,7 @@ class UserWithdrawRecordHttpBeen {
 
   String token;
   String limit;
+  int page;
   String status;
   String start_date;
   String end_date;
