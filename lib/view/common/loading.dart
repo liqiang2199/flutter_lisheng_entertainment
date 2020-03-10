@@ -5,7 +5,10 @@ import 'package:flutter_lisheng_entertainment/Util/SpaceViewUtil.dart';
 
 class LoadingDialog extends Dialog {
 
-
+  String loadingTip = "加载中";
+  LoadingDialog({String loadTip}) {
+    this.loadingTip = loadTip;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +38,7 @@ class LoadingDialog extends Dialog {
                 SpaceViewUtil.pading_Top_10(),
 
                 Text(
-                    "加载中",
+                  loadingTip,
                   style: TextStyle(
                     fontSize: 14.0
                   ),

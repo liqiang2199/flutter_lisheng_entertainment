@@ -83,9 +83,28 @@ class LotteryTimeNumChildView extends BaseController<LotteryTimeNumView> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
 
-          _openLotteryTime(context),
-          CommonView().commonLine_NoMargin(context),
-          _gameItem(),
+          //_openLotteryTime(context),
+          //CommonView().commonLine_NoMargin(context),
+
+          /// 当前开奖
+          new Stack(
+            alignment: Alignment.center,
+            children: <Widget>[
+              _gameItem(),
+              // 玩法
+              new Container(
+                padding: EdgeInsets.only(right: 15.0,),
+                alignment: Alignment.centerRight,
+                child: new GestureDetector(
+                  onTap: () {
+                    _reMarkDialog(context);
+                  },
+                  child: new Image.asset(ImageUtil.imgBettingCpQuestion, width: 22.0, height: 22.0,),
+                ),
+              ),
+            ],
+          ),
+
           CommonView().commonLine_NoMargin(context),
 
           _dragDownLookLotteryNum(context),
@@ -99,7 +118,7 @@ class LotteryTimeNumChildView extends BaseController<LotteryTimeNumView> {
     this.isOpenLotteryList = isOpenLotteryList;
     this.playRemark = playRemark;
     this.openLotteryListBeen = openLotteryListBeen;
-    isOpeningLottery = false;
+    //isOpeningLottery = false;
     if (mounted)
       setState(() {
 
@@ -149,28 +168,28 @@ class LotteryTimeNumChildView extends BaseController<LotteryTimeNumView> {
 
   int _timerIndex = 1;
 
-  void reGetCountdown() {
-    if (_countdownTimer != null) {
-      return;
-    }
-    _countdownTimer =
-    new Timer.periodic(new Duration(seconds: 1), (timer) {
-
-      if (_timerIndex == 5) {
-        _countdownTimer?.cancel();
-        _countdownTimer = null;
-        //回调请求接口 下期开奖期数和开奖时间
-      }
-      _timerIndex++;
-    });
-  }
+//  void reGetCountdown() {
+//    if (_countdownTimer != null) {
+//      return;
+//    }
+//    _countdownTimer =
+//    new Timer.periodic(new Duration(seconds: 1), (timer) {
+//
+//      if (_timerIndex == 5) {
+//        _countdownTimer?.cancel();
+//        _countdownTimer = null;
+//        //回调请求接口 下期开奖期数和开奖时间
+//      }
+//      _timerIndex++;
+//    });
+//  }
 
   Widget _openLotteryTime(BuildContext context) {
     String titleIssue = "0";
-    if (openLotteryDrawIssue != null || openLotteryDrawIssue.length > 0) {
-      var length = openLotteryDrawIssue.length;
-      titleIssue = "${openLotteryDrawIssue.substring(length - 3, length)}期";
-    }
+//    if (openLotteryDrawIssue != null || openLotteryDrawIssue.length > 0) {
+//      var length = openLotteryDrawIssue.length;
+//      titleIssue = "${openLotteryDrawIssue.substring(length - 3, length)}期";
+//    }
     return new Container(
       padding: EdgeInsets.only(top: 8.0,bottom: 8.0,),
       child: new Stack(
@@ -206,17 +225,17 @@ class LotteryTimeNumChildView extends BaseController<LotteryTimeNumView> {
 
             ],
           ),
-
-          new Container(
-            padding: EdgeInsets.only(right: 15.0,),
-            alignment: Alignment.centerRight,
-            child: new GestureDetector(
-              onTap: () {
-                _reMarkDialog(context);
-              },
-              child: new Image.asset(ImageUtil.imgBettingCpQuestion, width: 22.0, height: 22.0,),
-            ),
-          ),
+//
+//          new Container(
+//            padding: EdgeInsets.only(right: 15.0,),
+//            alignment: Alignment.centerRight,
+//            child: new GestureDetector(
+//              onTap: () {
+//                _reMarkDialog(context);
+//              },
+//              child: new Image.asset(ImageUtil.imgBettingCpQuestion, width: 22.0, height: 22.0,),
+//            ),
+//          ),
 
         ],
       ),
@@ -335,8 +354,8 @@ class LotteryTimeNumChildView extends BaseController<LotteryTimeNumView> {
   Widget _cqNumView(String num) {
 
     return new Container(
-      height: 25.0,
-      width: 25.0,
+      height: 22.0,
+      width: 22.0,
       alignment: Alignment.center,
       margin: EdgeInsets.only(right: 10.0, top: 8.0),
       decoration: new BoxDecoration(
@@ -359,6 +378,7 @@ class LotteryTimeNumChildView extends BaseController<LotteryTimeNumView> {
   /**
    * 向下拖动查看开奖号码
    */
+  ///
   Widget _dragDownLookLotteryNum(BuildContext context) {
     return new Visibility(
       visible: isOpenLotteryList,

@@ -6,8 +6,11 @@ import 'package:flutter_lisheng_entertainment/Util/ImageUtil.dart';
 import 'package:flutter_lisheng_entertainment/Util/SpaceViewUtil.dart';
 import 'package:flutter_lisheng_entertainment/Util/StringUtil.dart';
 import 'package:flutter_lisheng_entertainment/agent/net/AgentService.dart';
+import 'package:flutter_lisheng_entertainment/agent/net/OpenAccountIntervalHandler.dart';
 import 'package:flutter_lisheng_entertainment/agent/net/OrdinaryOpenAccountHandler.dart';
 import 'package:flutter_lisheng_entertainment/base/BaseController.dart';
+import 'package:flutter_lisheng_entertainment/game_hall/net/GameService.dart';
+import 'package:flutter_lisheng_entertainment/model/json/agent/open_account_interval/OpenAccountIntervalBeen.dart';
 import 'package:flutter_lisheng_entertainment/view/SemicircleButView.dart';
 import 'package:flutter_lisheng_entertainment/view/view_interface/SemicircleButCallBack.dart';
 
@@ -21,7 +24,8 @@ class OrdinaryOpenAccountCenterView extends StatefulWidget {
 
 }
 
-class _OrdinaryOpenAccountCenterView extends BaseController<OrdinaryOpenAccountCenterView> with SemicircleButCallBack implements OrdinaryOpenAccountHandler{
+class _OrdinaryOpenAccountCenterView extends BaseController<OrdinaryOpenAccountCenterView>
+    with SemicircleButCallBack implements OrdinaryOpenAccountHandler, OpenAccountIntervalHandler{
 
   int groupValue = 1;
 
@@ -42,6 +46,17 @@ class _OrdinaryOpenAccountCenterView extends BaseController<OrdinaryOpenAccountC
   String _rePass;
   String _ratio;
   String accountType = "1";//账户类型
+  // 开户区间
+  String openAccountCenter = StringUtil.openAccountCenterEditReturnTip;
+  String _maxRatio = "";// 最大开户区间
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    AgentService.instance.openAccount(this);
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -51,15 +66,15 @@ class _OrdinaryOpenAccountCenterView extends BaseController<OrdinaryOpenAccountC
 
         _openAccountType(),
 
-        _editOpenAccount("请输入用户名", ImageUtil.imgOpenAccountEdit, _getAgentAccount, accountController, false),
-        _editTip(StringUtil.openAccountCenterEditTip),
+//        _editOpenAccount("请输入用户名", ImageUtil.imgOpenAccountEdit, _getAgentAccount, accountController, false),
+//        _editTip(StringUtil.openAccountCenterEditTip),
         _editOpenAccount("请输入登录账号", ImageUtil.imgOpenAccountEdit, _getAgentLoginAccount, loginAccountController, false),
         _editTip(StringUtil.openAccountCenterEditTip),
         _editOpenAccount("请输入密码", ImageUtil.imgModify, _getAgentPass, passController, true),
         _editTip(StringUtil.openAccountCenterEditTip),
         _editOpenAccount("请再次输入密码", ImageUtil.imgModify, _getAgentRePass, rePassController, true),
         _editOpenAccount("请输入返点", ImageUtil.imgReturnPoint, _getAgentRatio, ratioController, false),
-        _editTip(StringUtil.openAccountCenterEditReturnTip),
+        _editTip(openAccountCenter),
 
         new Container(
           margin: EdgeInsets.only(left: 25.0, right: 25.0, top: 25.0),
@@ -205,7 +220,7 @@ class _OrdinaryOpenAccountCenterView extends BaseController<OrdinaryOpenAccountC
   @override
   void onPressedBut() {
     AgentService.instance.postOrdinaryOpenAccount(this, accountType
-        , _loginAccount, _accountName, _pass, _rePass, _ratio);
+        , _loginAccount, "", _pass, _rePass, _ratio, _maxRatio);
   }
 
   @override
@@ -224,6 +239,15 @@ class _OrdinaryOpenAccountCenterView extends BaseController<OrdinaryOpenAccountC
       accountType = "1";
       setUpdateTypeChoice(1);
     }
+  }
+
+  @override
+  void setOpenAccountIntervalBeen(OpenAccountIntervalBeen been) {
+    _maxRatio = been.data.max_ratio;
+    openAccountCenter = "开户区间：0.0-${been.data.max_ratio}";
+    setState(() {
+
+    });
   }
 
 }

@@ -5,7 +5,9 @@ import 'package:flutter_lisheng_entertainment/Util/Constant.dart';
 import 'package:flutter_lisheng_entertainment/Util/ImageUtil.dart';
 import 'package:flutter_lisheng_entertainment/Util/RouteUtil.dart';
 import 'package:flutter_lisheng_entertainment/Util/StringUtil.dart';
-import 'package:flutter_lisheng_entertainment/base/BaseController.dart';
+import 'package:flutter_lisheng_entertainment/base/BaseChoicePhotoController.dart';
+import 'package:flutter_lisheng_entertainment/base/handler/ModifyAvatarHandler.dart';
+import 'package:flutter_lisheng_entertainment/user/net/UserService.dart';
 import 'package:flutter_lisheng_entertainment/view/ListStateItemView.dart';
 import 'package:flutter_lisheng_entertainment/view/common/CommonView.dart';
 
@@ -19,7 +21,7 @@ class PersonalController extends StatefulWidget{
 
 }
 
-class _PersonalController extends BaseController<PersonalController> {
+class _PersonalController extends BaseChoicePhotoController<PersonalController> implements ModifyAvatarHandler {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
@@ -149,24 +151,29 @@ class _PersonalController extends BaseController<PersonalController> {
   /// 顶部头像
   Widget _headView() {
 
-    return new Center(
-      child: new Container(
-        padding: EdgeInsets.only(top: 10.0,),
-        child: new Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
+    return new GestureDetector(
+      onTap: () {
+        openModalBottomSheet();
+      },
+      child: new Center(
+        child: new Container(
+          padding: EdgeInsets.only(top: 10.0,),
+          child: new Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
 
-            CommonView().clipHeadImg(),
-            new Text(
-              SpUtil.getString(Constant.USER_NAME),
-              style: new TextStyle(
-                fontSize: 14.0,
-                color: Color(ColorUtil.textColor_333333),
+              CommonView().clipHeadImg(),
+              new Text(
+                SpUtil.getString(Constant.USER_NAME),
+                style: new TextStyle(
+                  fontSize: 14.0,
+                  color: Color(ColorUtil.textColor_333333),
+                ),
               ),
-            ),
 
 
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -285,5 +292,19 @@ class _PersonalController extends BaseController<PersonalController> {
 
     return SpUtil.getBool(Constant.PAY_SET);
   }
+
+  @override
+  void upLoadFileSuccessful(String urlImg) {
+    UserService.instance.editAvatar(context, this, urlImg);
+  }
+
+  @override
+  void setModifyHeadImgUrl(String urlHeadImg) {
+    setState(() {
+
+    });
+  }
+
+
 
 }

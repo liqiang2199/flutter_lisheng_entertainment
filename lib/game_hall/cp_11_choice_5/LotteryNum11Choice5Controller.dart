@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_lisheng_entertainment/Util/ColorUtil.dart';
+import 'package:flutter_lisheng_entertainment/Util/Constant.dart';
 import 'package:flutter_lisheng_entertainment/base/BaseRefreshController.dart';
 import 'package:flutter_lisheng_entertainment/game_hall/net/GameService.dart';
 import 'package:flutter_lisheng_entertainment/game_hall/net/game_gd_11_5/LotteryNum11Choice5Handler.dart';
@@ -12,8 +13,9 @@ import 'package:flutter_lisheng_entertainment/model/json/gd_11_5/OpenLotteryList
 import 'package:flutter_lisheng_entertainment/view/common/CommonView.dart';
 
 /**
- * 11 选 5 开奖列表
+ * 开奖记录
  */
+///
 class LotteryNum11Choice5Controller extends StatefulWidget {
 
   String colorVariety;
@@ -54,13 +56,36 @@ class _LotteryNum11Choice5Controller extends BaseRefreshController<LotteryNum11C
   @override
   void onRefreshData() {
     page = 1;
-//    if (colorVariety == "15") {
-//      /// 河内一分彩
-//      GameService.instance.hanoi_kjlogList("$page", this);
-//    } else {
-//      GameService.instance.kjlogList(colorVariety,"$page", this);
-//    }
-    GameService.instance.kjlogList(colorVariety,"$page", this);
+
+    switch(colorVariety) {
+      case "${Constant.GAME_NUM_VIETNAME_HANOI}":
+      case "${Constant.GAME_NUM_VIETNAME_HANOI_8}":// 河内 5分彩
+        /// 河内一分彩
+        GameService.instance.hanoi_kjlogList("$page", this, colorVariety);
+        break;
+      case "${Constant.GAME_NUM_TENCENT}":// 腾讯分分彩
+      case "${Constant.GAME_NUM_5_TENCENT}"://5分彩
+      case "${Constant.GAME_NUM_10_TENCENT}"://10分彩
+        GameService.instance.tencent_kjlogList("$page", this, colorVariety);
+        break;
+      case "${Constant.GAME_NUM_ODD_INTEREST}":// 奇趣一分彩
+      case "${Constant.GAME_NUM_ODD_INTEREST_4}":// 奇趣5分彩
+      case "${Constant.GAME_NUM_ODD_INTEREST_5}":// 奇趣10分彩
+
+      case "${Constant.GAME_NUM_LUCKY_AIRSHIP_13}":// 幸运飞艇
+        GameService.instance.oddInterest_kjlogList("$page", this, colorVariety);
+        break;
+      default:
+        GameService.instance.kjlogList(colorVariety,"$page", this);
+        break;
+    }
+  }
+
+  @override
+  void onResumed() {
+    // TODO: implement onResumed
+    super.onResumed();
+    //onRefreshData();
   }
 
   @override
@@ -159,8 +184,10 @@ class _LotteryNum11Choice5Controller extends BaseRefreshController<LotteryNum11C
   ///
   Widget _num(String title) {
     var length = title.length;
-    if (colorVariety == "15") {
-      /// 河内一分彩
+    if (colorVariety == "15" || colorVariety == "${Constant.GAME_NUM_TENCENT}"
+        || colorVariety == "${Constant.GAME_NUM_5_TENCENT}"
+        || colorVariety == "${Constant.GAME_NUM_10_TENCENT}") {
+      /// 河内一分彩 腾讯 1 ，5 ，10 分彩
       title = "${title.substring(length - 4, length)}期";
     } else {
       /// 11 选 5

@@ -1,10 +1,12 @@
 import 'package:flustars/flustars.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_lisheng_entertainment/Util/ColorUtil.dart';
 import 'package:flutter_lisheng_entertainment/Util/ImageUtil.dart';
 import 'package:flutter_lisheng_entertainment/Util/RouteUtil.dart';
 import 'package:flutter_lisheng_entertainment/Util/SpaceViewUtil.dart';
 import 'package:flutter_lisheng_entertainment/Util/StringUtil.dart';
+import 'package:flutter_lisheng_entertainment/WebController.dart';
 import 'package:flutter_lisheng_entertainment/base/BaseController.dart';
 import 'package:flutter_lisheng_entertainment/dialog/LineSwitchingDialog.dart';
 import 'package:flutter_lisheng_entertainment/model/json/login/LoginBeen.dart';
@@ -53,6 +55,8 @@ class _LoginActivity extends BaseController<LoginActivity> implements LoginHandl
   /// 移动的坐标
   double topDistance = 0.0;
   double leftDistance = 0.0;
+  /// 点击退出的时间
+  DateTime lastPopTime;
 
   @override
   void initState() {
@@ -66,23 +70,19 @@ class _LoginActivity extends BaseController<LoginActivity> implements LoginHandl
         });
       });
     _videoPlayerController.setLooping(true);
+
+    ScreenUtil.getInstance();
+    SpUtil.getInstance();
+    Future.delayed(Duration(milliseconds: 1000)).then((e) {
+      phone = SpUtil.getString("LoginPhone");
+      phoneController.text = phone;
+
+      password = SpUtil.getString("LoginPassWord");
+      passController.text = password;
+    });
+
   }
 
-//  @override
-//  void deactivate() {
-//    // TODO: implement deactivate
-//
-//    if (_chewieController != null && _chewieController.isLive) {
-//      if (_videoPlayerController != null) {
-//        _videoPlayerController.dispose();
-//      }
-//      if (_chewieController != null) {
-//        _chewieController.dispose();
-//      }
-//    }
-//    super.deactivate();
-//
-//  }
 
   @override
   void dispose() {
@@ -97,50 +97,77 @@ class _LoginActivity extends BaseController<LoginActivity> implements LoginHandl
   }
 
   @override
+  void onResumed() {
+    // TODO: implement onResumed
+    super.onResumed();
+    if (_videoPlayerController != null) {
+      _videoPlayerController.play();
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    ScreenUtil.getInstance();
-    SpUtil.getInstance();
 
     leftDistance = ScreenUtil.getScreenW(context) - 60;
 
-    return new Scaffold(
-      resizeToAvoidBottomPadding: false,
-      body: new Center(
-        child: new Stack(
-          fit: StackFit.expand,
-          children: <Widget>[
-            new Container(
-              child: _videoView(),
-              height: ScreenUtil.getScreenH(context),
-            ),
-            //_chenViewVideo(),
-
-            new Column(
+    return new WillPopScope(
+        child: new Scaffold(
+          resizeToAvoidBottomPadding: false,
+          body: new Center(
+            child: new Stack(
+              fit: StackFit.expand,
               children: <Widget>[
-                new Expanded(child: _loginTopLogo(), flex: 3,),
-                new Expanded(child: _loginView(), flex: 6,),
-                _customView(),
+                new Container(
+                  child: _videoView(),
+                  height: ScreenUtil.getScreenH(context),
+                ),
+                //_chenViewVideo(),
 
+                new Column(
+                  children: <Widget>[
+                    new Expanded(child: _loginTopLogo(), flex: 3,),
+                    new Expanded(child: _loginView(), flex: 6,),
+                    _customView(),
+
+
+                  ],
+                ),
+
+                _lineChage(),
 
               ],
             ),
-
-            _lineChage(),
-
-          ],
+          ),
         ),
-      ),
+        onWillPop: () async{
+          // 点击返回键的操作
+          if(lastPopTime == null || DateTime.now().difference(lastPopTime) > Duration(seconds: 2)){
+            lastPopTime = DateTime.now();
+            showToast("再按一次退出");
+          }else{
+            lastPopTime = DateTime.now();
+            // 退出app
+            await SystemChannels.platform.invokeMethod('SystemNavigator.pop');
+          }
+          return;
+        }
     );
   }
+
   GlobalKey<LineChangeStateView> textKey = GlobalKey ();
   /// 线路切换
   Widget _lineChage() {
 
-    return new LineChangeView(
-      textKey,
-      topDistance: topDistance,
-      leftDistance: leftDistance,
+    bool lightsSuspension = SpUtil.getBool("LightsSuspension", defValue: false);
+
+    return new Visibility(
+      visible: lightsSuspension,
+      child: new LineChangeView(
+        textKey,
+        topDistance: topDistance,
+        leftDistance: leftDistance,
+      ),
     );
   }
 
@@ -272,14 +299,17 @@ class _LoginActivity extends BaseController<LoginActivity> implements LoginHandl
 
   _phoneText(String str) {
     phone = str;
+    SpUtil.putString("LoginPhone", phone);
   }
 
   _passwordText(String str) {
     password = str;
+    SpUtil.putString("LoginPassWord", password);
   }
 
   ///返回 控件列表
   Widget _listLoginView() {
+
     return new Container(
       padding: EdgeInsets.only(left: 15.0,right: 15.0, top: 15.0),
       width: 326.0,
@@ -308,6 +338,8 @@ class _LoginActivity extends BaseController<LoginActivity> implements LoginHandl
       child: new RaisedButton(onPressed: (){
         //跳转首页
 //        Navigator.pushNamedAndRemoveUntil(context, RouteUtil.homeController);
+
+        print(" SpUtil.LoginPassWord = ${SpUtil.getString("LoginPassWord")}");
 
         UserService.instance.login(phone, password, this);
 
@@ -355,31 +387,48 @@ class _LoginActivity extends BaseController<LoginActivity> implements LoginHandl
   //联系客服
   Widget _customView() {
     
-    return new Center(
-      child: new Container(
-        alignment: Alignment.center,
-        padding: EdgeInsets.only(bottom: 70.0),
-        child: new Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
+    return new GestureDetector(
+      onTap: () {
+        // 联系客服
+        _videoPlayerController.value.isPlaying
+            ? _videoPlayerController.pause()
+            : _videoPlayerController.play();
+        //Navigator.of(context).pushNamed(RouteUtil.webController);
+        Navigator.push(context, MaterialPageRoute(builder: (context) {
+          return WebController();
+        }))
+            .then((value){
+          _videoPlayerController.value.isPlaying
+              ? _videoPlayerController.pause()
+              : _videoPlayerController.play();
+        });
+      },
+      child: new Center(
+        child: new Container(
+          alignment: Alignment.center,
+          padding: EdgeInsets.only(bottom: 70.0),
+          child: new Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
 
-            new Image.asset(ImageUtil.imgLoginCustom, width: 20.0, height: 20.0,),
+              new Image.asset(ImageUtil.imgLoginCustom, width: 20.0, height: 20.0,),
 
-            SpaceViewUtil.pading_Left(5.0),
-//
-            new Expanded(
-              flex: 0,
-                child: new Text(
-                  StringUtil.customContact,
-                  style: new TextStyle(
-                      fontSize: 12.0, color: Color(ColorUtil.whiteColor)
-                  ),
-                )
-            ),
+              SpaceViewUtil.pading_Left(5.0),
 
-          ],
+              new Expanded(
+                  flex: 0,
+                  child: new Text(
+                    StringUtil.customContact,
+                    style: new TextStyle(
+                        fontSize: 12.0, color: Color(ColorUtil.whiteColor)
+                    ),
+                  )
+              ),
+
+            ],
+          ),
         ),
       ),
     );

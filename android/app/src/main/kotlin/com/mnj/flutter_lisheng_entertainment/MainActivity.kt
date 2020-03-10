@@ -13,12 +13,15 @@ import io.flutter.app.FlutterActivity
 import io.flutter.app.FlutterPluginRegistry
 import io.flutter.plugin.common.PluginRegistry
 import io.flutter.plugins.GeneratedPluginRegistrant
+import io.flutter.plugins.imagepicker.ImagePickerPlugin
 import io.flutter.plugins.packageinfo.PackageInfoPlugin
 import io.flutter.plugins.pathprovider.PathProviderPlugin
 import io.flutter.plugins.share.SharePlugin
 import io.flutter.plugins.sharedpreferences.SharedPreferencesPlugin
 import io.flutter.plugins.videoplayer.VideoPlayerPlugin
 import io.github.ponnamkarthik.toast.fluttertoast.FluttertoastPlugin
+import vn.hunghd.flutter.plugins.imagecropper.ImageCropperPlugin
+import io.flutter.plugins.webviewflutter.WebViewFlutterPlugin;
 
 class MainActivity: FlutterActivity() {
 
@@ -39,6 +42,9 @@ class MainActivity: FlutterActivity() {
         SharePlugin.registerWith(registrarFor("io.flutter.plugins.share.SharePlugin"))
         VideoPlayerPlugin.registerWith(registrarFor("io.flutter.plugins.videoplayer.VideoPlayerPlugin"))
         SqflitePlugin.registerWith(registrarFor("com.tekartik.sqflite.SqflitePlugin"))
+        ImagePickerPlugin.registerWith(registrarFor("io.flutter.plugins.imagepicker.ImagePickerPlugin"))
+        ImageCropperPlugin.registerWith(registrarFor("vn.hunghd.flutter.plugins.imagecropper.ImageCropperPlugin"))
+        WebViewFlutterPlugin.registerWith(registrarFor("io.flutter.plugins.webviewflutter.WebViewFlutterPlugin"))
 
         val vto = flutterView.viewTreeObserver
         vto.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {

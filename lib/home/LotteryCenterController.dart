@@ -62,6 +62,7 @@ class _LotteryCenterController extends BaseRefreshController<LotteryCenterContro
   Widget _listLotteryItem () {
 
     return ListView.builder(
+      shrinkWrap: true,
       itemBuilder: (c, i) => Container(
         //height: 223.0,
         margin: EdgeInsets.only(left: 15.0, right: 15.0),
@@ -69,13 +70,7 @@ class _LotteryCenterController extends BaseRefreshController<LotteryCenterContro
           onTap: () {
             //
           },
-          child: new Column(
-            children: <Widget>[
-              //buildItemWidget(context,i),
-              _listItem(i),
-
-            ],
-          ),
+          child: _listItem(i),
         ),
       ),
       //itemExtent: 200.0,
@@ -89,6 +84,7 @@ class _LotteryCenterController extends BaseRefreshController<LotteryCenterContro
       child: new Column(
         children: <Widget>[
 
+//          _numStrList(dataLotteryCenterList[index]),
           _listTopView(index),
           CommonView().commonLine_NoMargin(context),
           _listBottom(index),
@@ -101,36 +97,38 @@ class _LotteryCenterController extends BaseRefreshController<LotteryCenterContro
   Widget _listTopView(int index) {
 
     return new Container(
-      padding: EdgeInsets.only(left: 10.0, right: 10.0),
-      height: 95.0,
+      padding: EdgeInsets.only(left: 10.0, right: 10.0, top: 10.0, bottom: 10.0),
+//      height: 95.0,
       child: new Row(
         children: <Widget>[
 
           Image.asset(ImageUtil.imgLotteryCenterCqSSC, width: 67.0, height: 67.0,),
 
-          new Container(
-            margin: EdgeInsets.only(left: 10.0, right: 10.0,),
-            child: new Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
+          new Expanded(
+              child: new Container(
+                margin: EdgeInsets.only(left: 10.0, right: 10.0,),
+                child: new Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
 
-                new Align(
-                  child: new Text(
-                    dataLotteryCenterList[index].name,
-                    style: TextStyle(
-                      fontSize: 14.0,
-                      color: Color(ColorUtil.textColor_333333),
+                    new Align(
+                      child: new Text(
+                        dataLotteryCenterList[index].name,
+                        style: TextStyle(
+                          fontSize: 14.0,
+                          color: Color(ColorUtil.textColor_333333),
+                        ),
+                        textAlign: TextAlign.start,
+                      ),
+                      alignment: Alignment.centerLeft,
                     ),
-                    textAlign: TextAlign.start,
-                  ),
-                  alignment: Alignment.centerLeft,
+
+                    _numStrList(dataLotteryCenterList[index]),
+
+                  ],
                 ),
-
-                _numStrList(dataLotteryCenterList[index]),
-
-              ],
-            ),
+              ),
           ),
 
         ],
@@ -146,8 +144,27 @@ class _LotteryCenterController extends BaseRefreshController<LotteryCenterContro
       numViewList.add(_cqNumView(valueNum));
 
     });
-    return new Row(
-      children: numViewList,
+//    return new Row(
+//      children: numViewList,
+//    );
+
+//    return new Wrap(
+//      children: numViewList,
+//    );
+
+    return new Container(
+      child: new GridView.count(
+        physics: new NeverScrollableScrollPhysics(),
+        crossAxisCount: 6,
+        padding: const EdgeInsets.only(top:0.0,),
+        primary: false,
+        mainAxisSpacing: 0.0,//竖向间距
+        crossAxisSpacing: 0.0,//横向间距
+        childAspectRatio: 0.9,
+        children: numViewList,
+        shrinkWrap: true,
+
+      ),
     );
   }
 
@@ -156,8 +173,9 @@ class _LotteryCenterController extends BaseRefreshController<LotteryCenterContro
     return new Container(
       height: 25.0,
       width: 25.0,
-      margin: EdgeInsets.only(right: 10.0, top: 15.0),
-      padding: EdgeInsets.only(top: 3.0),
+      alignment: Alignment.center,
+      margin: EdgeInsets.only(right: 10.0),
+//      padding: EdgeInsets.only(top: 3.0),
       decoration: new BoxDecoration(
         shape: BoxShape.circle,
         color: Color(ColorUtil.bgColor_E7242C),

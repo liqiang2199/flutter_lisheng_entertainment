@@ -54,10 +54,6 @@ class LotteryNumListStateView extends BaseController<LotteryNumListView> {
   Widget build(BuildContext context) {
     // TODO: implement build
 
-//    if (openLotteryListBeen != null && openLotteryListBeen.length > 0) {
-//      openLotteryListBeen.removeAt(0);
-//    }
-
     return new Visibility(
         visible: isLookLotteryList,
         child: new Container(
@@ -135,13 +131,13 @@ class LotteryNumListStateView extends BaseController<LotteryNumListView> {
       title = "${title.substring(length - 2, length)}期";
     }
     return new Container(
-      margin: EdgeInsets.only(right: 10.0, top: 15.0),
+      margin: EdgeInsets.only(right: 10.0, top: 3.0),
       alignment: Alignment.center,
       child: new Text(
         title,
         style: new TextStyle(
           color: Color(ColorUtil.textColor_333333),
-          fontSize: 14.0,
+          fontSize: 12.0,
         ),
       ),
     );
@@ -149,7 +145,7 @@ class LotteryNumListStateView extends BaseController<LotteryNumListView> {
 
   Widget _numLotteryPlay(String title) {
     return new Container(
-      margin: EdgeInsets.only(right: 10.0, top: 15.0),
+      margin: EdgeInsets.only(right: 10.0, top: 3.0),
       alignment: Alignment.center,
       child: new Text(
         title,
@@ -177,10 +173,10 @@ class LotteryNumListStateView extends BaseController<LotteryNumListView> {
   Widget _cqNumView(String num) {
 
     return new Container(
-      height: 25.0,
-      width: 25.0,
+      height: 22.0,
+      width: 22.0,
       alignment: Alignment.center,
-      margin: EdgeInsets.only(right: 10.0, top: 15.0),
+      margin: EdgeInsets.only(right: 10.0, top: 3.0),
       decoration: new BoxDecoration(
         shape: BoxShape.circle,
         color: Color(ColorUtil.bgColor_E7242C),

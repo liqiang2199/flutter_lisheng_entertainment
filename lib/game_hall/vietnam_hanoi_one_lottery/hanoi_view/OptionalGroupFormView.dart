@@ -4,8 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_lisheng_entertainment/base/BaseController.dart';
 import 'package:flutter_lisheng_entertainment/game_hall/cp_find_view/Choose11And5View.dart';
 import 'package:flutter_lisheng_entertainment/game_hall/game_bridge/Choose11And5Interface.dart';
+import 'package:flutter_lisheng_entertainment/game_hall/game_bridge/OptionalGroupFormInterface.dart';
 import 'package:flutter_lisheng_entertainment/game_hall/game_bridge/ThousandsOfBitsChoiceInterface.dart';
 import 'package:flutter_lisheng_entertainment/game_hall/game_view/ThousandsOfBitsView.dart';
+import 'package:flutter_lisheng_entertainment/game_hall/odd_interest_lottery/odd_interest_util/OddInterestPlayModelChoiceUtils.dart';
 import 'package:flutter_lisheng_entertainment/game_hall/vietnam_hanoi_one_lottery/hanoi_util/HanoiPlayModelChoiceUtils.dart';
 import 'package:flutter_lisheng_entertainment/model/json/gd_11_5/Play11Choice5DataPlayBeen.dart';
 
@@ -29,6 +31,7 @@ class OptionalGroupFormView extends StatefulWidget{
   final int viewIndex;
   final String titleTip;
   final Choose11And5Interface choose11and5interface;
+  final OptionalGroupFormInterface optionalGroupFormInterface;
 
   OptionalGroupFormView(Key key,{
     this.typeIndex = -1,
@@ -40,6 +43,7 @@ class OptionalGroupFormView extends StatefulWidget{
     this.choiceCpNumList,
     this.cpNumStr,
     this.choose11and5interface,
+    this.optionalGroupFormInterface,
   }): super(key: key);
 
   @override
@@ -54,6 +58,7 @@ class OptionalGroupFormView extends StatefulWidget{
       titleTip: titleTip,
       choiceCpNumList: choiceCpNumList,
       cpNumStr: cpNumStr,
+      optionalGroupFormInterface: optionalGroupFormInterface
     );
   }
 
@@ -74,6 +79,7 @@ class OptionalGroupFormStateView extends BaseController<OptionalGroupFormView> i
   int viewIndex;
   String titleTip;
   Choose11And5Interface choose11and5interface;
+  OptionalGroupFormInterface optionalGroupFormInterface;
 
   OptionalGroupFormStateView({
     this.choose11and5interface,
@@ -84,7 +90,8 @@ class OptionalGroupFormStateView extends BaseController<OptionalGroupFormView> i
     /// 每行的文本提示
     this.titleTip,
     this.choiceCpNumList,
-    this.cpNumStr,});
+    this.cpNumStr,
+    this.optionalGroupFormInterface});
 
 
   GlobalKey<ThousandsOfBitsStateView> _bitsStateViewKey = new GlobalKey();
@@ -100,7 +107,7 @@ class OptionalGroupFormStateView extends BaseController<OptionalGroupFormView> i
 
     return new Column(
       children: <Widget>[
-        ThousandsOfBitsView(_bitsStateViewKey),
+        ThousandsOfBitsView(_bitsStateViewKey, bitsChoiceInterface: this,),
         Choose11And5View(key: _chooseCpNumViewKey,choose11and5interface: choose11and5interface, typeIndex: typeIndex,
           cpNumIndex: cpNumIndex, isClickType: isClickType,
           viewIndex: viewIndex, titleTip: titleTip, choiceCpNumList: choiceCpNumList, cpNumStr: cpNumStr,)
@@ -151,6 +158,14 @@ class OptionalGroupFormStateView extends BaseController<OptionalGroupFormView> i
 
   }
 
+  /// 奇趣随机彩种
+  randomOddInterestOptionalGroupNumView(Play11Choice5DataPlayBeen playBeen) {
+    _bitsStateViewKey.currentState.randomThousandsOfBitsStateRefresh(playBeen.id);
+    _chooseCpNumViewKey.currentState.randomChoiceCpNum(playBeen.id
+        ,OddInterestPlayModelChoiceUtils.getInstance().getGamePlayModelRandomBase(playBeen));
+
+  }
+
   /// 清空选择状态
   cleanOptionalGroupNum() {
     _bitsStateViewKey.currentState.cleanThousandsOfBitsState();
@@ -176,10 +191,15 @@ class OptionalGroupFormStateView extends BaseController<OptionalGroupFormView> i
   @override
   void setThousandsOfBitsStateSave(Set<String> _bitsStateSet) {
     groupBitsList.clear();
-    var iterator = _bitsStateSet.iterator;
-    while (iterator.moveNext()) {
-      var current = iterator.current;
-      groupBitsList.add(current);
+
+    var iterator = _bitsStateSet.toList();
+
+    iterator?.forEach((value){
+      groupBitsList.add(value);
+    });
+
+    if (optionalGroupFormInterface != null) {
+      optionalGroupFormInterface.getThousandsOfBitsOnClick();
     }
 
   }

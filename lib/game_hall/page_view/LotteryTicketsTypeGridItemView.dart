@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:flustars/flustars.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_lisheng_entertainment/Util/ColorUtil.dart';
+import 'package:flutter_lisheng_entertainment/Util/Constant.dart';
 import 'package:flutter_lisheng_entertainment/Util/ImageUtil.dart';
 import 'package:flutter_lisheng_entertainment/Util/RouteUtil.dart';
 import 'package:flutter_lisheng_entertainment/Util/SpaceViewUtil.dart';
@@ -15,6 +16,7 @@ import 'package:flutter_lisheng_entertainment/view/common/CommonView.dart';
 /**
  * 每组的彩票种类
  */
+///
 class LotteryTicketsTypeGridItemView extends StatefulWidget {
 
   LotteryTypeDataListBeen  dataListBeen;
@@ -90,7 +92,7 @@ class _LotteryTicketsTypeGridItemView extends BaseController<LotteryTicketsTypeG
       child: new GridView.count(
         physics: new NeverScrollableScrollPhysics(),
         crossAxisCount: 4,
-        //padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(0.0),
         primary: false,
         mainAxisSpacing: 0.0,//竖向间距
         crossAxisSpacing: 0.0,//横向间距
@@ -112,13 +114,31 @@ class _LotteryTicketsTypeGridItemView extends BaseController<LotteryTicketsTypeG
         onTap: () {
           //点击 投注
           switch(index) {
-            case 9:
+            case Constant.GAME_NUM_11_CHOICE_5_GD:
               //广东11 选 5
-              Navigator.pushNamed(context, RouteUtil.bettingController);
+              Navigator.pushNamed(context, RouteUtil.bettingController, arguments: {"ColorVarietyID": index});
               break;
-            case 15:
-              //越南 河内1分彩
+            case Constant.GAME_NUM_VIETNAME_HANOI://越南 河内1分彩
+            case Constant.GAME_NUM_VIETNAME_HANOI_8://河内5分彩
+
               Navigator.pushNamed(context, RouteUtil.vietnamHanoiOneLotteryController, arguments: {"ColorVarietyID": index});
+              break;
+            case Constant.GAME_NUM_TENCENT:
+            case Constant.GAME_NUM_5_TENCENT:
+            case Constant.GAME_NUM_10_TENCENT:
+              //腾讯分分彩
+              Navigator.pushNamed(context, RouteUtil.tencentCentLotteryController, arguments: {"ColorVarietyID": index});
+              break;
+            case Constant.GAME_NUM_ODD_INTEREST:
+            //case Constant.GAME_NUM_ODD_INTEREST_3:
+            case Constant.GAME_NUM_ODD_INTEREST_4:
+            case Constant.GAME_NUM_ODD_INTEREST_5:
+            //奇趣一分彩
+              Navigator.pushNamed(context, RouteUtil.oddInterestLotteryController, arguments: {"ColorVarietyID": index});
+              break;
+            case Constant.GAME_NUM_LUCKY_AIRSHIP_13:
+              //幸运飞艇
+              Navigator.pushNamed(context, RouteUtil.luckyAirshipLotteryController, arguments: {"ColorVarietyID": index});
               break;
             case -1:
               // 添加常玩彩种

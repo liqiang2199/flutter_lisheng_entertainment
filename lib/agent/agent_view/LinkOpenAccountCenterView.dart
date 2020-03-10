@@ -5,7 +5,9 @@ import 'package:flutter_lisheng_entertainment/Util/SpaceViewUtil.dart';
 import 'package:flutter_lisheng_entertainment/Util/StringUtil.dart';
 import 'package:flutter_lisheng_entertainment/agent/net/AgentService.dart';
 import 'package:flutter_lisheng_entertainment/agent/net/LinkOpenAccountHandler.dart';
+import 'package:flutter_lisheng_entertainment/agent/net/OpenAccountIntervalHandler.dart';
 import 'package:flutter_lisheng_entertainment/base/BaseController.dart';
+import 'package:flutter_lisheng_entertainment/model/json/agent/open_account_interval/OpenAccountIntervalBeen.dart';
 import 'package:flutter_lisheng_entertainment/view/SemicircleButView.dart';
 import 'package:flutter_lisheng_entertainment/view/view_interface/SemicircleButCallBack.dart';
 
@@ -19,7 +21,8 @@ class LinkOpenAccountCenterView extends StatefulWidget {
 
 }
 
-class _LinkOpenAccountCenterView extends BaseController<LinkOpenAccountCenterView> with SemicircleButCallBack implements LinkOpenAccountHandler{
+class _LinkOpenAccountCenterView extends BaseController<LinkOpenAccountCenterView>
+    with SemicircleButCallBack implements LinkOpenAccountHandler,OpenAccountIntervalHandler{
 
   int groupValue = 1;
   //有效期选择
@@ -29,6 +32,16 @@ class _LinkOpenAccountCenterView extends BaseController<LinkOpenAccountCenterVie
   String ratio;
   String accountType = "1";
   String day = "1";
+  // 开户区间
+  String openAccountCenter = StringUtil.openAccountCenterEditReturnTip;
+  String maxRatio = "";// 最大开户区间
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    AgentService.instance.openAccount(this);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +52,7 @@ class _LinkOpenAccountCenterView extends BaseController<LinkOpenAccountCenterVie
         _openAccountType(),
         _validityPeriodSelection(),
         _editOpenAccount("请输入返点"),
-        _editTip(StringUtil.openAccountCenterEditReturnTip),
+        _editTip(openAccountCenter),
 
         new Container(
           margin: EdgeInsets.only(left: 25.0, right: 25.0, top: 25.0),
@@ -254,7 +267,7 @@ class _LinkOpenAccountCenterView extends BaseController<LinkOpenAccountCenterVie
 
   @override
   void onPressedBut() {
-    AgentService.instance.postLinkOpenAccount(accountType, day, ratio, this);
+    AgentService.instance.postLinkOpenAccount(accountType, day, ratio, maxRatio, this);
   }
 
   @override
@@ -266,6 +279,15 @@ class _LinkOpenAccountCenterView extends BaseController<LinkOpenAccountCenterVie
       ratio = "";
       _editingController.clear();
     }
+  }
+
+  @override
+  void setOpenAccountIntervalBeen(OpenAccountIntervalBeen been) {
+    maxRatio = been.data.max_ratio;
+    openAccountCenter = "开户区间：0.0-${been.data.max_ratio}";
+    setState(() {
+
+    });
   }
 
 }

@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_lisheng_entertainment/HomeController.dart';
 import 'package:flutter_lisheng_entertainment/Util/ColorUtil.dart';
 import 'package:flutter_lisheng_entertainment/Util/RouteUtil.dart';
+import 'package:flutter_lisheng_entertainment/game_hall/tencent_cent_lottery/TencentCentLotteryController.dart';
 import 'package:flutter_lisheng_entertainment/user/bank/BankListController.dart';
 import 'package:flutter_lisheng_entertainment/user/bank/BindBankController.dart';
 import 'package:flutter_lisheng_entertainment/user/personal_center/AccountChangeRecordController.dart';
@@ -22,6 +23,7 @@ import 'package:flutter_lisheng_entertainment/user/WithdrawalController.dart';
 import 'package:flutter_lisheng_entertainment/user/personal_center/ModifyLoginPasswordController.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
+import 'WebController.dart';
 import 'agent/AgencyBonusController.dart';
 import 'agent/AgentCenterController.dart';
 import 'agent/OpenAccountCenterController.dart';
@@ -36,6 +38,10 @@ import 'game_hall/GameShoppingCartController.dart';
 import 'game_hall/cp_11_choice_5/BettingController.dart';
 import 'game_hall/GameHallController.dart';
 import 'game_hall/cp_11_choice_5/PlayMode11Choice5Controller.dart';
+import 'game_hall/lucky_airship_lottery/LuckyAirshipLotteryController.dart';
+import 'game_hall/odd_interest_lottery/OddInterestLotteryController.dart';
+import 'game_hall/odd_interest_lottery/PlayModeOddInterestLotteryController.dart';
+import 'game_hall/tencent_cent_lottery/PlayModeTencentCentLotteryController.dart';
 import 'game_hall/vietnam_hanoi_one_lottery/PlayModeHanoiOneLotteryController.dart';
 import 'game_hall/vietnam_hanoi_one_lottery/VietnamHanoiOneLotteryController.dart';
 import 'home/ActivePageController.dart';
@@ -149,6 +155,12 @@ class MyApp extends StatelessWidget {
             RouteUtil.addGameController: (BuildContext context) => AddGameController(),
             RouteUtil.vietnamHanoiOneLotteryController: (BuildContext context) => VietnamHanoiOneLotteryController(),
             RouteUtil.playModeHanoiOneLotteryController: (BuildContext context) => PlayModeHanoiOneLotteryController(),
+            RouteUtil.tencentCentLotteryController: (BuildContext context) => TencentCentLotteryController(),
+            RouteUtil.playModeTencentCentLotteryController: (BuildContext context) => PlayModeTencentCentLotteryController(),
+            RouteUtil.webController: (BuildContext context) => WebController(),
+            RouteUtil.oddInterestLotteryController: (BuildContext context) => OddInterestLotteryController(),
+            RouteUtil.playModeOddInterestLotteryController: (BuildContext context) => PlayModeOddInterestLotteryController(),
+            RouteUtil.luckyAirshipLotteryController: (BuildContext context) => LuckyAirshipLotteryController(),
           },
         )
     );

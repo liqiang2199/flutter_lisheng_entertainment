@@ -19,11 +19,18 @@ import '../net/PlayMode11Choice5Handler.dart';
 /**
  * 11 选5 玩法选择
  */
+///
 class PlayMode11Choice5Controller extends StatefulWidget{
+
+  final List<Play11Choice5DataPlayBeen> playModeBeenList;
+  final String colorVarietyID;
+
+  const PlayMode11Choice5Controller({Key key, this.playModeBeenList, this.colorVarietyID}) : super(key: key);
+
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
-    return _PlayMode11Choice5Controller();
+    return _PlayMode11Choice5Controller(this.playModeBeenList, this.colorVarietyID);
   }
 
 }
@@ -32,6 +39,11 @@ class _PlayMode11Choice5Controller extends BaseController<PlayMode11Choice5Contr
 
   List<Play11Choice5DataPlayBeen> playModeBeenList = new List();
   bool isChoiceType = false;//是否是有选择
+
+  String colorVarietyID;
+
+  _PlayMode11Choice5Controller(this.playModeBeenList,
+      this.colorVarietyID);
 
   @override
   void initState() {
@@ -229,21 +241,18 @@ class _PlayMode11Choice5Controller extends BaseController<PlayMode11Choice5Contr
       return;
     }
 
-    Map<String, dynamic> dataThreeYards = data["0"];//三码
+    Map<String, dynamic> dataThreeYards = data["1"];//三码
     var threeYardsBeen = Play11Choice5DataThreeYardsBeen.fromJson(dataThreeYards);
     Map<String, dynamic> dataThreeYardsPlay = dataThreeYards["play"];//三码 直选 复式
-//    Map<String, dynamic> dataThreeYardsOneD = dataThreeYards["1"]["4"];//三码 直选 单式
-//    Map<String, dynamic> dataThreeYardsTwoF = dataThreeYards["2"]["5"];//三码 组合 复式
-//    Map<String, dynamic> dataThreeYardsTwoD = dataThreeYards["2"]["6"];//三码 组合 单式
     List<Play11Choice5DataPlayBeen> threeYardsList = new List();
-    for (int yards = 1; yards <= 2; yards++) {
+    for (int yards = 2; yards <= 3; yards++) {
 
       var dataThreeYardsPlay2 = dataThreeYardsPlay["$yards"]["play"];
-      Map<String, dynamic> dataThreeYardsOneF = dataThreeYardsPlay2["${(2 * yards) + 1}"];//三码
-      Map<String, dynamic> dataThreeYardsOneD = dataThreeYardsPlay2["${(2 * yards) + 2}"];//三码
+      Map<String, dynamic> dataThreeYardsOneF = dataThreeYardsPlay2["${(2 * yards)}"];//三码
+      Map<String, dynamic> dataThreeYardsOneD = dataThreeYardsPlay2["${(2 * yards) + 1}"];//三码
       var play11Choice5DataPlayBeenF = Play11Choice5DataPlayBeen.fromJson(dataThreeYardsOneF);
       var play11Choice5DataPlayBeenD = Play11Choice5DataPlayBeen.fromJson(dataThreeYardsOneD);
-      if (yards == 1) {
+      if (yards == 2) {
         play11Choice5DataPlayBeenF.name = "直选复式";
 
         play11Choice5DataPlayBeenD.name = "直选单式";
@@ -251,25 +260,27 @@ class _PlayMode11Choice5Controller extends BaseController<PlayMode11Choice5Contr
         play11Choice5DataPlayBeenD.isGroupSelection = false;
         play11Choice5DataPlayBeenF.groupSelectionNum = 3;
         play11Choice5DataPlayBeenD.groupSelectionNum = 0;
+        play11Choice5DataPlayBeenF.playModeSingleOrDouble = 2;
+        play11Choice5DataPlayBeenD.playModeSingleOrDouble = 1;
 
       } else {
-        play11Choice5DataPlayBeenF.name = "组合复式";
-        play11Choice5DataPlayBeenD.name = "组合单式";
+        play11Choice5DataPlayBeenF.name = "组合单式";
+        play11Choice5DataPlayBeenD.name = "组合复式";
 
         play11Choice5DataPlayBeenF.isGroupSelection = true;
         play11Choice5DataPlayBeenD.isGroupSelection = true;
-        play11Choice5DataPlayBeenF.groupSelectionNum = 1;
-        play11Choice5DataPlayBeenD.groupSelectionNum = 0;
+        play11Choice5DataPlayBeenF.groupSelectionNum = 0;
+        play11Choice5DataPlayBeenD.groupSelectionNum = 1;
+        play11Choice5DataPlayBeenF.playModeSingleOrDouble = 1;
+        play11Choice5DataPlayBeenD.playModeSingleOrDouble = 2;
 
       }
 
       play11Choice5DataPlayBeenF.playMode = 1;
       play11Choice5DataPlayBeenF.playModeTitle = "";
-      play11Choice5DataPlayBeenF.playModeSingleOrDouble = 2;
 
       play11Choice5DataPlayBeenD.playMode = 1;
       play11Choice5DataPlayBeenD.playModeTitle = "";
-      play11Choice5DataPlayBeenD.playModeSingleOrDouble = 1;
 
       threeYardsList.add(play11Choice5DataPlayBeenF);
       threeYardsList.add(play11Choice5DataPlayBeenD);
@@ -278,18 +289,18 @@ class _PlayMode11Choice5Controller extends BaseController<PlayMode11Choice5Contr
     choiceModeMap[threeYardsBeen] = threeYardsList;
 
     /// 二码
-    Map<String, dynamic> dataTwoYards = data["7"];//二码
+    Map<String, dynamic> dataTwoYards = data["8"];//二码
     var twoYardsBeen = Play11Choice5DataThreeYardsBeen.fromJson(dataTwoYards);
     Map<String, dynamic> dataTwoYardsPlay = dataTwoYards["play"];//二码
     List<Play11Choice5DataPlayBeen> twoYardsList = new List();
-    for (int yards = 8; yards <= 8; yards++) {
+    for (int yards = 9; yards <= 9; yards++) {
 
       var dataTwoYardsPlay2 = dataTwoYardsPlay["$yards"]["play"];
       Map<String, dynamic> dataTwoYardsOneF = dataTwoYardsPlay2["${yards + 2}"];//二码
       Map<String, dynamic> dataTwoYardsOneD = dataTwoYardsPlay2["${yards + 3}"];//二码
       var play11Choice5DataPlayBeenF = Play11Choice5DataPlayBeen.fromJson(dataTwoYardsOneF);
       var play11Choice5DataPlayBeenD = Play11Choice5DataPlayBeen.fromJson(dataTwoYardsOneD);
-      if (yards == 8) {
+      if (yards == 9) {
         play11Choice5DataPlayBeenF.name = "直选复式";
         play11Choice5DataPlayBeenD.name = "直选单式";
 
@@ -307,11 +318,10 @@ class _PlayMode11Choice5Controller extends BaseController<PlayMode11Choice5Contr
       twoYardsList.add(play11Choice5DataPlayBeenD);
     }
 
-//    List<Play11Choice5DataPlayBeen> threeYardsList = new List();
     Map<String, dynamic> dataTwoYardsTwoPlay = dataTwoYards["play"];//二码
-    var dataTwoYardsTwoPlay2 = dataTwoYardsTwoPlay["9"]["play"];
-    Map<String, dynamic> dataTwoYardsOneF = dataTwoYardsTwoPlay2["35"];//二码
-    Map<String, dynamic> dataTwoYardsOneD = dataTwoYardsTwoPlay2["36"];//二码
+    var dataTwoYardsTwoPlay2 = dataTwoYardsTwoPlay["10"]["play"];
+    Map<String, dynamic> dataTwoYardsOneF = dataTwoYardsTwoPlay2["39"];//二码
+    Map<String, dynamic> dataTwoYardsOneD = dataTwoYardsTwoPlay2["40"];//二码
     var play11Choice5DataPlayBeenF = Play11Choice5DataPlayBeen.fromJson(dataTwoYardsOneF);
     var play11Choice5DataPlayBeenD = Play11Choice5DataPlayBeen.fromJson(dataTwoYardsOneD);
     play11Choice5DataPlayBeenF.name = "组合复式";
@@ -332,12 +342,12 @@ class _PlayMode11Choice5Controller extends BaseController<PlayMode11Choice5Contr
     choiceModeMap[twoYardsBeen] = twoYardsList;
 
     /// 不定胆
-    Map<String, dynamic> dataUncertainGallbladder = data["12"];//不定胆
+    Map<String, dynamic> dataUncertainGallbladder = data["13"];//不定胆
     var uncertainGallbladderBeen = Play11Choice5DataThreeYardsBeen.fromJson(dataUncertainGallbladder);
 
     Map<String, dynamic> uncertainGallbladderPlay = dataUncertainGallbladder["play"];//
 
-    Map<String, dynamic> uncertainGallbladderBeenF = uncertainGallbladderPlay["13"];//
+    Map<String, dynamic> uncertainGallbladderBeenF = uncertainGallbladderPlay["15"];//
     List<Play11Choice5DataPlayBeen> uncertainGallbladderList = new List();
     var uncertainGallbladderBeenD = Play11Choice5DataPlayBeen.fromJson(uncertainGallbladderBeenF);
 
@@ -351,11 +361,11 @@ class _PlayMode11Choice5Controller extends BaseController<PlayMode11Choice5Contr
     choiceModeMap[uncertainGallbladderBeen] = uncertainGallbladderList;
 
     /// 定胆
-    Map<String, dynamic> dataCertainGallbladder = data["14"];//定胆
+    Map<String, dynamic> dataCertainGallbladder = data["16"];//定胆
     var certainGallbladderBeen = Play11Choice5DataThreeYardsBeen.fromJson(dataCertainGallbladder);
     Map<String, dynamic> certainGallbladderPlay = dataCertainGallbladder["play"];//
 
-    Map<String, dynamic> certainGallbladderBeenF = certainGallbladderPlay["15"];//
+    Map<String, dynamic> certainGallbladderBeenF = certainGallbladderPlay["17"];//
     List<Play11Choice5DataPlayBeen> certainGallbladderList = new List();
     var certainGallbladderBeenD = Play11Choice5DataPlayBeen.fromJson(certainGallbladderBeenF);
 
@@ -369,7 +379,7 @@ class _PlayMode11Choice5Controller extends BaseController<PlayMode11Choice5Contr
     choiceModeMap[certainGallbladderBeen] = certainGallbladderList;
 
     /// 任选
-    Map<String, dynamic> dataOptional = data["16"];//任选
+    Map<String, dynamic> dataOptional = data["18"];//任选
     var OptionalBeen = Play11Choice5DataThreeYardsBeen.fromJson(dataOptional);
 
     Map<String, dynamic> dataOptionalPlay = dataOptional["play"];//二码
@@ -377,13 +387,12 @@ class _PlayMode11Choice5Controller extends BaseController<PlayMode11Choice5Contr
 
 
     /// 任选 复式
-    var dataOptionalPlay17 = dataOptionalPlay["17"]["play"];
+    var dataOptionalPlay17 = dataOptionalPlay["19"]["play"];
 
     List<Play11Choice5DataPlayBeen> optionalList = new List();
-    for(int optional = 27; optional < 34; optional++) {
+    for(int optional = 29; optional < 36; optional++) {
       Map<String, dynamic> optionalMapF = dataOptionalPlay17["$optional"];//复式
 
-//      List<Play11Choice5DataPlayBeen> optionalList = new List();
       var optionalBeenF = Play11Choice5DataPlayBeen.fromJson(optionalMapF);
 
       optionalBeenF.isGroupSelection = false;
@@ -398,9 +407,9 @@ class _PlayMode11Choice5Controller extends BaseController<PlayMode11Choice5Contr
 
     }
 
-    var dataOptionalPlay18 = dataOptionalPlay["18"]["play"];
+    var dataOptionalPlay18 = dataOptionalPlay["20"]["play"];
     /// 任选 单式
-    for(int optional = 19; optional < 25; optional++) {
+    for(int optional = 21; optional < 28; optional++) {
       Map<String, dynamic> optionalMapF = dataOptionalPlay18["$optional"];//复式
 
       var optionalBeenD = Play11Choice5DataPlayBeen.fromJson(optionalMapF);

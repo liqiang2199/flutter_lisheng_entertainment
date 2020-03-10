@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_lisheng_entertainment/Util/ColorUtil.dart';
 import 'package:flutter_lisheng_entertainment/base/BaseController.dart';
 import 'package:flutter_lisheng_entertainment/game_hall/game_bridge/Choose11And5EditContentHandle.dart';
+import 'package:flutter_lisheng_entertainment/game_hall/game_bridge/OptionalSingleFormInterface.dart';
+import 'package:flutter_lisheng_entertainment/game_hall/game_bridge/ThousandsOfBitsChoiceInterface.dart';
 import 'package:flutter_lisheng_entertainment/game_hall/game_view/ThousandsOfBitsView.dart';
 
 /**
@@ -15,24 +17,26 @@ import 'package:flutter_lisheng_entertainment/game_hall/game_view/ThousandsOfBit
 class OptionalSingleFormView extends StatefulWidget {
 
   final Choose11And5EditContentHandle contentHandle;
+  final OptionalSingleFormInterface singleFormInterface;
 
-  OptionalSingleFormView(Key key, this.contentHandle): super(key: key);
+  OptionalSingleFormView(Key key, this.contentHandle, this.singleFormInterface): super(key: key);
 
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
-    return OptionalSingleFormStateView(this.contentHandle);
+    return OptionalSingleFormStateView(this.contentHandle, this.singleFormInterface);
   }
 
 }
 
-class OptionalSingleFormStateView extends BaseController<OptionalSingleFormView> {
+class OptionalSingleFormStateView extends BaseController<OptionalSingleFormView> implements ThousandsOfBitsChoiceInterface{
 
   List<int> editNumList = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9,];
   Set<int> _randomSet = new Set();// 保存随机数
 
   TextEditingController textEditingController = new TextEditingController();
   Choose11And5EditContentHandle contentHandle;
+  OptionalSingleFormInterface singleFormInterface;
 
   int singleFormNum = 3;//单式 判断输入多少加一个 分隔符号
   String editContent = "";// 传入输入的内容
@@ -43,7 +47,7 @@ class OptionalSingleFormStateView extends BaseController<OptionalSingleFormView>
 
   GlobalKey<ThousandsOfBitsStateView> _bitsStateViewKey = new GlobalKey();
 
-  OptionalSingleFormStateView(this.contentHandle);
+  OptionalSingleFormStateView(this.contentHandle, this.singleFormInterface);
 
   @override
   Widget build(BuildContext context) {
@@ -62,7 +66,7 @@ class OptionalSingleFormStateView extends BaseController<OptionalSingleFormView>
       child: new Column(
         children: <Widget>[
 
-          ThousandsOfBitsView(_bitsStateViewKey),
+          ThousandsOfBitsView(_bitsStateViewKey, bitsChoiceInterface: this,),
           _bettingNumEdit(),
 
         ],
@@ -112,6 +116,10 @@ class OptionalSingleFormStateView extends BaseController<OptionalSingleFormView>
     if (TextUtil.isEmpty(str)) {
       //刷新界面
       textEditingController.clear();
+      editContent = "";
+      if (contentHandle != null) {
+        contentHandle.editContent11Choose5Handle("");
+      }
       return;
     }
 
@@ -304,6 +312,14 @@ class OptionalSingleFormStateView extends BaseController<OptionalSingleFormView>
   getThousandsOfBitsStateStr() {
 
     return _bitsStateViewKey.currentState.getCheckStateThousandsOfBitsList();
+  }
+
+  @override
+  void setThousandsOfBitsStateSave(Set<String> _bitsStateSet) {
+
+    if (singleFormInterface != null) {
+      singleFormInterface.getThousandsOfBitsSingleOnClick();
+    }
   }
 
 }
