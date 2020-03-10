@@ -5,10 +5,10 @@ class DateUtils {
 
   static String formatLongToTimeStrToDay(String time) {
 
-    var today = DateTime.now();
+    var today = DateTime.now(); //12: 15
     var date1 = today.millisecondsSinceEpoch;
     var dateTime = DateTime.parse("$time");
-    int date = DateUtil.getDateMsByTimeStr("$time");
+    int date = DateUtil.getDateMsByTimeStr("$time");// 12:17
 //    var date = dateTime.millisecondsSinceEpoch;
 
     var dateValue = (date - date1) - 8 * 60 * 60 * 1000;
@@ -22,7 +22,9 @@ class DateUtils {
 //    var hour = (dateValue / (60 * 60)) - (day * 24);
 //    var min = dateValue / 60 - day * 24 * 60 - hour * 60;
 //    var s = dateValue - day * 24 * 60 * 60 - hour * 60 * 60 - min * 60;
-
+    if (date <= date1) {
+      return "";
+    }
 
     return "$dateStrBy";
 

@@ -25,6 +25,7 @@ import 'package:flutter_lisheng_entertainment/model/json/game_hall/LotteryTypeDa
 import 'package:flutter_lisheng_entertainment/model/json/home_json/GetBannerListDataBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/json/login/LoginUserInfoBeen.dart';
 import 'package:flutter_lisheng_entertainment/net/UrlUtil.dart';
+import 'package:flutter_lisheng_entertainment/user/view/LineChangeView.dart';
 import 'package:flutter_lisheng_entertainment/view/common/CommonView.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 
@@ -42,6 +43,10 @@ class _HomeControllerView extends BaseController<HomeControllerView> implements 
 
   LoginUserInfoBeen userInfoBeen;
   LotteryTypeDataListBeen typeDataListBeen;
+
+  /// 移动的坐标
+  double topDistance = 0.0;
+  double leftDistance = 0.0;
 
   @override
   void initState() {
@@ -137,23 +142,49 @@ class _HomeControllerView extends BaseController<HomeControllerView> implements 
       });
     }
 
+    leftDistance = ScreenUtil.getScreenW(context) - 60;
+
     return new Scaffold(
-      body: new SingleChildScrollView(
-        physics: BouncingScrollPhysics(),
-        child: new Center(
-          child: new Column(
-            children: <Widget>[
-              _topView(),
-              _gridOperationClassification(),
-              //new Expanded(child: _gridOperationClassification(),),
-              _bannerHome(),
+      body: new Stack(
+        children: <Widget>[
 
-              LotteryTicketsTypeGridItemView(typeDataListBeen),
+          new SingleChildScrollView(
+            physics: BouncingScrollPhysics(),
+            child: new Center(
+              child: new Column(
+                children: <Widget>[
+                  _topView(),
+                  _gridOperationClassification(),
+                  //new Expanded(child: _gridOperationClassification(),),
+                  _bannerHome(),
 
-            ],
+                  LotteryTicketsTypeGridItemView(typeDataListBeen),
+
+                ],
+              ),
+            ),
           ),
-        ),
+
+          _lineChage(),
+
+        ],
       ),
+    );
+  }
+
+  GlobalKey<LineChangeStateView> textKey = GlobalKey ();
+  /// 线路切换
+  Widget _lineChage() {
+
+    bool lightsSuspension = SpUtil.getBool("LightsSuspension", defValue: true);
+
+    return new Visibility(
+      visible: lightsSuspension,
+        child: new LineChangeView(
+          textKey,
+          topDistance: topDistance,
+          leftDistance: leftDistance,
+        ),
     );
   }
 
@@ -237,8 +268,14 @@ class _HomeControllerView extends BaseController<HomeControllerView> implements 
   //客服按钮
   Widget _topImgCustom() {
 
-    return new Padding(padding: EdgeInsets.only(right: 15.0),
-      child: Image.asset(ImageUtil.imgHomeCustom, width: 22, height: 22,),
+    return new GestureDetector(
+      onTap: () {
+        //跳转客服
+        Navigator.of(context).pushNamed(RouteUtil.webController);
+      },
+      child: new Padding(padding: EdgeInsets.only(right: 15.0),
+        child: Image.asset(ImageUtil.imgHomeCustom, width: 22, height: 22,),
+      ),
     );
   }
 
@@ -403,7 +440,7 @@ class _HomeControllerView extends BaseController<HomeControllerView> implements 
       child: new GridView.count(
         physics: new NeverScrollableScrollPhysics(),
         crossAxisCount: 3,
-        //padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.only(top:10.0,),
         primary: false,
         mainAxisSpacing: 0.0,//竖向间距
         crossAxisSpacing: 0.0,//横向间距
@@ -509,13 +546,16 @@ class _HomeControllerView extends BaseController<HomeControllerView> implements 
       child: Swiper(
         itemCount: imgListStr.length,
         pagination: new SwiperPagination(),
-        //control: new SwiperControl(),
         //轮播的item  widget 必传
         itemBuilder: (BuildContext context,int index){
-          //return Image.network(imgListStr[index],fit: BoxFit.fill,);
           return CachedNetworkImage(
+            fit: BoxFit.fill,
             imageUrl: imgListStr[index],
-            placeholder: (context, url) => CircularProgressIndicator(),
+//            placeholder: (context, url) => new Container(
+//              child: CircularProgressIndicator(),
+//              height: 50.0,
+//              width: 50.0,
+//            ),
             errorWidget: (context, url, error) => Icon(Icons.error),
           );
         },

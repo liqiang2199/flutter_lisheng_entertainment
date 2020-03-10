@@ -33,6 +33,10 @@ import 'package:flutter_lisheng_entertainment/view/common/CommonView.dart';
 
 import '../cp_find_view/Choose11And5View.dart';
 
+/**
+ * 11 选 5
+ */
+///
 class BettingView extends StatefulWidget {
 
   @override
@@ -78,6 +82,11 @@ class _BettingView extends BaseRefreshNoHeadController<BettingView> with Automat
   String openLotteryTime = "开奖中";//开奖时间显示
   String openLotteryDrawIssue = "000000";//开奖期数
   GlobalKey<LotteryTimeNumChildView> textKey = GlobalKey();
+  GlobalKey<BonusAdjustmentStateView> adjustmentKey = GlobalKey();//奖金调节
+  GlobalKey<LotteryNumListStateView> lotteryNumListStateViewKey = GlobalKey();//开奖号码
+  GlobalKey<BettingNumAndOperationStateView> numAndOperationStateViewKey = GlobalKey();//注数显示
+  /// 彩票列表 选号 key
+  List<GlobalKey<Choose11And5StateView>> listCpNumKey = new List();
 
   ScrollController scrollController = ScrollController(
     initialScrollOffset: 0.0,
@@ -100,7 +109,7 @@ class _BettingView extends BaseRefreshNoHeadController<BettingView> with Automat
     });
 
     GameService.instance.getApi("9",this);
-    GameService.instance.kjlogList_Betting("9","5",this);
+    GameService.instance.kjlogList_Betting("9","8",this);
 
     /// 读取保存 的顶部内容
     List<Map<dynamic, dynamic>> playModel = SpUtil.getObjectList("PlayModeList");
@@ -182,8 +191,17 @@ class _BettingView extends BaseRefreshNoHeadController<BettingView> with Automat
         new Expanded(
             child: _notificationListenerG(),
         ),
+        /// 奖金调节
+        BonusAdjustmentView(
+          key: adjustmentKey,
+          adjustmentInterface: this,
+          multipleNum: bettingMultipleNum,
+          segmentedIndex: _segmentedIndex,
+          sliderValue: this.sliderValue,
+        ),
         /// 下面投注 按钮
         BettingNumAndOperationView(
+          key: numAndOperationStateViewKey,
           calculationBettingNumBeen: calculationBettingNumBeen,
           operationHandler: this,
           playMoneyAward: this.playMoneyAward,
@@ -223,6 +241,7 @@ class _BettingView extends BaseRefreshNoHeadController<BettingView> with Automat
 
           });
         }
+        lotteryNumListStateViewKey.currentState.onSetRefreshLotteryNumList(isLookLotteryList, openLotteryListBeen);
         textKey.currentState.onSetRefreshLotteryState(isLookLotteryTitle, playRemark, openLotteryListBeen);
         return false;
       },
@@ -264,27 +283,23 @@ class _BettingView extends BaseRefreshNoHeadController<BettingView> with Automat
         ),
         CommonView().commonLine_NoMarginChange(context, 10.0),
 
-        new Column(
-          children: <Widget>[
-            // 200
-            LotteryNumListView(
-              isLookLotteryList: isLookLotteryList,
-              openLotteryListBeen: openLotteryListBeen,
-            ),
-            //187 头部   + 60 标题
-            //45 + 24 + 40 + 40 + 15 + 1 = 165(单个)
-            _numTypeChoiceView(),
-
-            /// 奖金调节
-            BonusAdjustmentView(
-              adjustmentInterface: this,
-              multipleNum: bettingMultipleNum,
-              segmentedIndex: _segmentedIndex,
-              sliderValue: this.sliderValue,
-            ),
-
-          ],
+        LotteryNumListView(
+          key: lotteryNumListStateViewKey,
+          isLookLotteryList: isLookLotteryList,
+          openLotteryListBeen: openLotteryListBeen,
         ),
+        //187 头部   + 60 标题
+        //45 + 24 + 40 + 40 + 15 + 1 = 165(单个)
+        _numTypeChoiceView(),
+
+//        /// 奖金调节
+//        BonusAdjustmentView(
+//          adjustmentInterface: this,
+//          multipleNum: bettingMultipleNum,
+//          segmentedIndex: _segmentedIndex,
+//          sliderValue: this.sliderValue,
+//        ),
+
       ],
     );
   }
@@ -493,7 +508,14 @@ class _BettingView extends BaseRefreshNoHeadController<BettingView> with Automat
           setState(() {
 
           });
+          if (numAndOperationStateViewKey != null && numAndOperationStateViewKey.currentState != null) {
+            calculationBettingNumBeen = new CalculationBettingNumDataBeen(new List(),0,"0.00","0.00","0.00");//注数 和 金额
+            numAndOperationStateViewKey.currentState.setCalculationBettingNumData(calculationBettingNumBeen);
+          }
           textKey.currentState.onSetRefreshLotteryState(isLookLotteryTitle, playRemark, openLotteryListBeen);
+          if(isSinglePlay) {
+            editContent11Choose5Handle("");
+          }
 
         },color: Color(ColorUtil.whiteColor),
           child: new Text(name
@@ -650,6 +672,7 @@ class _BettingView extends BaseRefreshNoHeadController<BettingView> with Automat
   /**
    * 随机 彩种号码
    */
+  ///
   _randomIndexGetCpNum(int num) {
     int index1 = Random().nextInt(11);
     int index2 = Random().nextInt(11);
@@ -931,6 +954,7 @@ class _BettingView extends BaseRefreshNoHeadController<BettingView> with Automat
    * bettingMultiple  投注倍数
    * isAddBetting 是否在投注
    */
+  ///
   void addBettingAndBettingNum(bool isAddBetting, int bettingMultiple) {
 
     switch(currentPlayType) {
@@ -1008,7 +1032,7 @@ class _BettingView extends BaseRefreshNoHeadController<BettingView> with Automat
       // 定位胆/定位胆（计算注数）
         if (choiceCpNumList.length >= 2) {
           GameGd11Choice5Service.instance.certainGallbladderCombinationCompound(choiceCpNumList[0]
-              , choiceCpNumList[1], choiceCpNumList[2], this, isAddBetting, bettingMultiple);
+              , choiceCpNumList[1], choiceCpNumList[2], this, "17", isAddBetting, bettingMultiple);
         }
         break;
       default:
@@ -1027,9 +1051,7 @@ class _BettingView extends BaseRefreshNoHeadController<BettingView> with Automat
     this.calculationBettingNumBeen = data;
 
     Future.delayed(Duration(milliseconds: 300)).then((e) {
-      setState(() {
-
-      });
+      numAndOperationStateViewKey.currentState.setCalculationBettingNumData(calculationBettingNumBeen);
     });
   }
 
@@ -1037,9 +1059,17 @@ class _BettingView extends BaseRefreshNoHeadController<BettingView> with Automat
   void editContent11Choose5Handle(String strContent) {
     /// 输入单式 内容
     this.editContentSingle = strContent;
-    setState(() {
+    if (!TextUtil.isEmpty(strContent)) {
+      choiceNumAfter();
+    } else {
+      calculationBettingNumBeen = new CalculationBettingNumDataBeen(new List(),0,"0.00","0.00","0.00");
+      numAndOperationStateViewKey.currentState.setCalculationBettingNumData(calculationBettingNumBeen);
+    }
 
-    });
+    if(mounted)
+      setState(() {
+      });
+
   }
 
   @override
@@ -1083,25 +1113,24 @@ class _BettingView extends BaseRefreshNoHeadController<BettingView> with Automat
   @override
   void bettingMultipleAddAndSub(bool isAdd, int num) {
     bettingMultipleNum = num;
-    setState(() {
+    adjustmentKey.currentState.bonusAdjustmentRefreshState(_segmentedIndex,sliderValue, bettingMultipleNum);
+    numAndOperationStateViewKey.currentState.setBettingNum(num);//下注信息
 
-    });
   }
 
   @override
   void setSegmentedIndex(int index) {
     _segmentedIndex = index;
-    setState(() {
+    adjustmentKey.currentState.bonusAdjustmentRefreshState(_segmentedIndex,sliderValue, bettingMultipleNum);
+    numAndOperationStateViewKey.currentState.setBettingNumAndSlideValue(bettingMultipleNum, _segmentedIndex);//下注信息
 
-    });
   }
 
   @override
   void sliderChangeNum(double sliderValue) {
     this.sliderValue = sliderValue;
-    setState(() {
+    adjustmentKey.currentState.bonusAdjustmentRefreshState(_segmentedIndex,sliderValue, bettingMultipleNum);
 
-    });
   }
 
   @override
@@ -1134,7 +1163,6 @@ class _BettingView extends BaseRefreshNoHeadController<BettingView> with Automat
 
     var lotteryInfoBeen = data.data;
     if (data != null) {
-//        var drawTime = lotteryInfoBeen.drawTime;
       if (!TextUtil.isEmpty(drawTime)) {
         var formatLongToTimeStrToDay = DateUtils.formatLongToTimeStrToDay(drawTime);
         print("formatLongToTimeStrToDay = $formatLongToTimeStrToDay");
@@ -1143,26 +1171,8 @@ class _BettingView extends BaseRefreshNoHeadController<BettingView> with Automat
       }
 
     }
-//    setState(() {
-//
-//    });
     textKey.currentState.onSetRefreshState(openLotteryTime, openLotteryDrawIssue);
     reGetCountdown();
-
-//    var lotteryInfoDataBeen = data.data;
-//
-//    openLotteryListBeen.clear();
-//    lotteryInfoDataBeen.forEach((lotteryDataBeen){
-//
-//      OpenLotteryListTwoDataListBeen twoDataListBeen = new OpenLotteryListTwoDataListBeen(
-//          lotteryDataBeen.id,0,lotteryDataBeen.preDrawCode,lotteryDataBeen.preDrawCode
-//        ,lotteryDataBeen.preDrawTime,lotteryDataBeen.preDrawCode,lotteryDataBeen.drawIssue);
-//      twoDataListBeen.drawTime = lotteryDataBeen.drawTime;
-//      twoDataListBeen.drawIssue = lotteryDataBeen.drawIssue;
-//      openLotteryListBeen.add(twoDataListBeen);
-//    });
-
-
 
   }
 
@@ -1184,6 +1194,7 @@ class _BettingView extends BaseRefreshNoHeadController<BettingView> with Automat
         this.openLotteryTime = formatLongToTimeStrToDay;
       }
       textKey.currentState.onSetRefreshState(openLotteryTime, openLotteryDrawIssue);
+      lotteryNumListStateViewKey.currentState.onSetRefreshLotteryNumList(isLookLotteryList, openLotteryListBeen);
     });
   }
 

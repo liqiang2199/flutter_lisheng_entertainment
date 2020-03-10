@@ -15,7 +15,8 @@ GetBettingRecordListHttpBeen _$GetBettingRecordListHttpBeenFromJson(
     ..lottery_id = json['lottery_id'] as String
     ..status = json['status'] as String
     ..stare_time = json['stare_time'] as String
-    ..end_time = json['end_time'] as String;
+    ..end_time = json['end_time'] as String
+    ..page = json['page'] as String;
 }
 
 Map<String, dynamic> _$GetBettingRecordListHttpBeenToJson(
@@ -28,4 +29,5 @@ Map<String, dynamic> _$GetBettingRecordListHttpBeenToJson(
       'status': instance.status,
       'stare_time': instance.stare_time,
       'end_time': instance.end_time,
+      'page': instance.page,
     };

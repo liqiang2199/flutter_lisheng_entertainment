@@ -13,7 +13,9 @@ GetBettingRecordDataListParamBeen _$GetBettingRecordDataListParamBeenFromJson(
     json['two_num'] as String,
     json['three_num'] as String,
     json['data_num'] as String,
-  );
+  )
+    ..four_num = json['four_num'] as String
+    ..five_num = json['five_num'] as String;
 }
 
 Map<String, dynamic> _$GetBettingRecordDataListParamBeenToJson(
@@ -22,5 +24,7 @@ Map<String, dynamic> _$GetBettingRecordDataListParamBeenToJson(
       'one_num': instance.one_num,
       'two_num': instance.two_num,
       'three_num': instance.three_num,
+      'four_num': instance.four_num,
+      'five_num': instance.five_num,
       'data_num': instance.data_num,
     };

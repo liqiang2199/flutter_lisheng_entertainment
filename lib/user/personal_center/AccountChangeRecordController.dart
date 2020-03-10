@@ -179,10 +179,25 @@ class _AccountChangeRecordController extends BaseRefreshTabController<AccountCha
         return new Container();
       }
       var item = accountRecordList[index - 1];
+
+      var symbol = item.t;//变动金额 符号
+      var money = item.money;
+      var symbolMoney = "";
+      if (TextUtil.isEmpty(money)) {
+        money = "0.00";
+        symbolMoney = "0.00";
+      } else {
+        if (double.parse(money) > 1) {
+          symbolMoney = "$symbol$money";
+        } else {
+          symbolMoney = "$money";
+        }
+      }
+
       return new Column(
         children: <Widget>[
 
-          _recordBottomList(item.createtime, item.money, item.all_money, item.remark),
+          _recordBottomList(item.createtime, symbolMoney, item.t, item.all_money, item.remark),
           CommonView().commonLine_NoMargin(context),
 
         ],
@@ -289,7 +304,7 @@ class _AccountChangeRecordController extends BaseRefreshTabController<AccountCha
   }
 
 
-  Widget _recordBottomList(String time, String bMoney, String money, String remark) {
+  Widget _recordBottomList(String time, String bMoney, String symbol, String money, String remark) {
 
     return new Container(
       height: 50.0,
@@ -326,7 +341,7 @@ class _AccountChangeRecordController extends BaseRefreshTabController<AccountCha
                 width: ScreenUtil.getScreenW(context),
 //                padding: EdgeInsets.all(15.0),
                 child: new Text(
-                  bMoney,
+                  "$bMoney",
                   style: TextStyle(
                     fontSize: 14.0,
                     color: Color(ColorUtil.textColor_333333),

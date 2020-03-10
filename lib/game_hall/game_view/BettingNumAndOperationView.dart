@@ -1,5 +1,6 @@
 
 import 'package:flustars/flustars.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_lisheng_entertainment/Util/ColorUtil.dart';
 import 'package:flutter_lisheng_entertainment/Util/Constant.dart';
@@ -90,18 +91,21 @@ class BettingNumAndOperationStateView extends BaseController<BettingNumAndOperat
     return  new Container(
       padding: EdgeInsets.only(left: 15.0, right: 15.0, bottom: 15.0, top: 5.0),
       child: new Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           /// 共计 和 可用余额
           new Row(
             children: <Widget>[
 
-              new Expanded(child: _bettingNumTotalText(_moneyCompanyMultiple)),
-              new Expanded(child: _bettingCanMoneyText()),
+              //账号奖金：1994
+              new Expanded(child: _accountBonusMoney(), flex: 1,),
+              new Expanded(child: _bettingNumTotalText(_moneyCompanyMultiple), flex: 0,),
+              //new Expanded(child: _bettingCanMoneyText()),
 
             ],
           ),
 
-          _bettingBonusText(_moneyCompanyMultiple),
+          //_bettingBonusText(_moneyCompanyMultiple),
 
           _operationBut(),
 
@@ -138,7 +142,10 @@ class BettingNumAndOperationStateView extends BaseController<BettingNumAndOperat
   Widget _bettingCanMoneyText() {
 
     return new Container(
+      alignment: Alignment.center,
+      padding: new EdgeInsets.only(top: 14.0),
       child: new Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
 
           new Text(
@@ -150,6 +157,28 @@ class BettingNumAndOperationStateView extends BaseController<BettingNumAndOperat
           ),
 
           _numText(SpUtil.getString(Constant.ALL_MONEY),"元"),
+
+        ],
+      ),
+    );
+  }
+
+  /// 账号奖金
+  Widget _accountBonusMoney() {
+
+    return new Container(
+      child: new Row(
+        children: <Widget>[
+
+          new Text(
+            "账号奖金：",
+            style: TextStyle(
+              color: Color(ColorUtil.textColor_333333),
+              fontSize: 14.0,
+            ),
+          ),
+
+          _numText(SpUtil.getString(Constant.USER_RATIO),""),
 
         ],
       ),
@@ -226,10 +255,11 @@ class BettingNumAndOperationStateView extends BaseController<BettingNumAndOperat
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
 
-        new Expanded(child: _redBotOperationBut("0"), flex: 1,),
-        new Expanded(child: _operationButItem("机选", 67.0, 1), flex: 1,),
-        new Expanded(child: _operationButItem("添加号码", 95.0, 2), flex: 0,),
-        new Expanded(child: _operationButItem("立即投注", 95.0, 3), flex: 0,),
+        //new Expanded(child: _redBotOperationBut("0"), flex: 1,),
+        new Expanded(child: _bettingCanMoneyText(), flex: 1,),//可用余额
+        new Expanded(child: _operationButItem("机选", 57.0, 1), flex: 0,),
+        //new Expanded(child: _operationButItem("添加号码", 95.0, 2), flex: 0,),
+        new Expanded(child: _operationButItem("立即投注", 80.0, 3), flex: 0,),
 
       ],
     );
@@ -282,9 +312,10 @@ class BettingNumAndOperationStateView extends BaseController<BettingNumAndOperat
   /// 按钮
   Widget _operationButItem(String butTitle, double w, int index) {
     return new Container(
-//      width: w,
+      width: w,
       height: 30.0  ,
       margin: EdgeInsets.only(top: 15.0, left: 5.0,),
+//      padding: EdgeInsets.all(5.0),
       child: new RaisedButton(onPressed: (){
         //
         switch(index) {

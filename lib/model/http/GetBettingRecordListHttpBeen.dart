@@ -11,6 +11,7 @@ class GetBettingRecordListHttpBeen {
   String status;//状态 状态（默认0 为全部） 1=待开奖,2=中奖,3=未中奖
   String stare_time;//起始时间（2018-06-06）（默认1）
   String end_time;
+  String page;
 
   GetBettingRecordListHttpBeen();
   factory GetBettingRecordListHttpBeen.fromJson(Map<String, dynamic> json) => _$GetBettingRecordListHttpBeenFromJson(json);

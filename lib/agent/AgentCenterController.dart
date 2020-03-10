@@ -6,6 +6,10 @@ import 'package:flutter_lisheng_entertainment/Util/ImageUtil.dart';
 import 'package:flutter_lisheng_entertainment/Util/RouteUtil.dart';
 import 'package:flutter_lisheng_entertainment/Util/SpaceViewUtil.dart';
 import 'package:flutter_lisheng_entertainment/Util/StringUtil.dart';
+import 'package:flutter_lisheng_entertainment/base/BaseChoicePhotoController.dart';
+import 'package:flutter_lisheng_entertainment/base/BaseController.dart';
+import 'package:flutter_lisheng_entertainment/base/handler/ModifyAvatarHandler.dart';
+import 'package:flutter_lisheng_entertainment/user/net/UserService.dart';
 import 'package:flutter_lisheng_entertainment/view/ListStateItemView.dart';
 import 'package:flutter_lisheng_entertainment/view/common/CommonView.dart';
 
@@ -21,7 +25,8 @@ class AgentCenterController extends StatefulWidget{
 
 }
 
-class _AgentCenterController extends State<AgentCenterController> {
+class _AgentCenterController extends BaseChoicePhotoController<AgentCenterController> implements ModifyAvatarHandler{
+
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
@@ -151,24 +156,29 @@ class _AgentCenterController extends State<AgentCenterController> {
   /// 顶部头像
   Widget _headView() {
 
-    return new Center(
-      child: new Container(
-        padding: EdgeInsets.only(top: 10.0,),
-        child: new Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
+    return new GestureDetector(
+      onTap: () {
+        openModalBottomSheet();
+      },
+      child: new Center(
+        child: new Container(
+          padding: EdgeInsets.only(top: 10.0,),
+          child: new Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
 
-            CommonView().clipHeadImg(),
-            new Text(
-              SpUtil.getString(Constant.USER_NAME),
-              style: new TextStyle(
-                fontSize: 14.0,
-                color: Color(ColorUtil.textColor_333333),
+              CommonView().clipHeadImg(),
+              new Text(
+                SpUtil.getString(Constant.USER_NAME),
+                style: new TextStyle(
+                  fontSize: 14.0,
+                  color: Color(ColorUtil.textColor_333333),
+                ),
               ),
-            ),
 
 
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -208,6 +218,15 @@ class _AgentCenterController extends State<AgentCenterController> {
         switch(index) {
           case 0:
             //开户中心
+            var agentCenter = SpUtil.getString(Constant.IS_AGENT);
+            if (TextUtil.isEmpty(agentCenter)) {
+              showToast("非代理不能开户");
+              return;
+            }
+            if (agentCenter == "1") {
+              showToast("非代理不能开户");
+              return;
+            }
             Navigator.pushNamed(context, RouteUtil.openAccountCenterController);
             break;
           case 1:
@@ -274,18 +293,19 @@ class _AgentCenterController extends State<AgentCenterController> {
             case 1:
               //团队报表
               //Navigator.pushNamed(context, RouteUtil.teamReportFormController);
-              try {
-                Navigator.of(context).pushAndRemoveUntil(new MaterialPageRoute(
-                  builder: (BuildContext context) => TeamReportFormController(),
-                  settings: RouteSettings(
-                    arguments: {"userIdDL" : "0"},
-                  ),
-                ), (//跳转到主页
-                    // ignore: unrelated_type_equality_checks
-                    Route route) => route == RouteUtil.teamReportFormController);
-              } catch (e) {
-
-              }
+//              try {
+//                Navigator.of(context).pushAndRemoveUntil(new MaterialPageRoute(
+//                  builder: (BuildContext context) => TeamReportFormController(),
+//                  settings: RouteSettings(
+//                    arguments: {"userIdDL" : "0"},
+//                  ),
+//                ), (//跳转到主页
+//                    // ignore: unrelated_type_equality_checks
+//                    Route route) => route == RouteUtil.teamReportFormController);
+//              } catch (e) {
+//
+//              }
+              Navigator.pushNamed(context, RouteUtil.teamReportFormController, arguments: {"userIdDL" : "0"});
               break;
             case 2:
               //团队账变
@@ -314,6 +334,18 @@ class _AgentCenterController extends State<AgentCenterController> {
         ),
       ),
     );
+  }
+
+  @override
+  void upLoadFileSuccessful(String urlImg) {
+    UserService.instance.editAvatar(context, this, urlImg);
+  }
+
+  @override
+  void setModifyHeadImgUrl(String urlHeadImg) {
+    setState(() {
+
+    });
   }
 
 }

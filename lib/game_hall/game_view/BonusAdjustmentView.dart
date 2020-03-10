@@ -19,6 +19,7 @@ class BonusAdjustmentView extends StatefulWidget {
   final int multipleNum;
   final int segmentedIndex;
   final double sliderValue;
+  final FocusNode focusNode;
 
   BonusAdjustmentView({
     Key key,
@@ -26,6 +27,7 @@ class BonusAdjustmentView extends StatefulWidget {
     this.multipleNum = 1,
     this.segmentedIndex = 0,
     this.sliderValue = 0.0,
+    this.focusNode,
   }) : super(key: key);
 
   @override
@@ -36,6 +38,7 @@ class BonusAdjustmentView extends StatefulWidget {
       multipleNum: this.multipleNum,
       segmentedIndex: this.segmentedIndex,
       sliderValue: this.sliderValue,
+      focusNode: this.focusNode,
     );
   }
 
@@ -45,29 +48,31 @@ class BonusAdjustmentStateView extends BaseController<BonusAdjustmentView> {
 
 
   TextEditingController textEditingController = new TextEditingController();
-  FocusNode _focusNode = FocusNode();
+
 
   BonusAdjustmentInterface adjustmentInterface; // 奖金调节回调接口
   int multipleNum;
   int segmentedIndex;
   double sliderValue;
+  FocusNode focusNode;
 
   BonusAdjustmentStateView({
     this.adjustmentInterface,
     this.multipleNum,
     this.segmentedIndex,
     this.sliderValue ,
+    this.focusNode,
   });
 
   @override
   void initState() {
     // TODO: implement initState
-//    _focusNode?.addListener((){
-//      if (!_focusNode.hasFocus) {
-//        FocusScope.of(context).requestFocus(_focusNode);     // 获取焦点
+//    focusNode?.addListener((){
+//      if (!focusNode.hasFocus) {
+//        FocusScope.of(context).requestFocus(focusNode);     // 获取焦点
 //      }
 //    });
-//    _focusNode.unfocus();
+//    focusNode.unfocus();
     super.initState();
 
 
@@ -75,11 +80,16 @@ class BonusAdjustmentStateView extends BaseController<BonusAdjustmentView> {
 
   @override
   Widget build(BuildContext context) {
-
     textEditingController.text = "$multipleNum";
-    textEditingController.selection = new TextSelection.fromPosition(TextPosition(
-        affinity: TextAffinity.downstream,
-        offset: "$multipleNum".length));
+    if (multipleNum == 0) {
+      textEditingController.text = "";
+    } else {
+      textEditingController.selection = new TextSelection.fromPosition(TextPosition(
+          affinity: TextAffinity.downstream,
+          offset: "$multipleNum".length));
+    }
+
+
 
     return new Column(
       children: <Widget>[
@@ -184,7 +194,7 @@ class BonusAdjustmentStateView extends BaseController<BonusAdjustmentView> {
   Widget _companyRow() {
 
     return new Container(
-      margin: EdgeInsets.only(top: 15.0, bottom: 15.0),
+      margin: EdgeInsets.only(top: 5.0, bottom: 5.0),
       child: new Row(
         children: <Widget>[
 
@@ -277,7 +287,7 @@ class BonusAdjustmentStateView extends BaseController<BonusAdjustmentView> {
         alignment: Alignment.center,
         padding: EdgeInsets.only(left: 10.0, right: 10.0),
         child: new Text(
-          "--",
+          "-",
           style: TextStyle(
             color: Color(ColorUtil.whiteColor),
             fontSize: 16.0,
@@ -289,41 +299,71 @@ class BonusAdjustmentStateView extends BaseController<BonusAdjustmentView> {
 
   Widget _bettingTextView() {
 
-    return new Container(
-      height: 30.0,
-      width: 50.0,
-      decoration: new BoxDecoration(
-        border: new Border.all(color: Color(ColorUtil.textColor_888888), width: 0.5), // 边色与边宽度
-        borderRadius: new BorderRadius.only(), // 圆角度
-      ),
-      alignment: Alignment.center,
-      padding: EdgeInsets.only(left: 10.0,right: 10.0),
-      child: new TextField(
-        textAlign: TextAlign.center,
-        focusNode: _focusNode,
-        style: TextStyle(fontSize: 14, color: Color(ColorUtil.textColor_333333)),
-        decoration: InputDecoration(
-          hintText: "",
-          border: InputBorder.none,
-          hoverColor: Color(ColorUtil.textColor_333333),
-          hintStyle: TextStyle(fontSize: 14, color: Color(ColorUtil.textColor_333333)),
-          contentPadding: const EdgeInsets.only(top: 0.0, bottom: 14.0),
-
+//    if (focusNode.hasFocus) {
+      return new Container(
+        height: 30.0,
+        width: 50.0,
+        decoration: new BoxDecoration(
+          border: new Border.all(color: Color(ColorUtil.textColor_888888), width: 0.5), // 边色与边宽度
+          borderRadius: new BorderRadius.only(), // 圆角度
         ),
-        onChanged: _textFieldChanged,
-        controller: textEditingController,
+        alignment: Alignment.center,
+        padding: EdgeInsets.only(left: 10.0,right: 10.0),
+        child: new TextField(
+          textAlign: TextAlign.center,
+//          focusNode: focusNode,
+          autofocus: false,
+          style: TextStyle(fontSize: 14, color: Color(ColorUtil.textColor_333333)),
+          decoration: InputDecoration(
+            hintText: "",
+            border: InputBorder.none,
+            hoverColor: Color(ColorUtil.textColor_333333),
+            hintStyle: TextStyle(fontSize: 14, color: Color(ColorUtil.textColor_333333)),
+            contentPadding: const EdgeInsets.only(top: 0.0, bottom: 15.0),
+
+          ),
+          onChanged: _textFieldChanged,
+          controller: textEditingController,
 //        inputFormatters: WhitelistingTextInputFormatter(RegExp("[0-9.]")),
-      ),
-    );
+        ),
+      );
+//    }
+
+//    return new GestureDetector(
+//      onTap: () {
+//        FocusScope.of(context).requestFocus(focusNode);
+//      },
+//      child: new Container(
+//        height: 30.0,
+//        width: 50.0,
+//        decoration: new BoxDecoration(
+//          border: new Border.all(color: Color(ColorUtil.textColor_888888), width: 0.5), // 边色与边宽度
+//          borderRadius: new BorderRadius.only(), // 圆角度
+//        ),
+//        alignment: Alignment.center,
+//        padding: EdgeInsets.only(left: 10.0,right: 10.0),
+//        child: new Text("${textEditingController.text}",
+//          textAlign: TextAlign.center,
+//          style: TextStyle(fontSize: 14, color: Color(ColorUtil.textColor_333333)),
+//
+//        ),
+//      ),
+//    );
+
   }
 
   _textFieldChanged(String str) {
     if(TextUtil.isEmpty(str)) {
-      str = "1";
+      str = "";
+      if (adjustmentInterface != null) {
+        adjustmentInterface.bettingMultipleAddAndSub(true, 0);
+      }
+    } else {
+      if (adjustmentInterface != null) {
+        adjustmentInterface.bettingMultipleAddAndSub(true, int.parse(str));
+      }
     }
-    if (adjustmentInterface != null) {
-      adjustmentInterface.bettingMultipleAddAndSub(true, int.parse(str));
-    }
+
   }
 
   Widget _addBettingItemViewADD() {

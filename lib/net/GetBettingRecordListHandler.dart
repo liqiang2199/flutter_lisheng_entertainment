@@ -6,4 +6,10 @@ abstract class GetBettingRecordListHandler extends BaseHandler{
 
   void setGetBettingRecordData(GetBettingRecordBeen recordDataBeen);
 
+  /**
+   * 再来一注的结果
+   */
+  ///
+  void getOrderOnceResult(bool result);
+
 }

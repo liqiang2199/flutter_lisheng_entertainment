@@ -40,6 +40,7 @@ class GameGd11Choice5Service {
   /**
    * len 需要多少长度
    */
+  ///
   String _stringAppend_List(List<String> list, int len) {
     StringBuffer numStr = new StringBuffer();
 
@@ -101,7 +102,9 @@ class GameGd11Choice5Service {
    * 只有一个选号时
    * playId 玩法ID
    */
-  void commonOneListDataNum(List<String> numList, CalculationBettingNumHandler  bettingNumHandler, String playId, bool isAddBetting, int bettingMultiple) {
+  ///
+  void commonOneListDataNum(List<String> numList, CalculationBettingNumHandler  bettingNumHandler
+      , String playId, bool isAddBetting, int bettingMultiple) {
     CalculationBettingNumDataBeen calculationBettingNumBeen = new CalculationBettingNumDataBeen(new List(),0,"0.00","0.00","0.00");//注数 和 金额
     if (numList.length <= 0) {
       bettingNumHandler.getCalculationBettingNumData(calculationBettingNumBeen);
@@ -109,11 +112,11 @@ class GameGd11Choice5Service {
     }
     CalculationBettingNumHttpBeen bettingNumHttpBeen = new CalculationBettingNumHttpBeen(SpUtil.getString(Constant.TOKEN),playId);
 
-    if(playId == "5"|| playId == "23") {
-      // 三码/前三直选/单式（计算注数）任选/任选单式/三中三
+    if(playId == "5"|| playId == "6"|| playId == "23") {
+      // 三码/前三直选/单式（计算注数） 三码/前三组合/单式（计算注数）任选/任选单式/三中三
       bettingNumHttpBeen.data_num = _stringAppend_List(numList, 6);
     } else if (playId == "40" || playId == "12" || playId == "22") {
-      // 二码/前二直选/单式（计算注数）二码/前二组合/单式（计算注数）  任选/任选单式/二中二
+      // 二码/前二组选/单式（计算注数）二码/前二直选/单式（计算注数）  任选/任选单式/二中二
       bettingNumHttpBeen.data_num = _stringAppend_List(numList, 4);
     }else if (playId == "24") {
       // 任选/任选单式四中四
@@ -135,11 +138,17 @@ class GameGd11Choice5Service {
       // 任选/任选单式 八中五
       bettingNumHttpBeen.data_num = _stringAppend_List(numList, 16);
     }
+    else if (playId == "21") {
+      // 任选/任选单式 1中1
+      bettingNumHttpBeen.data_num = _stringAppend_List(numList, 2);
+    }
     else {
       bettingNumHttpBeen.data_num = _stringAppend(numList);
     }
 
-
+    if (isAddBetting) {
+      bettingNumHttpBeen.multiple = bettingMultiple;
+    }
 
     ApiService apiService = RetrofitManager.instance.createApiService();
     apiService.setHandler(bettingNumHandler);
@@ -159,6 +168,7 @@ class GameGd11Choice5Service {
   /**
    * 二码/前二直选/复式（计算注数）
    */
+  ///
   void twoYardDirectlyElectedCompound(List<String> one_num, List<String> two_num,  CalculationBettingNumHandler  bettingNumHandler, bool isAddBetting, int bettingMultiple ) {
 
     CalculationBettingNumDataBeen calculationBettingNumBeen = new CalculationBettingNumDataBeen(new List(),0,"0.00","0.00","0.00");//注数 和 金额
@@ -203,7 +213,7 @@ class GameGd11Choice5Service {
 
   /// 定位胆/定位胆（计算注数）
   void certainGallbladderCombinationCompound(List<String> one_num, List<String> two_num,
-      List<String> three_num, CalculationBettingNumHandler  bettingNumHandler, bool isAddBetting, int bettingMultiple ) {
+      List<String> three_num, CalculationBettingNumHandler  bettingNumHandler, String playID, bool isAddBetting, int bettingMultiple ) {
 
     CalculationBettingNumDataBeen calculationBettingNumBeen = new CalculationBettingNumDataBeen(new List(),0,"0.00","0.00","0.00");//注数 和 金额
     if (one_num.length <= 0) {
@@ -218,7 +228,7 @@ class GameGd11Choice5Service {
       bettingNumHandler.getCalculationBettingNumData(calculationBettingNumBeen);
       return;
     }
-    CalculationBettingNumHttpBeen bettingNumHttpBeen = new CalculationBettingNumHttpBeen(SpUtil.getString(Constant.TOKEN),"17");
+    CalculationBettingNumHttpBeen bettingNumHttpBeen = new CalculationBettingNumHttpBeen(SpUtil.getString(Constant.TOKEN), playID);
 
 
     bettingNumHttpBeen.one_num = _stringAppend(one_num);

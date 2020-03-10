@@ -17,6 +17,7 @@ import 'package:flutter_lisheng_entertainment/view/view_interface/SelectionTimeC
 /**
  * 游戏里面 -》 投注记录
  */
+///
 class GameBettingRecordView extends StatefulWidget {
 
   String _colorVariety;
@@ -48,7 +49,7 @@ class _GameBettingRecordView extends BaseRefreshController<GameBettingRecordView
     super.initState();
     startTime = DateUtil.getDateStrByDateTime(DateTime.now(),format: DateFormat.YEAR_MONTH_DAY);
     endTime = DateUtil.getDateStrByDateTime(DateTime.now(),format: DateFormat.YEAR_MONTH_DAY);
-    GameService.instance.bettingList(this, "$_colorVariety", "0", startTime, endTime);
+    GameService.instance.bettingList(this, "$_colorVariety", "0", startTime, endTime, "$page");
   }
 
   @override
@@ -57,7 +58,7 @@ class _GameBettingRecordView extends BaseRefreshController<GameBettingRecordView
     return new Column(
       children: <Widget>[
 
-        new GameSelectionTimeAndBettingStateView(this),
+        new GameSelectionTimeAndBettingStateView(this, choiceBettingStatusInterface: this,),
         new Expanded(child: smartRefreshBase(_cpList(),)),
 
       ],
@@ -98,26 +99,72 @@ class _GameBettingRecordView extends BaseRefreshController<GameBettingRecordView
     StringBuffer bettingNumList = new StringBuffer();
     if (dataListBeen != null && dataListBeen.param != null) {
       var param = dataListBeen.param;
-      bettingNumList.write("${param.one_num}");
+      if (!TextUtil.isEmpty(param.one_num)) {
+        bettingNumList.write("${param.one_num}");
+        bettingNumList.write("/");
+      }
       if(!TextUtil.isEmpty(param.two_num)) {
         bettingNumList.write("${param.two_num}");
+        bettingNumList.write("/");
       }
       if(!TextUtil.isEmpty(param.three_num)) {
         bettingNumList.write("${param.three_num}");
+        bettingNumList.write("/");
+      }
+      if(!TextUtil.isEmpty(param.four_num)) {
+        bettingNumList.write("${param.four_num}");
+        bettingNumList.write("/");
+      }
+      if(!TextUtil.isEmpty(param.five_num)) {
+        bettingNumList.write("${param.five_num}");
+        bettingNumList.write("/");
       }
       if(!TextUtil.isEmpty(param.data_num)) {
         bettingNumList.write("${param.data_num}");
+        bettingNumList.write("");
       }
     }
 
-    String cpFindName = "";
-    if (_colorVariety == "9") {
-      cpFindName = "广东11选5";
-    } else {
-      if (_colorVariety == "15") {
-        cpFindName = "河内一分彩";
-      }
+    String cpFindName = dataListBeen.lottery_name;
+    if (TextUtil.isEmpty(cpFindName)) {
+      if (_colorVariety == "9") {
+        cpFindName = "广东11选5";
+      } else {
+        if (_colorVariety == "15") {
+          cpFindName = "河内一分彩";
+        }
 
+      }
+    }
+
+    var status = dataListBeen.status;
+    bool isCancelTheOrder = true;
+    if (TextUtil.isEmpty(dataListBeen.remark)) {
+
+      switch(status) {
+        case "1":
+          dataListBeen.remark = "待开奖";
+          break;
+        case "2":
+          dataListBeen.remark = "中奖";
+          break;
+        case "3":
+          dataListBeen.remark = "未中奖";
+          break;
+        case "5":
+          //已撤单
+          dataListBeen.remark = "已撤单";
+          break;
+      }
+    }
+
+    String zjMoney = "0.00";
+    if (status == "2") {
+      zjMoney = "${!TextUtil.isEmpty(dataListBeen.jg_money) ? dataListBeen.jg_money : ""}";
+    }
+
+    if (status == "5") {
+      isCancelTheOrder = false;
     }
 
     return new Container(
@@ -131,9 +178,12 @@ class _GameBettingRecordView extends BaseRefreshController<GameBettingRecordView
           _recordBottomList("订单编号：", "${!TextUtil.isEmpty(dataListBeen.ordercode) ? dataListBeen.ordercode : ""}"),
           _recordBottomList("订单时间：", "${!TextUtil.isEmpty(dataListBeen.createtime) ? dataListBeen.createtime : ""}"),
           _recordBottomList("投注内容：", bettingNumList.toString()),
+          //  1=待开奖,2=中奖,3=未中奖,
           _recordBottomList("投注状态：", "${!TextUtil.isEmpty(dataListBeen.remark) ? dataListBeen.remark : ""}"),
           _recordBottomList("投注金额：", "${!TextUtil.isEmpty(dataListBeen.xz_money) ? dataListBeen.xz_money  : ""}"),
-          _recordBottomList("中奖金额：", "${!TextUtil.isEmpty(dataListBeen.jg_money) ? dataListBeen.jg_money : ""}"),
+          _recordBottomList("中奖金额：", zjMoney),
+          SpaceViewUtil.pading_Top_10(),
+          _butRowOperation("${dataListBeen.id}", dataListBeen.paly_id, isCancelTheOrder),
           SpaceViewUtil.pading_Top_10(),
           CommonView().commonLine_NoMargin(context),
           SpaceViewUtil.pading_Top_10(),
@@ -172,7 +222,7 @@ class _GameBettingRecordView extends BaseRefreshController<GameBettingRecordView
           ),
         ),
 
-        _butCopy(qs),
+        //_butCopy(qs),
 
       ],
     );
@@ -198,6 +248,65 @@ class _GameBettingRecordView extends BaseRefreshController<GameBettingRecordView
 
         },color: Color(ColorUtil.whiteColor),
           child: new Text("复制期号"
+            , style: TextStyle(fontSize: 12.0,color: Color(ColorUtil.butColor)),),
+          //shape:new RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)) ,
+          shape: new RoundedRectangleBorder(side: new BorderSide(
+            //设置 界面效果
+            color: Color(ColorUtil.butColor),
+            style: BorderStyle.solid,
+
+          ),
+            borderRadius: BorderRadius.circular(5.0),
+          ),
+          padding: EdgeInsets.only(left: 5.0, right: 5.0),
+        ),
+      ),
+    );
+  }
+
+  Widget _butRowOperation(String id, int paly_id, bool isCancelTheOrder) {
+    return new Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: <Widget>[
+        new Visibility(
+            child: _butOperation("撤单", 1, id, paly_id),
+          visible: isCancelTheOrder,
+        ),
+        _butOperation("再来一注", 2, id, paly_id),
+      ],
+    );
+  }
+
+  /**
+   * 删除  再来一注
+   */
+  ///
+  Widget _butOperation(String title, int index, String id, int paly_id) {
+    return new Align(
+      alignment: Alignment.center,
+      child: new Container(
+        width: 70.0,
+        height: 26.0  ,
+        margin: EdgeInsets.only(left: 5.0, right: 15.0,),
+        child: new RaisedButton(onPressed: (){
+          //
+          switch(index) {
+            case 1:
+              //撤单
+              GameService.instance.delOrder(context, this, "$id");
+              break;
+            case 2:
+              //再来一注
+              GameService.instance.orderOnce(context, this, "$id");
+//              Play11Choice5DataPlayBeen playBeen = new Play11Choice5DataPlayBeen(0, 0, paly_id, "", "", "", "", "", "");
+//
+//              HanoiPlayModelChoiceUtils.getInstance().getGameHttpBettingNum(context,playBeen,
+//                  choiceCpNumList, groupBitsList, this, true, 1);
+              break;
+          }
+
+        },color: Color(ColorUtil.whiteColor),
+          child: new Text("$title"
             , style: TextStyle(fontSize: 12.0,color: Color(ColorUtil.butColor)),),
           //shape:new RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)) ,
           shape: new RoundedRectangleBorder(side: new BorderSide(
@@ -245,6 +354,19 @@ class _GameBettingRecordView extends BaseRefreshController<GameBettingRecordView
 
 
   @override
+  void onRefreshData() {
+    // TODO: implement onRefreshData
+    super.onRefreshData();
+    GameService.instance.bettingList(this, "$_colorVariety", statusId, startTime, endTime, "$page");
+  }
+
+  @override
+  void onLoadingDataRefresh() {
+    GameService.instance.bettingList(this, "$_colorVariety", statusId, startTime, endTime, "$page");
+  }
+
+
+  @override
   void selectionEndTime(String endTime) {
     this.endTime = endTime;
   }
@@ -252,7 +374,7 @@ class _GameBettingRecordView extends BaseRefreshController<GameBettingRecordView
   @override
   void selectionStartTime(String starTime) {
     this.startTime = starTime;
-    GameService.instance.bettingList(this, "9", statusId, startTime, endTime);
+    GameService.instance.bettingList(this, "$_colorVariety", statusId, startTime, endTime, "$page");
   }
 
   @override
@@ -262,6 +384,14 @@ class _GameBettingRecordView extends BaseRefreshController<GameBettingRecordView
     setState(() {
 
     });
+  }
+
+  @override
+  void getOrderOnceResult(bool result) {
+    if (result) {
+      // 再来一注 结果
+      onRefreshData();
+    }
   }
 
   @override

@@ -10,6 +10,7 @@ class GameConstant {
    * 1 三码 2 二码
    * 3 直选  复式
    */
+  ///
   static const gd11_5_1_3 = "GD11513";
   /// 直选 单式
   static const gd11_5_1_4 = "GD11514";
@@ -25,6 +26,7 @@ class GameConstant {
    * 2 二码
    * 10 直选  复式
    */
+  ///
   static const gd11_5_2_10 = "GD115210";
   /// 直选 单式
   static const gd11_5_2_11 = "GD115211";
@@ -40,6 +42,7 @@ class GameConstant {
    * 3 不定胆
    * 13 前三位
    */
+  ///
   static const gd11_5_3_13 = "GD115313";
 
   /**
@@ -49,6 +52,7 @@ class GameConstant {
    * 4 定位胆
    * 15 定位胆
    */
+  ///
   static const gd11_5_4_15 = "GD115415";
 
   /**
@@ -58,6 +62,7 @@ class GameConstant {
    * 5 任选
    * 19 单式 一中一
    */
+  ///
   static const gd11_5_5_19 = "GD115519";
   /// 20 单式 二中二
   static const gd11_5_5_20 = "GD115520";
@@ -94,6 +99,7 @@ class GameConstant {
   /**
    * 获取任选玩法方式
    */
+  ///
   String gbChoiceNumType(String title, int playModeSingleOrDouble) {
     String typeStr;
     if (playModeSingleOrDouble == 2) {
@@ -159,6 +165,7 @@ class GameConstant {
   /**
    * 获取任选 玩法ID
    */
+  ///
   String getGD11Choice5PlayID(String title) {
     String playID;
     switch(title) {
@@ -219,6 +226,7 @@ class GameConstant {
   /**
    * 获取任选 单式 随机选好数
    */
+  ///
   int getGD11Choice5Single_Num(String title) {
     int randomNum;
     switch(title) {

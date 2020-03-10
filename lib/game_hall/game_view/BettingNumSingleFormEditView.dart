@@ -148,8 +148,6 @@ class BettingNumSingleFormEditView extends StatelessWidget{
 
     print("输入数字： $str");
     var length = stringBuffer.toString().split(",").length;
-//    int length = (editLength~/6);
-//    print("分割 长度 $length");
     int le = singleFormNum * singleFormBaseNum * length + (length -1);
 
 
@@ -209,20 +207,6 @@ class BettingNumSingleFormEditView extends StatelessWidget{
           }
         }
 
-        /// 去除先前的重
-//        Set<String> cancelReNum = new Set();
-//        splitAfter?.forEach((value) {
-//          cancelReNum.add(value);
-//        });
-//        splitAfter.clear();
-//        stringBuffer.clear();
-//        cancelReNum?.forEach((value) {
-//          splitAfter.add(value);
-//          stringBuffer.write("$value");
-//          stringBuffer.write(",");
-//        });
-//        cancelReNum.clear();
-
       }
 
       if(!isRepeat) {
@@ -272,6 +256,10 @@ class BettingNumSingleFormEditView extends StatelessWidget{
           if (contentHandle != null) {
 //        contentHandle.editContent11Choose5Handle(str);
             contentHandle.editContent11Choose5Handle(strAfter);
+          }
+        } else {
+          if (contentHandle != null) {
+            contentHandle.editContent11Choose5Handle(str);
           }
         }
 

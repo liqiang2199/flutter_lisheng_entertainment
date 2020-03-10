@@ -19,13 +19,15 @@ class GameSelectionTimeAndBettingStateView extends StatefulWidget {
 
 
   final SelectionTimeCallBack timeCallBack;
+  final ChoiceBettingStatusInterface choiceBettingStatusInterface;
   final String startTime;
   final String endTime;
 
   const GameSelectionTimeAndBettingStateView(this.timeCallBack,{
     Key key,
     this.startTime = "选择时间",
-    this.endTime = "选择时间"
+    this.endTime = "选择时间",
+    this.choiceBettingStatusInterface,
   }) : assert(
   timeCallBack != null
   ),super(key: key);
@@ -33,11 +35,9 @@ class GameSelectionTimeAndBettingStateView extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
-    return _GameSelectionTimeAndBettingStateView(this.timeCallBack,key: key, startTime: startTime, endTime: endTime);
+    return _GameSelectionTimeAndBettingStateView(this.timeCallBack,key: key,
+        startTime: startTime, endTime: endTime, choiceBettingStatusInterface: choiceBettingStatusInterface);
   }
-
-
-
 
 }
 class _GameSelectionTimeAndBettingStateView extends BaseController<GameSelectionTimeAndBettingStateView> with ShowPickerDateInterface,ChoiceTimeResultInterface{
@@ -279,7 +279,7 @@ class _GameSelectionTimeAndBettingStateView extends BaseController<GameSelection
         child: new RaisedButton(onPressed: (){
           //
           if (timeCallBack != null) {
-            timeCallBack.selectionEndTime(startTime == "选择时间" ? "" : startTime);
+            timeCallBack.selectionEndTime(endTime == "选择时间" ? "" : endTime);
             timeCallBack.selectionStartTime(startTime == "选择时间" ? "" : startTime);
           }
 

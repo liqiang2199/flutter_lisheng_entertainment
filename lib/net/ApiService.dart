@@ -1,4 +1,5 @@
 
+import 'dart:io';
 import 'dart:math';
 
 import 'package:dio/dio.dart';
@@ -9,23 +10,28 @@ import 'package:flutter_lisheng_entertainment/agent/net/AgencyBonusHandler.dart'
 import 'package:flutter_lisheng_entertainment/agent/net/LinkManagerHandler.dart';
 import 'package:flutter_lisheng_entertainment/agent/net/LinkOpenAccountHandler.dart';
 import 'package:flutter_lisheng_entertainment/agent/net/MemberManagerHandler.dart';
+import 'package:flutter_lisheng_entertainment/agent/net/OpenAccountIntervalHandler.dart';
 import 'package:flutter_lisheng_entertainment/agent/net/OrdinaryOpenAccountHandler.dart';
 import 'package:flutter_lisheng_entertainment/agent/net/TeamAccountChangeHandler.dart';
 import 'package:flutter_lisheng_entertainment/agent/net/TeamBettingHandler.dart';
 import 'package:flutter_lisheng_entertainment/agent/net/TeamOverviewHandler.dart';
 import 'package:flutter_lisheng_entertainment/agent/net/TeamRechargeRecordHandler.dart';
 import 'package:flutter_lisheng_entertainment/agent/net/TeamReportFormHandler.dart';
+import 'package:flutter_lisheng_entertainment/base/handler/ModifyAvatarHandler.dart';
 import 'package:flutter_lisheng_entertainment/game_hall/net/GameHallHandler.dart';
 import 'package:flutter_lisheng_entertainment/game_hall/net/PlayMode11Choice5Handler.dart';
 import 'package:flutter_lisheng_entertainment/game_hall/net/TrendHanoiOneLotteryHandler.dart';
 import 'package:flutter_lisheng_entertainment/game_hall/net/game_gd_11_5/CalculationBettingNumHandler.dart';
 import 'package:flutter_lisheng_entertainment/game_hall/net/game_gd_11_5/LotteryNum11Choice5Handler.dart';
+import 'package:flutter_lisheng_entertainment/game_hall/net/odd_interest/OddInterestHandler.dart';
+import 'package:flutter_lisheng_entertainment/game_hall/net/tencent_game/TencentCnetBettingHandler.dart';
 import 'package:flutter_lisheng_entertainment/game_hall/net/vietnam_hanoi/VietnamHanoiBettingHandler.dart';
 import 'package:flutter_lisheng_entertainment/home/net/ActivePageHandler.dart';
 import 'package:flutter_lisheng_entertainment/home/net/HomeHandler.dart';
 import 'package:flutter_lisheng_entertainment/home/net/LotteryCenterHandler.dart';
 import 'package:flutter_lisheng_entertainment/home/net/SystemNoticeHandler.dart';
 import 'package:flutter_lisheng_entertainment/model/http/BaseTokenHttpBeen.dart';
+import 'package:flutter_lisheng_entertainment/model/http/CommonUploadHttpBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/http/GetBettingRecordListHttpBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/http/LoginHttpBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/http/UserReportHttpBeen.dart';
@@ -42,8 +48,13 @@ import 'package:flutter_lisheng_entertainment/model/http/bank/BindBankHttpBeen.d
 import 'package:flutter_lisheng_entertainment/model/http/game/OpenLotteryListHttpBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/http/gd_11_5/CalculationBettingNumHttpBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/http/gd_11_5/CpOpenLotteryInfoHttp.dart';
+import 'package:flutter_lisheng_entertainment/model/http/odd_interest/OddInterestHttpBeen.dart';
+import 'package:flutter_lisheng_entertainment/model/http/order/DelOrderHttpBeen.dart';
+import 'package:flutter_lisheng_entertainment/model/http/order/OrderOnceHttpBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/http/set_cash_pass/ModifyPaypwdHttpBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/http/set_cash_pass/SetPaypwdHttpBeen.dart';
+import 'package:flutter_lisheng_entertainment/model/http/tencent/TencentHttpBeen.dart';
+import 'package:flutter_lisheng_entertainment/model/http/user_info_center/ModifyAvatarHttpBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/http/user_info_center/UserInfoCenterHttpBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/http/user_record/UserAccountChangeRecordHttpBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/http/vietnam_hanoi/VietnamHanoiHttpBeen.dart';
@@ -52,6 +63,7 @@ import 'package:flutter_lisheng_entertainment/model/http/vietnam_hanoi/hanoi_tre
 import 'package:flutter_lisheng_entertainment/model/http/withdraw/UserWithdrawHttpBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/http/withdraw/record/UserWithdrawRecordHttpBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/json/BaseJson.dart';
+import 'package:flutter_lisheng_entertainment/model/json/JsonBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/json/account_change_record/AccountChangeRecordBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/json/active_page/ActivePageListBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/json/agent/LinkOpenAccountBeen.dart';
@@ -60,6 +72,7 @@ import 'package:flutter_lisheng_entertainment/model/json/agent/TeamOverviewBeen.
 import 'package:flutter_lisheng_entertainment/model/json/agent/agency_bonus/AgencyBonusBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/json/agent/agency_bonus/AgencyBonusHistoryBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/json/agent/link_list/LinkAccountListDataBeen.dart';
+import 'package:flutter_lisheng_entertainment/model/json/agent/open_account_interval/OpenAccountIntervalBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/json/agent/team_account_change/TeamAccountChangeBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/json/agent/team_betting/TeamBettingBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/json/agent/team_member/MemberManagerBeen.dart';
@@ -128,6 +141,14 @@ abstract class ApiService<T> {
   @POST(UrlUtil.login)
   void login(@Body() LoginHttpBeen task);
 
+  // 图片上传
+  @POST(UrlUtil.commonUpload)
+  void upload(@Body() CommonUploadHttpBeen uploadHttpBeen);
+
+  // 修改用户头像
+  @POST(UrlUtil.editAvatar)
+  void editAvatar(@Body() ModifyAvatarHttpBeen uploadHttpBeen);
+
   /// 退出登录
   @POST(UrlUtil.loginOut)
   void loginOut(@Body() BaseTokenHttpBeen tokenHttpBeen);
@@ -182,6 +203,10 @@ abstract class ApiService<T> {
   /// 代理 开户
   @POST(UrlUtil.addAccount)
   void postOrdinaryOpenAccount(@Body() OrdinaryOpenAccountHttpBeen openAccountHttpBeen);
+
+  /// 开户页面获取最大返点值
+  @POST(UrlUtil.openAccount)
+  void openAccount(@Body() BaseTokenHttpBeen tokenHttpBeen);
 
   /// 创建开户链接
   @POST(UrlUtil.addAccountLink)
@@ -257,6 +282,14 @@ abstract class ApiService<T> {
   @POST(UrlUtil.getApi)
   void getApiHome(@Body() CpOpenLotteryInfoHttp openLotteryListHttpBeen);
 
+  /// 订单撤销
+  @POST(UrlUtil.delOrder)
+  void delOrder(@Body() DelOrderHttpBeen delOrderHttpBeen);
+
+  /// 再来一单 (app)
+  @POST(UrlUtil.orderOnce)
+  void orderOnce(@Body() OrderOnceHttpBeen orderOnceHttpBeen);
+
   /**
    * 越南 河内一分彩
    */
@@ -317,6 +350,203 @@ abstract class ApiService<T> {
   @POST(UrlUtil.hanoiOneDragonTiger)
   void hanoiOneDragonTiger(@Body() BaseTokenHttpBeen openAccountHttpBeen);
 
+
+  /**
+   * 河内5分彩
+   */
+  ///
+  @POST(UrlUtil.hanoi5GetPlay)
+  void hanoi5GetPlay(@Body() BaseTokenHttpBeen openAccountHttpBeen);
+
+  /// 计算注数
+  @POST(UrlUtil.hanoi5GetGDBets)
+  void hanoi5GetGDBets(@Body() VietnamHanoiHttpBeen openAccountHttpBeen);
+
+  /// 投注
+  @POST(UrlUtil.hanoi5GetOrderAdd)
+  void hanoi5GetOrderAdd(@Body() VietnamHanoiHttpBeen openAccountHttpBeen);
+
+  /// 获取下期开奖时间
+  @POST(UrlUtil.hanoi5GetKjTime)
+  void hanoi5GetKjTime(@Body() BaseTokenHttpBeen openAccountHttpBeen);
+
+  /// 河内5分彩 开奖记录
+  @POST(UrlUtil.hanoi5KjLog)
+  void hanoi5KjLog_LotteryList(@Body() OpenLotteryListHttpBeen openAccountHttpBeen);
+
+  /// 河内5分彩 开奖记录
+  @POST(UrlUtil.hanoi5KjLog)
+  void hanoi5KjLog(@Body() OpenLotteryListHttpBeen openAccountHttpBeen);
+
+
+
+
+  /**
+   * 腾讯分分彩
+   */
+  /// 腾讯分分彩 开奖记录
+  @POST(UrlUtil.tencentKjLog)
+  void tencentKjLog(@Body() OpenLotteryListHttpBeen openAccountHttpBeen);
+
+  /// 腾讯分分彩 开奖记录
+  @POST(UrlUtil.tencentKjLog)
+  void tencentKjLog_Limit(@Body() OpenLotteryListHttpBeen openAccountHttpBeen);
+
+  /// 腾讯分分彩 玩法获取
+  @POST(UrlUtil.tencentGetPlay)
+  void tencentGetPlay(@Body() BaseTokenHttpBeen baseTokenHttpBeen);
+
+  /// 腾讯分分彩 开奖时间
+  @POST(UrlUtil.tencentGetKjtime)
+  void tencentGetKjtime(@Body() BaseTokenHttpBeen baseTokenHttpBeen);
+
+  /// 腾讯分分彩 计算注数
+  @POST(UrlUtil.tencentGdBets)
+  void tencentGdBets(@Body() TencentHttpBeen baseTokenHttpBeen);
+
+  /// 腾讯分分彩 下注接口
+  @POST(UrlUtil.tencentOrderAdd)
+  void tencentOrderAdd(@Body() TencentHttpBeen baseTokenHttpBeen);
+
+  /**
+   * 腾讯五分彩
+   */
+  /// 腾讯5分彩 开奖记录
+  @POST(UrlUtil.tencent5KjLog)
+  void tencent5KjLog(@Body() OpenLotteryListHttpBeen openAccountHttpBeen);
+
+  /// 腾讯5分彩 玩法获取
+  @POST(UrlUtil.tencent5GetPlay)
+  void tencent5GetPlay(@Body() BaseTokenHttpBeen baseTokenHttpBeen);
+
+  /// 腾讯5分彩 开奖时间
+  @POST(UrlUtil.tencent5GetKjtime)
+  void tencent5GetKjtime(@Body() BaseTokenHttpBeen baseTokenHttpBeen);
+
+  /// 腾讯5分彩 计算注数
+  @POST(UrlUtil.tencent5GdBets)
+  void tencent5GdBets(@Body() TencentHttpBeen baseTokenHttpBeen);
+
+  /// 腾讯5分彩 下注接口
+  @POST(UrlUtil.tencent5OrderAdd)
+  void tencent5OrderAdd(@Body() TencentHttpBeen baseTokenHttpBeen);
+
+  /**
+   * 腾讯10分彩
+   */
+  /// 腾讯10分彩 开奖记录
+  @POST(UrlUtil.tencent10KjLog)
+  void tencent10KjLog(@Body() OpenLotteryListHttpBeen openAccountHttpBeen);
+
+  /// 腾讯10分彩 玩法获取
+  @POST(UrlUtil.tencent10GetPlay)
+  void tencent10GetPlay(@Body() BaseTokenHttpBeen baseTokenHttpBeen);
+
+  /// 腾讯10分彩 开奖时间
+  @POST(UrlUtil.tencent10GetKjtime)
+  void tencent10GetKjtime(@Body() BaseTokenHttpBeen baseTokenHttpBeen);
+
+  /// 腾讯10分彩 计算注数
+  @POST(UrlUtil.tencent10GdBets)
+  void tencent10GdBets(@Body() TencentHttpBeen baseTokenHttpBeen);
+
+  /// 腾讯10分彩 下注接口
+  @POST(UrlUtil.tencent10OrderAdd)
+  void tencent10OrderAdd(@Body() TencentHttpBeen baseTokenHttpBeen);
+
+  /**
+   * 奇趣一分彩
+   */
+  /// 奇趣一分彩 开奖记录
+  @POST(UrlUtil.oddInterestKjLog)
+  void oddInterestKjLog(@Body() OpenLotteryListHttpBeen openAccountHttpBeen);
+
+  /// 奇趣一分彩 玩法获取
+  @POST(UrlUtil.oddInterestGetPlay)
+  void oddInterestGetPlay(@Body() BaseTokenHttpBeen baseTokenHttpBeen);
+
+  /// 奇趣一分彩 开奖时间
+  @POST(UrlUtil.oddInterestGetKjtime)
+  void oddInterestGetKjtime(@Body() BaseTokenHttpBeen baseTokenHttpBeen);
+
+  /// 奇趣一分彩 计算注数
+  @POST(UrlUtil.oddInterestGdBets)
+  void oddInterestGdBets(@Body() OddInterestHttpBeen baseTokenHttpBeen);
+
+  /// 奇趣一分彩 下注接口
+  @POST(UrlUtil.oddInterestOrderAdd)
+  void oddInterestOrderAdd(@Body() OddInterestHttpBeen baseTokenHttpBeen);
+
+  /**
+   * 奇趣5分彩
+   */
+  /// 奇趣一分彩 开奖记录
+  @POST(UrlUtil.oddInterest5KjLog)
+  void oddInterest5KjLog(@Body() OpenLotteryListHttpBeen openAccountHttpBeen);
+
+  /// 奇趣一分彩 玩法获取
+  @POST(UrlUtil.oddInterest5GetPlay)
+  void oddInterest5GetPlay(@Body() BaseTokenHttpBeen baseTokenHttpBeen);
+
+  /// 奇趣一分彩 开奖时间
+  @POST(UrlUtil.oddInterest5GetKjtime)
+  void oddInterest5GetKjtime(@Body() BaseTokenHttpBeen baseTokenHttpBeen);
+
+  /// 奇趣一分彩 计算注数
+  @POST(UrlUtil.oddInterest5GdBets)
+  void oddInterest5GdBets(@Body() OddInterestHttpBeen baseTokenHttpBeen);
+
+  /// 奇趣一分彩 下注接口
+  @POST(UrlUtil.oddInterest5OrderAdd)
+  void oddInterest5OrderAdd(@Body() OddInterestHttpBeen baseTokenHttpBeen);
+
+  /**
+   * 奇趣10分彩
+   */
+  /// 奇趣10分彩 开奖记录
+  @POST(UrlUtil.oddInterest10KjLog)
+  void oddInterest10KjLog(@Body() OpenLotteryListHttpBeen openAccountHttpBeen);
+
+  /// 奇趣10分彩 玩法获取
+  @POST(UrlUtil.oddInterest10GetPlay)
+  void oddInterest10GetPlay(@Body() BaseTokenHttpBeen baseTokenHttpBeen);
+
+  /// 奇趣10分彩 开奖时间
+  @POST(UrlUtil.oddInterest10GetKjtime)
+  void oddInterest10GetKjtime(@Body() BaseTokenHttpBeen baseTokenHttpBeen);
+
+  /// 奇趣10分彩 计算注数
+  @POST(UrlUtil.oddInterest10GdBets)
+  void oddInterest10GdBets(@Body() OddInterestHttpBeen baseTokenHttpBeen);
+
+  /// 奇趣10分彩 下注接口
+  @POST(UrlUtil.oddInterest10OrderAdd)
+  void oddInterest10OrderAdd(@Body() OddInterestHttpBeen baseTokenHttpBeen);
+
+  /**
+   * 幸运飞艇
+   */
+  /// 幸运飞艇 开奖记录
+  @POST(UrlUtil.luckyAirshipKjLog)
+  void luckyAirshipKjLog(@Body() OpenLotteryListHttpBeen openAccountHttpBeen);
+
+  /// 幸运飞艇 玩法获取
+  @POST(UrlUtil.luckyAirshipGetPlay)
+  void luckyAirshipGetPlay(@Body() BaseTokenHttpBeen baseTokenHttpBeen);
+
+  /// 幸运飞艇 开奖时间
+  @POST(UrlUtil.luckyAirshipGetKjtime)
+  void luckyAirshipGetKjtime(@Body() BaseTokenHttpBeen baseTokenHttpBeen);
+
+  /// 幸运飞艇 计算注数
+  @POST(UrlUtil.luckyAirshipGdBets)
+  void luckyAirshipGdBets(@Body() OddInterestHttpBeen baseTokenHttpBeen);
+
+  /// 幸运飞艇 下注接口
+  @POST(UrlUtil.luckyAirshipOrderAdd)
+  void luckyAirshipOrderAdd(@Body() OddInterestHttpBeen baseTokenHttpBeen);
+
+
   /**
    * 个人中心
    */
@@ -370,6 +600,7 @@ class _ApiService<T> implements ApiService<T> {
    * 发送Post 网络请求
    * jsonData 传入的 json 数据
    */
+  ///
   @override
   Future<Map<String, dynamic>> responseResult(Map<String, dynamic> jsonData, String path) async {
     _showLoadingDialog();//弹出弹窗
@@ -420,7 +651,7 @@ class _ApiService<T> implements ApiService<T> {
         context: context, //BuildContext对象
         barrierDismissible: false,
         builder: (BuildContext context) {
-          return new LoadingDialog();
+          return new LoadingDialog(loadTip: "加载中...",);
         });
   }
 
@@ -442,6 +673,7 @@ class _ApiService<T> implements ApiService<T> {
         SpUtil.putString(Constant.USER_RATIO, "${loginDataBeen.data.userInfo.ratio}");
         SpUtil.putString(Constant.USER_HEAD_IMG, "${loginDataBeen.data.userInfo.avatar}");
         SpUtil.putString(Constant.USER_NAME, "${loginDataBeen.data.userInfo.username}");
+        SpUtil.putString(Constant.IS_AGENT, "${loginDataBeen.data.userInfo.is_dali}");
         var pay_pwd = loginDataBeen.data.userInfo.pay_pwd;
         if(pay_pwd != null) {
           if (!TextUtil.isEmpty(pay_pwd)) {
@@ -465,6 +697,42 @@ class _ApiService<T> implements ApiService<T> {
       }
 
       return loginDataBeen;
+    });
+  }
+
+  /// 图片保存
+  void upload(CommonUploadHttpBeen uploadHttpBeen) {
+    ArgumentError.checkNotNull(uploadHttpBeen, '参数为空');
+//    ArgumentError.checkNotNull(_baseHandler, '_baseHandler为空');
+
+    responseResult(uploadHttpBeen.toJson(), UrlUtil.commonUpload).then((onValue) {
+//      var bannerList = SetLoginOutBeen.fromJson(onValue);
+//      var setHandler = _baseHandler as SetHandler;
+//      if (bannerList.code == 1) {
+//        if (setHandler != null) {
+//          setHandler.loginOutResult(true);
+//        }
+//      } else {
+//        setHandler.showToast(bannerList.msg);
+//      }
+    });
+  }
+
+  /// 修改头像
+  void editAvatar(ModifyAvatarHttpBeen uploadHttpBeen) {
+    ArgumentError.checkNotNull(uploadHttpBeen, '参数为空');
+    ArgumentError.checkNotNull(_baseHandler, '_baseHandler为空');
+
+    responseResult(uploadHttpBeen.toJson(), UrlUtil.editAvatar).then((onValue) {
+      var bannerList = SetLoginOutBeen.fromJson(onValue);
+      var avatarHandler = _baseHandler as ModifyAvatarHandler;
+      avatarHandler.showToast(bannerList.msg);
+      if (bannerList.code == 1) {
+        if (avatarHandler != null) {
+          SpUtil.putString(Constant.USER_HEAD_IMG, "${uploadHttpBeen.avatar}");
+          avatarHandler.setModifyHeadImgUrl("${UrlUtil.BaseUrl}${uploadHttpBeen.avatar}");
+        }
+      }
     });
   }
 
@@ -693,6 +961,7 @@ class _ApiService<T> implements ApiService<T> {
   /**
    * 代理 开户
    */
+  ///
   @override
   void postOrdinaryOpenAccount(OrdinaryOpenAccountHttpBeen openAccountHttpBeen) {
     ArgumentError.checkNotNull(openAccountHttpBeen, '参数为空');
@@ -712,9 +981,28 @@ class _ApiService<T> implements ApiService<T> {
     });
   }
 
+  /// 开户页面获取最大返点值
+  void openAccount(BaseTokenHttpBeen tokenHttpBeen) {
+    ArgumentError.checkNotNull(tokenHttpBeen, '参数为空');
+    ArgumentError.checkNotNull(_baseHandler, '_baseHandler为空');
+
+    responseResult(tokenHttpBeen.toJson(), UrlUtil.openAccount).then((onValue) {
+      var openAccountBeen = OpenAccountIntervalBeen.fromJson(onValue);
+      OpenAccountIntervalHandler rechargeHandler = _baseHandler as OpenAccountIntervalHandler;
+
+      if (openAccountBeen.code == 1) {
+        rechargeHandler.setOpenAccountIntervalBeen(openAccountBeen);
+      } else {
+        rechargeHandler.showToast(openAccountBeen.msg);
+      }
+
+    });
+  }
+
   /**
    * 创建开户链接
    */
+  ///
   @override
   void postLinkOpenAccount(LinkOpenAccountHttpBeen openAccountHttpBeen) {
     ArgumentError.checkNotNull(openAccountHttpBeen, '参数为空');
@@ -1039,6 +1327,38 @@ class _ApiService<T> implements ApiService<T> {
     });
   }
 
+  /// 订单撤销
+  void delOrder(DelOrderHttpBeen delOrderHttpBeen) {
+    ArgumentError.checkNotNull(delOrderHttpBeen, '参数为空');
+    ArgumentError.checkNotNull(_baseHandler, '_baseHandler为空');
+    responseResult(delOrderHttpBeen.toJson(), UrlUtil.delOrder).then((onValue) {
+      var bettingNum = LotteryCenterBeen.fromJson(onValue);
+      GetBettingRecordListHandler linkManagerHandler = _baseHandler as GetBettingRecordListHandler;
+      linkManagerHandler.showToast(bettingNum.msg);
+      if (bettingNum.code == 1) {
+        //linkManagerHandler.setLotteryCenterBeen(bettingNum);
+      } else {
+
+      }
+
+    });
+  }
+
+  /// 再来一单 (app)
+  void orderOnce(@Body() OrderOnceHttpBeen orderOnceHttpBeen) {
+    ArgumentError.checkNotNull(orderOnceHttpBeen, '参数为空');
+    ArgumentError.checkNotNull(_baseHandler, '_baseHandler为空');
+    responseResult(orderOnceHttpBeen.toJson(), UrlUtil.orderOnce).then((onValue) {
+      var bettingNum = LotteryCenterBeen.fromJson(onValue);
+      GetBettingRecordListHandler linkManagerHandler = _baseHandler as GetBettingRecordListHandler;
+      linkManagerHandler.showToast(bettingNum.msg);
+      if (bettingNum.code == 1) {
+        linkManagerHandler.getOrderOnceResult(true);
+      }
+
+    });
+  }
+
   /**
    * 个人投注记录
    */
@@ -1088,7 +1408,7 @@ class _ApiService<T> implements ApiService<T> {
   void withdraw(UserWithdrawRecordHttpBeen withdrawRecordHttpBeen) {
     ArgumentError.checkNotNull(withdrawRecordHttpBeen, '参数为空');
     ArgumentError.checkNotNull(_baseHandler, '_baseHandler为空');
-    responseResult(withdrawRecordHttpBeen.toJson(), UrlUtil.moneyLog).then((onValue) {
+    responseResult(withdrawRecordHttpBeen.toJson(), UrlUtil.withdraw).then((onValue) {
       var bettingNum = UserWithdrawRecordBeen.fromJson(onValue);
       UserWithdrawRecordHandler bettingRecordListHandler = _baseHandler as UserWithdrawRecordHandler;
 
@@ -1158,13 +1478,20 @@ class _ApiService<T> implements ApiService<T> {
     ArgumentError.checkNotNull(openAccountHttpBeen, '参数为空');
     ArgumentError.checkNotNull(_baseHandler, '_baseHandler为空');
     responseResult(openAccountHttpBeen.toJson(), UrlUtil.hanoiOneGetOrderAdd).then((onValue) {
-      var bettingNum = CalculationBettingNumBeen.fromJson(onValue);
+      var jsonBeen = JsonBeen.fromJson(onValue);
       VietnamHanoiBettingHandler linkManagerHandler = _baseHandler as VietnamHanoiBettingHandler;
-      if (bettingNum.code == 1) {
-        linkManagerHandler.bettingSuccessResult();
+      if (jsonBeen.code == 1) {
+        var bettingNum = CalculationBettingNumBeen.fromJson(onValue);
+
+        if (bettingNum.code == 1) {
+          linkManagerHandler.bettingSuccessResult();
+        } else {
+          linkManagerHandler.showToast(bettingNum.msg);
+        }
       } else {
-        linkManagerHandler.showToast(bettingNum.msg);
+        linkManagerHandler.showToast(jsonBeen.msg);
       }
+
     });
   }
 
@@ -1444,6 +1771,807 @@ class _ApiService<T> implements ApiService<T> {
         linkManagerHandler.setTrendSingleOneLotteryBeen(dataTrendHanoi);
       } else {
         linkManagerHandler.showToast(trendHanoiBeen.msg);
+      }
+    });
+  }
+
+
+  /**
+   * 河内5分彩
+   */
+  ///
+  @override
+  void hanoi5GetPlay(BaseTokenHttpBeen openAccountHttpBeen) {
+    ArgumentError.checkNotNull(openAccountHttpBeen, '参数为空');
+    ArgumentError.checkNotNull(_baseHandler, '_baseHandler为空');
+    responseResult(openAccountHttpBeen.toJson(), UrlUtil.hanoi5GetPlay).then((onValue) {
+      PlayMode11Choice5Handler linkManagerHandler = _baseHandler as PlayMode11Choice5Handler;
+      linkManagerHandler.playModeMapValue(onValue);
+
+    });
+  }
+
+  /// 计算注数
+  @override
+  void hanoi5GetGDBets(VietnamHanoiHttpBeen openAccountHttpBeen) {
+    ArgumentError.checkNotNull(openAccountHttpBeen, '参数为空');
+    ArgumentError.checkNotNull(_baseHandler, '_baseHandler为空');
+    responseResult(openAccountHttpBeen.toJson(), UrlUtil.hanoi5GetGDBets).then((onValue) {
+      var bettingNum = CalculationBettingNumBeen.fromJson(onValue);
+      VietnamHanoiBettingHandler linkManagerHandler = _baseHandler as VietnamHanoiBettingHandler;
+      if (bettingNum.code == 1) {
+        linkManagerHandler.getCalculationBettingNumData(bettingNum.data);
+      } else {
+        linkManagerHandler.showToast(bettingNum.msg);
+      }
+    });
+  }
+
+  /// 河内一分彩 下注
+  @override
+  void hanoi5GetOrderAdd(VietnamHanoiHttpBeen openAccountHttpBeen) {
+    ArgumentError.checkNotNull(openAccountHttpBeen, '参数为空');
+    ArgumentError.checkNotNull(_baseHandler, '_baseHandler为空');
+    responseResult(openAccountHttpBeen.toJson(), UrlUtil.hanoi5GetOrderAdd).then((onValue) {
+      var jsonBeen = JsonBeen.fromJson(onValue);
+      VietnamHanoiBettingHandler linkManagerHandler = _baseHandler as VietnamHanoiBettingHandler;
+      if (jsonBeen.code == 1) {
+        var bettingNum = CalculationBettingNumBeen.fromJson(onValue);
+
+        if (bettingNum.code == 1) {
+          linkManagerHandler.bettingSuccessResult();
+        } else {
+          linkManagerHandler.showToast(bettingNum.msg);
+        }
+      } else {
+        linkManagerHandler.showToast(jsonBeen.msg);
+      }
+
+    });
+  }
+
+  /// 获取下期开奖时间
+  @override
+  void hanoi5GetKjTime(BaseTokenHttpBeen openAccountHttpBeen) {
+    ArgumentError.checkNotNull(openAccountHttpBeen, '参数为空');
+    ArgumentError.checkNotNull(_baseHandler, '_baseHandler为空');
+    responseResult(openAccountHttpBeen.toJson(), UrlUtil.hanoi5GetKjTime).then((onValue) {
+      VietnamHanoiBettingHandler linkManagerHandler = _baseHandler as VietnamHanoiBettingHandler;
+      var bettingNum = VietnamHanoiLotteryTimeBeen.fromJson(onValue);
+      if (bettingNum.code == 1) {
+        linkManagerHandler.openVietnamHanoiLotteryTime(bettingNum.data.kj_time, bettingNum.data.qishu);
+      } else {
+        linkManagerHandler.showToast(bettingNum.msg);
+      }
+    });
+  }
+
+  // 河内5分彩 开奖记录
+  void hanoi5KjLog_LotteryList(OpenLotteryListHttpBeen openAccountHttpBeen) {
+    ArgumentError.checkNotNull(openAccountHttpBeen, '参数为空');
+    ArgumentError.checkNotNull(_baseHandler, '_baseHandler为空');
+    responseResult(openAccountHttpBeen.toJson(), UrlUtil.hanoiOneKjLog).then((onValue) {
+      var bettingNum = OpenLotteryListDataBeen.fromJson(onValue);
+      LotteryNum11Choice5Handler bettingRecordListHandler = _baseHandler as LotteryNum11Choice5Handler;
+
+      if (bettingNum.code == 1) {
+        bettingRecordListHandler.setOpenLotteryListData(bettingNum);
+      } else {
+        bettingRecordListHandler.showToast(bettingNum.msg);
+      }
+
+    });
+  }
+
+  /// 河内5分彩 开奖记录
+  void hanoi5KjLog(OpenLotteryListHttpBeen openAccountHttpBeen) {
+    ArgumentError.checkNotNull(openAccountHttpBeen, '参数为空');
+    ArgumentError.checkNotNull(_baseHandler, '_baseHandler为空');
+    responseResult(openAccountHttpBeen.toJson(), UrlUtil.hanoi5KjLog).then((onValue) {
+      var bettingNum = OpenLotteryListDataBeen.fromJson(onValue);
+      VietnamHanoiBettingHandler bettingRecordListHandler = _baseHandler as VietnamHanoiBettingHandler;
+
+      if (bettingNum.code == 1) {
+        bettingRecordListHandler.setAccountChangeRecord(bettingNum);
+      } else {
+        bettingRecordListHandler.showToast(bettingNum.msg);
+      }
+
+    });
+  }
+
+  /**
+   * 腾讯分分彩
+   */
+  /// 腾讯分分彩 开奖记录
+  void tencentKjLog(OpenLotteryListHttpBeen openAccountHttpBeen) {
+    ArgumentError.checkNotNull(openAccountHttpBeen, '参数为空');
+    ArgumentError.checkNotNull(_baseHandler, '_baseHandler为空');
+    responseResult(openAccountHttpBeen.toJson(), UrlUtil.tencentKjLog).then((onValue) {
+      var bettingNum = OpenLotteryListDataBeen.fromJson(onValue);
+
+      if (_baseHandler is LotteryNum11Choice5Handler) {
+        LotteryNum11Choice5Handler bettingRecordListHandler = _baseHandler as LotteryNum11Choice5Handler;
+
+        if (bettingNum.code == 1) {
+          bettingRecordListHandler.setOpenLotteryListData(bettingNum);
+        } else {
+          bettingRecordListHandler.showToast(bettingNum.msg);
+        }
+      }
+
+      if (_baseHandler is TencentCnetBettingHandler) {
+        TencentCnetBettingHandler bettingRecordListHandler = _baseHandler as TencentCnetBettingHandler;
+
+        if (bettingNum.code == 1) {
+          bettingRecordListHandler.setAccountChangeRecord(bettingNum);
+        } else {
+          bettingRecordListHandler.showToast(bettingNum.msg);
+        }
+      }
+
+
+
+    });
+  }
+
+  /// 腾讯分分彩 开奖记录
+  void tencentKjLog_Limit(OpenLotteryListHttpBeen openAccountHttpBeen) {
+    ArgumentError.checkNotNull(openAccountHttpBeen, '参数为空');
+    ArgumentError.checkNotNull(_baseHandler, '_baseHandler为空');
+    responseResult(openAccountHttpBeen.toJson(), UrlUtil.tencentKjLog).then((onValue) {
+      var bettingNum = OpenLotteryListDataBeen.fromJson(onValue);
+      LotteryNum11Choice5Handler bettingRecordListHandler = _baseHandler as LotteryNum11Choice5Handler;
+
+      if (_baseHandler is LotteryNum11Choice5Handler) {
+
+      }
+
+      if (bettingNum.code == 1) {
+        bettingRecordListHandler.setOpenLotteryListData(bettingNum);
+      } else {
+        bettingRecordListHandler.showToast(bettingNum.msg);
+      }
+    });
+  }
+
+  /// 腾讯分分彩 玩法获取
+  void tencentGetPlay( BaseTokenHttpBeen baseTokenHttpBeen) {
+    ArgumentError.checkNotNull(baseTokenHttpBeen, '参数为空');
+    ArgumentError.checkNotNull(_baseHandler, '_baseHandler为空');
+    responseResult(baseTokenHttpBeen.toJson(), UrlUtil.tencentGetPlay).then((onValue) {
+      PlayMode11Choice5Handler linkManagerHandler = _baseHandler as PlayMode11Choice5Handler;
+      linkManagerHandler.playModeMapValue(onValue);
+    });
+  }
+
+  /// 腾讯分分彩 开奖时间
+  void tencentGetKjtime(BaseTokenHttpBeen baseTokenHttpBeen) {
+    ArgumentError.checkNotNull(baseTokenHttpBeen, '参数为空');
+    ArgumentError.checkNotNull(_baseHandler, '_baseHandler为空');
+    responseResult(baseTokenHttpBeen.toJson(), UrlUtil.tencentGetKjtime).then((onValue) {
+      TencentCnetBettingHandler linkManagerHandler = _baseHandler as TencentCnetBettingHandler;
+      var bettingNum = VietnamHanoiLotteryTimeBeen.fromJson(onValue);
+      if (bettingNum.code == 1) {
+        linkManagerHandler.openVietnamHanoiLotteryTime(bettingNum.data.kj_time, bettingNum.data.qishu);
+      } else {
+        linkManagerHandler.showToast(bettingNum.msg);
+      }
+    });
+  }
+
+  /// 腾讯分分彩 计算注数
+  void tencentGdBets(TencentHttpBeen baseTokenHttpBeen) {
+    ArgumentError.checkNotNull(baseTokenHttpBeen, '参数为空');
+    ArgumentError.checkNotNull(_baseHandler, '_baseHandler为空');
+    responseResult(baseTokenHttpBeen.toJson(), UrlUtil.tencentGdBets).then((onValue) {
+      TencentCnetBettingHandler linkManagerHandler = _baseHandler as TencentCnetBettingHandler;
+      var bettingNum = CalculationBettingNumBeen.fromJson(onValue);
+      if (bettingNum.code == 1) {
+        linkManagerHandler.getCalculationBettingNumData(bettingNum.data);
+      } else {
+        linkManagerHandler.showToast(bettingNum.msg);
+      }
+    });
+  }
+
+  /// 腾讯分分彩 下注接口
+  void tencentOrderAdd(TencentHttpBeen baseTokenHttpBeen) {
+    ArgumentError.checkNotNull(baseTokenHttpBeen, '参数为空');
+    ArgumentError.checkNotNull(_baseHandler, '_baseHandler为空');
+    responseResult(baseTokenHttpBeen.toJson(), UrlUtil.tencentGdBets).then((onValue) {
+      TencentCnetBettingHandler linkManagerHandler = _baseHandler as TencentCnetBettingHandler;
+      var jsonBeen = JsonBeen.fromJson(onValue);
+      if (jsonBeen.code == 1) {
+        var bettingNum = CalculationBettingNumBeen.fromJson(onValue);
+
+        if (bettingNum.code == 1) {
+          linkManagerHandler.bettingSuccessResult();
+        } else {
+          linkManagerHandler.showToast(bettingNum.msg);
+        }
+      } else {
+        linkManagerHandler.showToast(jsonBeen.msg);
+      }
+    });
+  }
+
+
+  /**
+   * 腾讯5分彩
+   */
+  /// 腾讯5分彩 开奖记录
+  void tencent5KjLog(OpenLotteryListHttpBeen openAccountHttpBeen) {
+    ArgumentError.checkNotNull(openAccountHttpBeen, '参数为空');
+    ArgumentError.checkNotNull(_baseHandler, '_baseHandler为空');
+    responseResult(openAccountHttpBeen.toJson(), UrlUtil.tencent5KjLog).then((onValue) {
+      var bettingNum = OpenLotteryListDataBeen.fromJson(onValue);
+
+      if (_baseHandler is LotteryNum11Choice5Handler) {
+        LotteryNum11Choice5Handler bettingRecordListHandler = _baseHandler as LotteryNum11Choice5Handler;
+
+        if (bettingNum.code == 1) {
+          bettingRecordListHandler.setOpenLotteryListData(bettingNum);
+        } else {
+          bettingRecordListHandler.showToast(bettingNum.msg);
+        }
+      }
+
+      if (_baseHandler is TencentCnetBettingHandler) {
+        TencentCnetBettingHandler bettingRecordListHandler = _baseHandler as TencentCnetBettingHandler;
+
+        if (bettingNum.code == 1) {
+          bettingRecordListHandler.setAccountChangeRecord(bettingNum);
+        } else {
+          bettingRecordListHandler.showToast(bettingNum.msg);
+        }
+      }
+
+
+
+    });
+  }
+
+  /// 腾讯5分彩 玩法获取
+  void tencent5GetPlay( BaseTokenHttpBeen baseTokenHttpBeen) {
+    ArgumentError.checkNotNull(baseTokenHttpBeen, '参数为空');
+    ArgumentError.checkNotNull(_baseHandler, '_baseHandler为空');
+    responseResult(baseTokenHttpBeen.toJson(), UrlUtil.tencent5GetPlay).then((onValue) {
+      PlayMode11Choice5Handler linkManagerHandler = _baseHandler as PlayMode11Choice5Handler;
+      linkManagerHandler.playModeMapValue(onValue);
+    });
+  }
+
+  /// 腾讯5分彩 开奖时间
+  void tencent5GetKjtime(BaseTokenHttpBeen baseTokenHttpBeen) {
+    ArgumentError.checkNotNull(baseTokenHttpBeen, '参数为空');
+    ArgumentError.checkNotNull(_baseHandler, '_baseHandler为空');
+    responseResult(baseTokenHttpBeen.toJson(), UrlUtil.tencent5GetKjtime).then((onValue) {
+      TencentCnetBettingHandler linkManagerHandler = _baseHandler as TencentCnetBettingHandler;
+      var bettingNum = VietnamHanoiLotteryTimeBeen.fromJson(onValue);
+      if (bettingNum.code == 1) {
+        linkManagerHandler.openVietnamHanoiLotteryTime(bettingNum.data.kj_time, bettingNum.data.qishu);
+      } else {
+        linkManagerHandler.showToast(bettingNum.msg);
+      }
+    });
+  }
+
+  /// 腾讯5分彩 计算注数
+  void tencent5GdBets(TencentHttpBeen baseTokenHttpBeen) {
+    ArgumentError.checkNotNull(baseTokenHttpBeen, '参数为空');
+    ArgumentError.checkNotNull(_baseHandler, '_baseHandler为空');
+    responseResult(baseTokenHttpBeen.toJson(), UrlUtil.tencent5GdBets).then((onValue) {
+      TencentCnetBettingHandler linkManagerHandler = _baseHandler as TencentCnetBettingHandler;
+      var bettingNum = CalculationBettingNumBeen.fromJson(onValue);
+      if (bettingNum.code == 1) {
+        linkManagerHandler.getCalculationBettingNumData(bettingNum.data);
+      } else {
+        linkManagerHandler.showToast(bettingNum.msg);
+      }
+    });
+  }
+
+  /// 腾讯5分彩 下注接口
+  void tencent5OrderAdd(TencentHttpBeen baseTokenHttpBeen) {
+    ArgumentError.checkNotNull(baseTokenHttpBeen, '参数为空');
+    ArgumentError.checkNotNull(_baseHandler, '_baseHandler为空');
+    responseResult(baseTokenHttpBeen.toJson(), UrlUtil.tencent5OrderAdd).then((onValue) {
+      TencentCnetBettingHandler linkManagerHandler = _baseHandler as TencentCnetBettingHandler;
+      var jsonBeen = JsonBeen.fromJson(onValue);
+      if (jsonBeen.code == 1) {
+        var bettingNum = CalculationBettingNumBeen.fromJson(onValue);
+
+        if (bettingNum.code == 1) {
+          linkManagerHandler.bettingSuccessResult();
+        } else {
+          linkManagerHandler.showToast(bettingNum.msg);
+        }
+      } else {
+        linkManagerHandler.showToast(jsonBeen.msg);
+      }
+    });
+  }
+
+
+  /**
+   * 腾讯10分彩
+   */
+  /// 腾讯10分彩 开奖记录
+  void tencent10KjLog(OpenLotteryListHttpBeen openAccountHttpBeen) {
+    ArgumentError.checkNotNull(openAccountHttpBeen, '参数为空');
+    ArgumentError.checkNotNull(_baseHandler, '_baseHandler为空');
+    responseResult(openAccountHttpBeen.toJson(), UrlUtil.tencent10KjLog).then((onValue) {
+      var bettingNum = OpenLotteryListDataBeen.fromJson(onValue);
+
+      if (_baseHandler is LotteryNum11Choice5Handler) {
+        LotteryNum11Choice5Handler bettingRecordListHandler = _baseHandler as LotteryNum11Choice5Handler;
+
+        if (bettingNum.code == 1) {
+          bettingRecordListHandler.setOpenLotteryListData(bettingNum);
+        } else {
+          bettingRecordListHandler.showToast(bettingNum.msg);
+        }
+      }
+
+      if (_baseHandler is TencentCnetBettingHandler) {
+        TencentCnetBettingHandler bettingRecordListHandler = _baseHandler as TencentCnetBettingHandler;
+
+        if (bettingNum.code == 1) {
+          bettingRecordListHandler.setAccountChangeRecord(bettingNum);
+        } else {
+          bettingRecordListHandler.showToast(bettingNum.msg);
+        }
+      }
+
+
+
+    });
+  }
+
+  /// 腾讯10分彩 玩法获取
+  void tencent10GetPlay( BaseTokenHttpBeen baseTokenHttpBeen) {
+    ArgumentError.checkNotNull(baseTokenHttpBeen, '参数为空');
+    ArgumentError.checkNotNull(_baseHandler, '_baseHandler为空');
+    responseResult(baseTokenHttpBeen.toJson(), UrlUtil.tencent10GetPlay).then((onValue) {
+      PlayMode11Choice5Handler linkManagerHandler = _baseHandler as PlayMode11Choice5Handler;
+      linkManagerHandler.playModeMapValue(onValue);
+    });
+  }
+
+  /// 腾讯10分彩 开奖时间
+  void tencent10GetKjtime(BaseTokenHttpBeen baseTokenHttpBeen) {
+    ArgumentError.checkNotNull(baseTokenHttpBeen, '参数为空');
+    ArgumentError.checkNotNull(_baseHandler, '_baseHandler为空');
+    responseResult(baseTokenHttpBeen.toJson(), UrlUtil.tencent10GetKjtime).then((onValue) {
+      TencentCnetBettingHandler linkManagerHandler = _baseHandler as TencentCnetBettingHandler;
+      var bettingNum = VietnamHanoiLotteryTimeBeen.fromJson(onValue);
+      if (bettingNum.code == 1) {
+        linkManagerHandler.openVietnamHanoiLotteryTime(bettingNum.data.kj_time, bettingNum.data.qishu);
+      } else {
+        linkManagerHandler.showToast(bettingNum.msg);
+      }
+    });
+  }
+
+  /// 腾讯10分彩 计算注数
+  void tencent10GdBets(TencentHttpBeen baseTokenHttpBeen) {
+    ArgumentError.checkNotNull(baseTokenHttpBeen, '参数为空');
+    ArgumentError.checkNotNull(_baseHandler, '_baseHandler为空');
+    responseResult(baseTokenHttpBeen.toJson(), UrlUtil.tencent10GdBets).then((onValue) {
+      TencentCnetBettingHandler linkManagerHandler = _baseHandler as TencentCnetBettingHandler;
+      var bettingNum = CalculationBettingNumBeen.fromJson(onValue);
+      if (bettingNum.code == 1) {
+        linkManagerHandler.getCalculationBettingNumData(bettingNum.data);
+      } else {
+        linkManagerHandler.showToast(bettingNum.msg);
+      }
+    });
+  }
+
+  /// 腾讯10分彩 下注接口
+  void tencent10OrderAdd(TencentHttpBeen baseTokenHttpBeen) {
+    ArgumentError.checkNotNull(baseTokenHttpBeen, '参数为空');
+    ArgumentError.checkNotNull(_baseHandler, '_baseHandler为空');
+    responseResult(baseTokenHttpBeen.toJson(), UrlUtil.tencent10OrderAdd).then((onValue) {
+      TencentCnetBettingHandler linkManagerHandler = _baseHandler as TencentCnetBettingHandler;
+      var jsonBeen = JsonBeen.fromJson(onValue);
+      if (jsonBeen.code == 1) {
+        var bettingNum = CalculationBettingNumBeen.fromJson(onValue);
+
+        if (bettingNum.code == 1) {
+          linkManagerHandler.bettingSuccessResult();
+        } else {
+          linkManagerHandler.showToast(bettingNum.msg);
+        }
+      } else {
+        linkManagerHandler.showToast(jsonBeen.msg);
+      }
+    });
+  }
+
+
+  /**
+   * 奇趣一分彩
+   */
+  /// 奇趣一分彩 开奖记录
+  void oddInterestKjLog(OpenLotteryListHttpBeen openAccountHttpBeen) {
+    ArgumentError.checkNotNull(openAccountHttpBeen, '参数为空');
+    ArgumentError.checkNotNull(_baseHandler, '_baseHandler为空');
+    responseResult(openAccountHttpBeen.toJson(), UrlUtil.oddInterestKjLog).then((onValue) {
+      var bettingNum = OpenLotteryListDataBeen.fromJson(onValue);
+
+      if (_baseHandler is LotteryNum11Choice5Handler) {
+        LotteryNum11Choice5Handler bettingRecordListHandler = _baseHandler as LotteryNum11Choice5Handler;
+
+        if (bettingNum.code == 1) {
+          bettingRecordListHandler.setOpenLotteryListData(bettingNum);
+        } else {
+          bettingRecordListHandler.showToast(bettingNum.msg);
+        }
+      }
+
+      if (_baseHandler is OddInterestHandler) {
+        OddInterestHandler bettingRecordListHandler = _baseHandler as OddInterestHandler;
+
+        if (bettingNum.code == 1) {
+          bettingRecordListHandler.setAccountChangeRecord(bettingNum);
+        } else {
+          bettingRecordListHandler.showToast(bettingNum.msg);
+        }
+      }
+
+
+
+    });
+  }
+
+  /// 奇趣一分彩 玩法获取
+  void oddInterestGetPlay( BaseTokenHttpBeen baseTokenHttpBeen) {
+    ArgumentError.checkNotNull(baseTokenHttpBeen, '参数为空');
+    ArgumentError.checkNotNull(_baseHandler, '_baseHandler为空');
+    responseResult(baseTokenHttpBeen.toJson(), UrlUtil.oddInterestGetPlay).then((onValue) {
+      PlayMode11Choice5Handler linkManagerHandler = _baseHandler as PlayMode11Choice5Handler;
+      linkManagerHandler.playModeMapValue(onValue);
+    });
+  }
+
+  /// 奇趣一分彩 开奖时间
+  void oddInterestGetKjtime(BaseTokenHttpBeen baseTokenHttpBeen) {
+    ArgumentError.checkNotNull(baseTokenHttpBeen, '参数为空');
+    ArgumentError.checkNotNull(_baseHandler, '_baseHandler为空');
+    responseResult(baseTokenHttpBeen.toJson(), UrlUtil.oddInterestGetKjtime).then((onValue) {
+      OddInterestHandler linkManagerHandler = _baseHandler as OddInterestHandler;
+      var bettingNum = VietnamHanoiLotteryTimeBeen.fromJson(onValue);
+      if (bettingNum.code == 1) {
+        linkManagerHandler.openVietnamHanoiLotteryTime(bettingNum.data.kj_time, bettingNum.data.qishu);
+      } else {
+        linkManagerHandler.showToast(bettingNum.msg);
+      }
+    });
+  }
+
+  /// 奇趣一分彩 计算注数
+  void oddInterestGdBets(OddInterestHttpBeen baseTokenHttpBeen) {
+    ArgumentError.checkNotNull(baseTokenHttpBeen, '参数为空');
+    ArgumentError.checkNotNull(_baseHandler, '_baseHandler为空');
+    responseResult(baseTokenHttpBeen.toJson(), UrlUtil.oddInterestGdBets).then((onValue) {
+      OddInterestHandler linkManagerHandler = _baseHandler as OddInterestHandler;
+      var bettingNum = CalculationBettingNumBeen.fromJson(onValue);
+      if (bettingNum.code == 1) {
+        linkManagerHandler.getCalculationBettingNumData(bettingNum.data);
+      } else {
+        linkManagerHandler.showToast(bettingNum.msg);
+      }
+    });
+  }
+
+  /// 奇趣一分彩 下注接口
+  void oddInterestOrderAdd(OddInterestHttpBeen baseTokenHttpBeen) {
+    ArgumentError.checkNotNull(baseTokenHttpBeen, '参数为空');
+    ArgumentError.checkNotNull(_baseHandler, '_baseHandler为空');
+    responseResult(baseTokenHttpBeen.toJson(), UrlUtil.oddInterestOrderAdd).then((onValue) {
+      OddInterestHandler linkManagerHandler = _baseHandler as OddInterestHandler;
+      var jsonBeen = JsonBeen.fromJson(onValue);
+      if (jsonBeen.code == 1) {
+        var bettingNum = CalculationBettingNumBeen.fromJson(onValue);
+
+        if (bettingNum.code == 1) {
+          linkManagerHandler.bettingSuccessResult();
+        } else {
+          linkManagerHandler.showToast(bettingNum.msg);
+        }
+      } else {
+        linkManagerHandler.showToast(jsonBeen.msg);
+      }
+    });
+  }
+
+  /**
+   * 奇趣5分彩
+   */
+  /// 奇趣5分彩 开奖记录
+  void oddInterest5KjLog(OpenLotteryListHttpBeen openAccountHttpBeen) {
+    ArgumentError.checkNotNull(openAccountHttpBeen, '参数为空');
+    ArgumentError.checkNotNull(_baseHandler, '_baseHandler为空');
+    responseResult(openAccountHttpBeen.toJson(), UrlUtil.oddInterest5KjLog).then((onValue) {
+      var bettingNum = OpenLotteryListDataBeen.fromJson(onValue);
+
+      if (_baseHandler is LotteryNum11Choice5Handler) {
+        LotteryNum11Choice5Handler bettingRecordListHandler = _baseHandler as LotteryNum11Choice5Handler;
+
+        if (bettingNum.code == 1) {
+          bettingRecordListHandler.setOpenLotteryListData(bettingNum);
+        } else {
+          bettingRecordListHandler.showToast(bettingNum.msg);
+        }
+      }
+
+      if (_baseHandler is OddInterestHandler) {
+        OddInterestHandler bettingRecordListHandler = _baseHandler as OddInterestHandler;
+
+        if (bettingNum.code == 1) {
+          bettingRecordListHandler.setAccountChangeRecord(bettingNum);
+        } else {
+          bettingRecordListHandler.showToast(bettingNum.msg);
+        }
+      }
+
+
+
+    });
+  }
+
+  /// 奇趣5分彩 玩法获取
+  void oddInterest5GetPlay( BaseTokenHttpBeen baseTokenHttpBeen) {
+    ArgumentError.checkNotNull(baseTokenHttpBeen, '参数为空');
+    ArgumentError.checkNotNull(_baseHandler, '_baseHandler为空');
+    responseResult(baseTokenHttpBeen.toJson(), UrlUtil.oddInterest5GetPlay).then((onValue) {
+      PlayMode11Choice5Handler linkManagerHandler = _baseHandler as PlayMode11Choice5Handler;
+      linkManagerHandler.playModeMapValue(onValue);
+    });
+  }
+
+  /// 奇趣5分彩 开奖时间
+  void oddInterest5GetKjtime(BaseTokenHttpBeen baseTokenHttpBeen) {
+    ArgumentError.checkNotNull(baseTokenHttpBeen, '参数为空');
+    ArgumentError.checkNotNull(_baseHandler, '_baseHandler为空');
+    responseResult(baseTokenHttpBeen.toJson(), UrlUtil.oddInterest5GetKjtime).then((onValue) {
+      OddInterestHandler linkManagerHandler = _baseHandler as OddInterestHandler;
+      var bettingNum = VietnamHanoiLotteryTimeBeen.fromJson(onValue);
+      if (bettingNum.code == 1) {
+        linkManagerHandler.openVietnamHanoiLotteryTime(bettingNum.data.kj_time, bettingNum.data.qishu);
+      } else {
+        linkManagerHandler.showToast(bettingNum.msg);
+      }
+    });
+  }
+
+  /// 奇趣5分彩 计算注数
+  void oddInterest5GdBets(OddInterestHttpBeen baseTokenHttpBeen) {
+    ArgumentError.checkNotNull(baseTokenHttpBeen, '参数为空');
+    ArgumentError.checkNotNull(_baseHandler, '_baseHandler为空');
+    responseResult(baseTokenHttpBeen.toJson(), UrlUtil.oddInterest5GdBets).then((onValue) {
+      OddInterestHandler linkManagerHandler = _baseHandler as OddInterestHandler;
+      var bettingNum = CalculationBettingNumBeen.fromJson(onValue);
+      if (bettingNum.code == 1) {
+        linkManagerHandler.getCalculationBettingNumData(bettingNum.data);
+      } else {
+        linkManagerHandler.showToast(bettingNum.msg);
+      }
+    });
+  }
+
+  /// 奇趣5分彩 下注接口
+  void oddInterest5OrderAdd(OddInterestHttpBeen baseTokenHttpBeen) {
+    ArgumentError.checkNotNull(baseTokenHttpBeen, '参数为空');
+    ArgumentError.checkNotNull(_baseHandler, '_baseHandler为空');
+    responseResult(baseTokenHttpBeen.toJson(), UrlUtil.oddInterest5OrderAdd).then((onValue) {
+      OddInterestHandler linkManagerHandler = _baseHandler as OddInterestHandler;
+      var jsonBeen = JsonBeen.fromJson(onValue);
+      if (jsonBeen.code == 1) {
+        var bettingNum = CalculationBettingNumBeen.fromJson(onValue);
+
+        if (bettingNum.code == 1) {
+          linkManagerHandler.bettingSuccessResult();
+        } else {
+          linkManagerHandler.showToast(bettingNum.msg);
+        }
+      } else {
+        linkManagerHandler.showToast(jsonBeen.msg);
+      }
+    });
+  }
+
+
+  /**
+   * 奇趣10分彩
+   */
+  /// 奇趣10分彩 开奖记录
+  void oddInterest10KjLog(OpenLotteryListHttpBeen openAccountHttpBeen) {
+    ArgumentError.checkNotNull(openAccountHttpBeen, '参数为空');
+    ArgumentError.checkNotNull(_baseHandler, '_baseHandler为空');
+    responseResult(openAccountHttpBeen.toJson(), UrlUtil.oddInterest10KjLog).then((onValue) {
+      var bettingNum = OpenLotteryListDataBeen.fromJson(onValue);
+
+      if (_baseHandler is LotteryNum11Choice5Handler) {
+        LotteryNum11Choice5Handler bettingRecordListHandler = _baseHandler as LotteryNum11Choice5Handler;
+
+        if (bettingNum.code == 1) {
+          bettingRecordListHandler.setOpenLotteryListData(bettingNum);
+        } else {
+          bettingRecordListHandler.showToast(bettingNum.msg);
+        }
+      }
+
+      if (_baseHandler is OddInterestHandler) {
+        OddInterestHandler bettingRecordListHandler = _baseHandler as OddInterestHandler;
+
+        if (bettingNum.code == 1) {
+          bettingRecordListHandler.setAccountChangeRecord(bettingNum);
+        } else {
+          bettingRecordListHandler.showToast(bettingNum.msg);
+        }
+      }
+
+
+
+    });
+  }
+
+  /// 奇趣10分彩 玩法获取
+  void oddInterest10GetPlay( BaseTokenHttpBeen baseTokenHttpBeen) {
+    ArgumentError.checkNotNull(baseTokenHttpBeen, '参数为空');
+    ArgumentError.checkNotNull(_baseHandler, '_baseHandler为空');
+    responseResult(baseTokenHttpBeen.toJson(), UrlUtil.oddInterest10GetPlay).then((onValue) {
+      PlayMode11Choice5Handler linkManagerHandler = _baseHandler as PlayMode11Choice5Handler;
+      linkManagerHandler.playModeMapValue(onValue);
+    });
+  }
+
+  /// 奇趣10分彩 开奖时间
+  void oddInterest10GetKjtime(BaseTokenHttpBeen baseTokenHttpBeen) {
+    ArgumentError.checkNotNull(baseTokenHttpBeen, '参数为空');
+    ArgumentError.checkNotNull(_baseHandler, '_baseHandler为空');
+    responseResult(baseTokenHttpBeen.toJson(), UrlUtil.oddInterest10GetKjtime).then((onValue) {
+      OddInterestHandler linkManagerHandler = _baseHandler as OddInterestHandler;
+      var bettingNum = VietnamHanoiLotteryTimeBeen.fromJson(onValue);
+      if (bettingNum.code == 1) {
+        linkManagerHandler.openVietnamHanoiLotteryTime(bettingNum.data.kj_time, bettingNum.data.qishu);
+      } else {
+        linkManagerHandler.showToast(bettingNum.msg);
+      }
+    });
+  }
+
+  /// 奇趣10分彩 计算注数
+  void oddInterest10GdBets(OddInterestHttpBeen baseTokenHttpBeen) {
+    ArgumentError.checkNotNull(baseTokenHttpBeen, '参数为空');
+    ArgumentError.checkNotNull(_baseHandler, '_baseHandler为空');
+    responseResult(baseTokenHttpBeen.toJson(), UrlUtil.oddInterest10GdBets).then((onValue) {
+      OddInterestHandler linkManagerHandler = _baseHandler as OddInterestHandler;
+      var bettingNum = CalculationBettingNumBeen.fromJson(onValue);
+      if (bettingNum.code == 1) {
+        linkManagerHandler.getCalculationBettingNumData(bettingNum.data);
+      } else {
+        linkManagerHandler.showToast(bettingNum.msg);
+      }
+    });
+  }
+
+  /// 奇趣10分彩 下注接口
+  void oddInterest10OrderAdd(OddInterestHttpBeen baseTokenHttpBeen) {
+    ArgumentError.checkNotNull(baseTokenHttpBeen, '参数为空');
+    ArgumentError.checkNotNull(_baseHandler, '_baseHandler为空');
+    responseResult(baseTokenHttpBeen.toJson(), UrlUtil.oddInterest10OrderAdd).then((onValue) {
+      OddInterestHandler linkManagerHandler = _baseHandler as OddInterestHandler;
+      var jsonBeen = JsonBeen.fromJson(onValue);
+      if (jsonBeen.code == 1) {
+        var bettingNum = CalculationBettingNumBeen.fromJson(onValue);
+
+        if (bettingNum.code == 1) {
+          linkManagerHandler.bettingSuccessResult();
+        } else {
+          linkManagerHandler.showToast(bettingNum.msg);
+        }
+      } else {
+        linkManagerHandler.showToast(jsonBeen.msg);
+      }
+    });
+  }
+
+  /**
+   * 幸运飞艇
+   */
+  /// 幸运飞艇 开奖记录
+  void luckyAirshipKjLog(OpenLotteryListHttpBeen openAccountHttpBeen) {
+    ArgumentError.checkNotNull(openAccountHttpBeen, '参数为空');
+    ArgumentError.checkNotNull(_baseHandler, '_baseHandler为空');
+    responseResult(openAccountHttpBeen.toJson(), UrlUtil.luckyAirshipKjLog).then((onValue) {
+      var bettingNum = OpenLotteryListDataBeen.fromJson(onValue);
+
+      if (_baseHandler is LotteryNum11Choice5Handler) {
+        LotteryNum11Choice5Handler bettingRecordListHandler = _baseHandler as LotteryNum11Choice5Handler;
+
+        if (bettingNum.code == 1) {
+          bettingRecordListHandler.setOpenLotteryListData(bettingNum);
+        } else {
+          bettingRecordListHandler.showToast(bettingNum.msg);
+        }
+      }
+
+      if (_baseHandler is OddInterestHandler) {
+        OddInterestHandler bettingRecordListHandler = _baseHandler as OddInterestHandler;
+
+        if (bettingNum.code == 1) {
+          bettingRecordListHandler.setAccountChangeRecord(bettingNum);
+        } else {
+          bettingRecordListHandler.showToast(bettingNum.msg);
+        }
+      }
+
+
+
+    });
+  }
+
+  /// 幸运飞艇 玩法获取
+  void luckyAirshipGetPlay( BaseTokenHttpBeen baseTokenHttpBeen) {
+    ArgumentError.checkNotNull(baseTokenHttpBeen, '参数为空');
+    ArgumentError.checkNotNull(_baseHandler, '_baseHandler为空');
+    responseResult(baseTokenHttpBeen.toJson(), UrlUtil.luckyAirshipGetPlay).then((onValue) {
+      PlayMode11Choice5Handler linkManagerHandler = _baseHandler as PlayMode11Choice5Handler;
+      linkManagerHandler.playModeMapValue(onValue);
+    });
+  }
+
+  /// 幸运飞艇 开奖时间
+  void luckyAirshipGetKjtime(BaseTokenHttpBeen baseTokenHttpBeen) {
+    ArgumentError.checkNotNull(baseTokenHttpBeen, '参数为空');
+    ArgumentError.checkNotNull(_baseHandler, '_baseHandler为空');
+    responseResult(baseTokenHttpBeen.toJson(), UrlUtil.luckyAirshipGetKjtime).then((onValue) {
+      OddInterestHandler linkManagerHandler = _baseHandler as OddInterestHandler;
+      var bettingNum = VietnamHanoiLotteryTimeBeen.fromJson(onValue);
+      if (bettingNum.code == 1) {
+        linkManagerHandler.openVietnamHanoiLotteryTime(bettingNum.data.kj_time, bettingNum.data.qishu);
+      } else {
+        linkManagerHandler.showToast(bettingNum.msg);
+      }
+    });
+  }
+
+  /// 幸运飞艇 计算注数
+  void luckyAirshipGdBets(OddInterestHttpBeen baseTokenHttpBeen) {
+    ArgumentError.checkNotNull(baseTokenHttpBeen, '参数为空');
+    ArgumentError.checkNotNull(_baseHandler, '_baseHandler为空');
+    responseResult(baseTokenHttpBeen.toJson(), UrlUtil.luckyAirshipGdBets).then((onValue) {
+      OddInterestHandler linkManagerHandler = _baseHandler as OddInterestHandler;
+      var bettingNum = CalculationBettingNumBeen.fromJson(onValue);
+      if (bettingNum.code == 1) {
+        linkManagerHandler.getCalculationBettingNumData(bettingNum.data);
+      } else {
+        linkManagerHandler.showToast(bettingNum.msg);
+      }
+    });
+  }
+
+  /// 幸运飞艇 下注接口
+  void luckyAirshipOrderAdd(OddInterestHttpBeen baseTokenHttpBeen) {
+    ArgumentError.checkNotNull(baseTokenHttpBeen, '参数为空');
+    ArgumentError.checkNotNull(_baseHandler, '_baseHandler为空');
+    responseResult(baseTokenHttpBeen.toJson(), UrlUtil.luckyAirshipOrderAdd).then((onValue) {
+      OddInterestHandler linkManagerHandler = _baseHandler as OddInterestHandler;
+      var jsonBeen = JsonBeen.fromJson(onValue);
+      if (jsonBeen.code == 1) {
+        var bettingNum = CalculationBettingNumBeen.fromJson(onValue);
+
+        if (bettingNum.code == 1) {
+          linkManagerHandler.bettingSuccessResult();
+        } else {
+          linkManagerHandler.showToast(bettingNum.msg);
+        }
+      } else {
+        linkManagerHandler.showToast(jsonBeen.msg);
       }
     });
   }

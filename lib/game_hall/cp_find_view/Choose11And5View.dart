@@ -286,6 +286,9 @@ class Choose11And5StateView extends BaseController<Choose11And5View> {
       child: new Row(
         children: <Widget>[
 
+          _chooseTitleOne(this.titleTip),
+//          _chooseType(titleTip, ColorUtil.whiteColor, -1),
+
           _chooseType("全", chooseTypeList[0] ?ColorUtil.textColor_FF8814: ColorUtil.textColor_888888, 0),
           _chooseType("大", chooseTypeList[1] ?ColorUtil.textColor_FF8814:ColorUtil.textColor_888888, 1),
           _chooseType("小", chooseTypeList[2] ?ColorUtil.textColor_FF8814:ColorUtil.textColor_888888, 2),
@@ -345,18 +348,41 @@ class Choose11And5StateView extends BaseController<Choose11And5View> {
   /// 位数标题显示
   Widget _chooseTitle(String title) {
 
-    return new Align(
-      alignment: Alignment.centerLeft,
-      child: new Container(
-        margin: EdgeInsets.only(left: 15.0, top: 15.0, bottom: 5.0,),
-        child: new Text(
-          title,
-          style: new TextStyle(
-            color: Color(ColorUtil.textColor_333333),
-            fontSize: 14.0,
+    return new Visibility(
+      visible: title.length >= 2,
+        child: new Align(
+          alignment: Alignment.centerLeft,
+          child: new Container(
+            margin: EdgeInsets.only(left: 15.0, top: 15.0),
+            child: new Text(
+              title,
+              style: new TextStyle(
+                color: Color(ColorUtil.textColor_333333),
+                fontSize: 14.0,
+              ),
+            ),
           ),
         ),
-      ),
+    );
+  }
+
+  Widget _chooseTitleOne(String title) {
+
+    return new Visibility(
+      visible: title.length == 1,
+        child: new Align(
+          alignment: Alignment.center,
+          child: new Container(
+            margin: EdgeInsets.only(left: 5.0, right: 5.0),
+            child: new Text(
+              title,
+              style: new TextStyle(
+                color: Color(ColorUtil.textColor_333333),
+                fontSize: 14.0,
+              ),
+            ),
+          ),
+        ),
     );
   }
 
@@ -367,12 +393,12 @@ class Choose11And5StateView extends BaseController<Choose11And5View> {
       margin: EdgeInsets.only(bottom: 15.0),
       child: new GridView.count(
         physics: new NeverScrollableScrollPhysics(),
-        crossAxisCount: 7,
+        crossAxisCount: 5,
         //padding: const EdgeInsets.all(8.0),
         primary: false,
         mainAxisSpacing: 0.0,//竖向间距
         crossAxisSpacing: 0.0,//横向间距
-        childAspectRatio: 1.3,
+        childAspectRatio: 1.4,
         children: _gridListItemView(),
         shrinkWrap: true,
 
@@ -488,8 +514,8 @@ class Choose11And5StateView extends BaseController<Choose11And5View> {
       });
   }
 
-  /// 随机选中 baseNum 随机基数
-  randomChoiceCpNum(int playID, int baseNum) {
+  // 初始化 选中状态
+  _initChoiceNumListState() {
     if (choiceCpNumList == null) {
       choiceCpNumList = new List();
     }
@@ -500,14 +526,60 @@ class Choose11And5StateView extends BaseController<Choose11And5View> {
     this.typeIndex = 5;
     this.isClickType = false;
     _cleanAllSelection();
-    if(playID == 180 || playID == 198 || playID == 203) {
+  }
+
+  /// 随机选中 baseNum 随机基数
+  randomChoiceCpNum(int playID, int baseNum) {
+//    if (choiceCpNumList == null) {
+//      choiceCpNumList = new List();
+//    }
+    var length = cpNumIndex.length;
+//    for (var i = 0; i < length; i++) {
+//      cpNumIndex[i] = -1;
+//    }
+//    this.typeIndex = 5;
+//    this.isClickType = false;
+//    _cleanAllSelection();
+    _initChoiceNumListState();
+    if(playID == 180 || playID == 198 || playID == 203 ||
+        playID == 349 ||
+        //河内5分彩
+        playID == 512 || playID == 525 || playID == 536 ||
+        //腾讯5分彩
+        playID == 679 || playID == 690 ||
+        //腾讯10分彩
+        playID == 834 || playID == 845 ||
+        //奇趣一分彩
+        playID == 1078 || playID == 1079 || playID == 1080 || playID == 989 || playID == 1000||
+        //奇趣5分彩
+        playID == 1098 || playID == 1110 || playID == 1123 || playID == 1136 || playID == 1147||
+        //奇趣10分彩
+        playID == 1241 || playID == 1253 || playID == 1266 || playID == 1279 || playID == 1290
+
+
+    ) {
       // 包胆 只能选择一个
       cpNumIndex[Random().nextInt(length)] = 0;
     } else {
       var randomNum = Random().nextInt(4) + baseNum;
 
-      for (var i = 0; i < randomNum; i++) {
-        cpNumIndex[Random().nextInt(length)] = 0;
+      for (var i = 0; i <= randomNum; i++) {
+        // 所选号码不能重复
+        var cpNumIndexRandomPage = cpNumIndex[Random().nextInt(length)];
+
+        if (cpNumIndexRandomPage == 0) {
+          while (cpNumIndexRandomPage == 0) {
+            cpNumIndexRandomPage = cpNumIndex[Random().nextInt(length)];
+            if (cpNumIndexRandomPage != 0) {
+              cpNumIndex[Random().nextInt(length)] = 0;
+              break;
+            }
+          }
+        } else {
+          if (cpNumIndexRandomPage != 0) {
+            cpNumIndex[Random().nextInt(length)] = 0;
+          }
+        }
       }
     }
 
@@ -516,6 +588,106 @@ class Choose11And5StateView extends BaseController<Choose11And5View> {
       setState(() {
 
       });
+  }
+
+  /**
+   * cyclicNum 循环次数
+   * isRepeat 是否是重号
+   *
+   */
+  /// 循环选号
+  _cyclicSelectionNumList(int cyclicNum, int length, bool isRepeat) {
+    _initChoiceNumListState();
+    for (int i = 0; i < cyclicNum; i++) {
+      var nextInt = Random().nextInt(length);
+      // 所选号码不能重复
+      if (cpNumIndex[nextInt] == 0) {
+        while(cpNumIndex[nextInt] == 0) {
+          nextInt = Random().nextInt(length);
+          if (cpNumIndex[nextInt] != 0) {
+            cpNumIndex[nextInt] = 0;
+            break;
+          }
+
+        }
+      } else {
+        if (cpNumIndex[nextInt] != 0) {
+          cpNumIndex[nextInt] = 0;
+        }
+      }
+    }
+
+  }
+
+  ///带有 重号 时 选择
+  repeatRandomNumChoiceList(int index, int playID, int baseNum) {
+    // 腾讯一分彩组选60 30 后四组选 12
+    var length = cpNumIndex.length;
+    if (playID == 287 || playID == 288 || playID == 301 ||
+        playID == 619 || playID == 620 || playID == 631 ||
+        playID == 774 || playID == 775 || playID == 786) {
+      // 二重号
+      if (index == 0) {
+        if (playID == 619 || playID == 631 || playID == 774 ||
+            playID == 786 || playID == 287 || playID == 301) {
+          // 组选 60 组选 12
+          _initChoiceNumListState();
+          cpNumIndex[Random().nextInt(length)] = 0;
+        } else {
+          // 组选 30
+          _cyclicSelectionNumList(2, length, false);
+          ///
+        }
+
+      } else {
+        // 不等于 0 时
+        var randomCyclicNum = Random().nextInt(4) + baseNum;
+        _cyclicSelectionNumList(randomCyclicNum, length, true);
+        ///
+
+      }
+
+    }
+
+    if (playID == 289 || playID == 621 || playID == 776) {
+      // 三重号
+      if (index == 0) {
+        // 组选 20
+        _initChoiceNumListState();
+        cpNumIndex[Random().nextInt(length)] = 0;
+
+      } else {
+        // 不等于 0 时
+        var randomCyclicNum = Random().nextInt(4) + baseNum;
+        _cyclicSelectionNumList(randomCyclicNum, length, true);
+        ///
+      }
+
+    }
+
+    if (playID == 290 || playID == 303 ||
+        playID == 622 || playID == 633 ||
+        playID == 777 || playID == 788) {
+      // 组选 10 / 后四 组选 4
+      // 三重号
+      _initChoiceNumListState();
+      cpNumIndex[Random().nextInt(length)] = 0;
+
+    }
+
+    if (playID == 302 || playID == 632 || playID == 787) {
+      // 后四组选 6
+      var randomCyclicNum = Random().nextInt(4) + baseNum;
+      _cyclicSelectionNumList(randomCyclicNum, length, true);
+    }
+
+
+    _changeCpTypeChoiceState();
+    if (mounted)
+      setState(() {
+
+      });
+
   }
 
   //清空状态

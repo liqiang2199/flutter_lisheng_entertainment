@@ -300,7 +300,12 @@ class _BettingRecordController extends BaseRefreshTabController<BettingRecordCon
 
   @override
   void setScreenData(String cpType, String issueNum) {
-    UserService.instance.bettingList(this, cpType, status, startTime, endTime);
+    UserService.instance.bettingList(this, issueNum, status, startTime, endTime);
+  }
+
+  @override
+  void getOrderOnceResult(bool result) {
+
   }
 
 }

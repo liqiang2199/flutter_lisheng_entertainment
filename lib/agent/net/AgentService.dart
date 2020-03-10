@@ -20,6 +20,7 @@ import 'package:flutter_lisheng_entertainment/net/RetrofitManager.dart';
 import 'AgencyBonusHandler.dart';
 import 'LinkManagerHandler.dart';
 import 'MemberManagerHandler.dart';
+import 'OpenAccountIntervalHandler.dart';
 import 'OrdinaryOpenAccountHandler.dart';
 import 'TeamAccountChangeHandler.dart';
 import 'TeamBettingHandler.dart';
@@ -52,7 +53,7 @@ class AgentService extends ToastUtilBridge{
    */
   ///
   void postOrdinaryOpenAccount(OrdinaryOpenAccountHandler handler, String accountType,
-      String account, String userName, String pwd,String rePwd, String ratio) {
+      String account, String userName, String pwd,String rePwd, String ratio, String maxRatio) {
     if (TextUtil.isEmpty(accountType)) {
       showToast("请选择开户类型");
       return;
@@ -61,10 +62,10 @@ class AgentService extends ToastUtilBridge{
       showToast("请输入登录账号");
       return;
     }
-    if (TextUtil.isEmpty(userName)) {
-      showToast("请输入用户名");
-      return;
-    }
+//    if (TextUtil.isEmpty(userName)) {
+//      showToast("请输入用户名");
+//      return;
+//    }
     if (TextUtil.isEmpty(pwd)) {
       showToast("请输入密码");
       return;
@@ -85,6 +86,13 @@ class AgentService extends ToastUtilBridge{
       showToast("请输入返点");
       return;
     }
+    if (TextUtil.isEmpty(maxRatio)) {
+      return;
+    }
+    if (int.parse(ratio) > int.parse(maxRatio)) {
+      showToast("返点不能超过$maxRatio");
+      return;
+    }
     OrdinaryOpenAccountHttpBeen openAccountHttpBeen = new
     OrdinaryOpenAccountHttpBeen(accountType, account, userName, pwd, ratio, SpUtil.getString(Constant.TOKEN));
     ApiService apiService = RetrofitManager.instance.createApiService();
@@ -97,7 +105,7 @@ class AgentService extends ToastUtilBridge{
    * 创建开户链接
    */
   ///
-  void postLinkOpenAccount(String accountType, String day, String ratio, LinkOpenAccountHandler handler){
+  void postLinkOpenAccount(String accountType, String day, String ratio, String maxRatio, LinkOpenAccountHandler handler){
     if (TextUtil.isEmpty(accountType)) {
       showToast("请选择开户类型");
       return;
@@ -110,12 +118,27 @@ class AgentService extends ToastUtilBridge{
       showToast("请输入返点");
       return;
     }
+    if (TextUtil.isEmpty(maxRatio)) {
+      return;
+    }
+    if (int.parse(ratio) > int.parse(maxRatio)) {
+      showToast("返点不能超过$maxRatio");
+      return;
+    }
     LinkOpenAccountHttpBeen openAccountHttpBeen = new LinkOpenAccountHttpBeen(
         SpUtil.getString(Constant.TOKEN), accountType, day, ratio);
     ApiService apiService = RetrofitManager.instance.createApiService();
     apiService.setHandler(handler);
     apiService.postLinkOpenAccount(openAccountHttpBeen);
 
+  }
+
+  /// 开户页面获取最大返点值
+  void openAccount(OpenAccountIntervalHandler openAccountIntervalHandler) {
+    BaseTokenHttpBeen tokenHttpBeen = new BaseTokenHttpBeen(SpUtil.getString(Constant.TOKEN));
+    ApiService apiService = RetrofitManager.instance.createApiService();
+    apiService.setHandler(openAccountIntervalHandler);
+    apiService.openAccount(tokenHttpBeen);
   }
 
   /**

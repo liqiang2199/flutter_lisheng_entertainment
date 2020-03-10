@@ -8,10 +8,13 @@ import '../page_view/BettingView.dart';
 import '../page_view/GameHallView.dart';
 import 'Record11Choice5Controller.dart';
 import 'Trend11Choice5Controller.dart';
+import 'cp_11_choice_5_view/Cp11Choice5LotteryBettingView.dart';
 
 /**
  * 投注
+ * 11 选 5
  */
+///
 class BettingController extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
@@ -135,7 +138,8 @@ class _BettingController extends BaseController<BettingController> with SingleTi
       return Trend11Choice5Controller();
     }
     if (index == 2) {
-      return BettingView();
+      //return BettingView();
+      return Cp11Choice5LotteryBettingView(colorVarietyID: "9",);
     }
     if (index == 3) {
       return Record11Choice5Controller("9");

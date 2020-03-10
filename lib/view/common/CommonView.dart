@@ -76,7 +76,10 @@ class CommonView {
       ),
       leading: new GestureDetector(
         child: new Align(
-          child: new Image.asset(ImageUtil.imgBack, height: 20.0,),
+          child: new Container(
+            width: 50,//给点宽度 让点击区域放大
+            child:  new Image.asset(ImageUtil.imgBack, height: 20.0,),
+          ),
         ),
         onTap: () {
           //点击返回
@@ -89,6 +92,7 @@ class CommonView {
   /**
    * 回传值
    */
+  ///
   AppBar commonAppBarIntentData(BuildContext context, String title, dynamic data) {
 
     return new AppBar(
@@ -102,11 +106,14 @@ class CommonView {
       ),
       leading: new GestureDetector(
         child: new Align(
-          child: new Image.asset(ImageUtil.imgBack, height: 20.0,),
+          child: new Container(
+            width: 50,//给点宽度 让点击区域放大
+            child:  new Image.asset(ImageUtil.imgBack, height: 20.0,),
+          ),
         ),
         onTap: () {
           //点击返回
-          Navigator.pop(context, data);
+          Navigator.pop(context);
         },
       ),
     );
@@ -116,7 +123,9 @@ class CommonView {
   /**
    * 圆形图片（头像）
    */
+  ///
   Widget clipImg(String headImgUrl) {
+
     return new Container(
       child: ClipOval(
         child: Image.network(UrlUtil.BaseUrl + headImgUrl,
@@ -143,12 +152,37 @@ class CommonView {
   /**
    * 头像
    */
+  ///
   Widget clipHeadImg() {
-    return clipImg(SpUtil.getString(Constant.USER_HEAD_IMG));
+    var headImgUrl = SpUtil.getString(Constant.USER_HEAD_IMG);
+    if (TextUtil.isEmpty(headImgUrl)) {
+      return new Container(
+        child: ClipOval(
+          child: Image.asset(ImageUtil.imgHead,
+            width: 70.0,
+            height: 70.0,
+            fit: BoxFit.cover,
+          ),
+        ),
+      );
+    }
+    return clipImg(headImgUrl);
   }
 
   Widget clipHeadImgHW48() {
-    return clipImgSetHW(SpUtil.getString(Constant.USER_HEAD_IMG), 48.0, 48.0);
+    var headImg = SpUtil.getString(Constant.USER_HEAD_IMG);
+    if (TextUtil.isEmpty(headImg)) {
+      return new Container(
+        child: ClipOval(
+          child: Image.asset(ImageUtil.imgHead,
+            width: 48.0,
+            height: 48.0,
+            fit: BoxFit.cover,
+          ),
+        ),
+      );
+    }
+    return clipImgSetHW(headImg, 48.0, 48.0);
   }
 
 }
