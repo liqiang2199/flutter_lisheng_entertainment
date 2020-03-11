@@ -1,6 +1,6 @@
 class UrlUtil {
 
-  static const BaseUrl = "http://ij8gpe.natappfree.cc/";
+  static const BaseUrl = "http://7csdv2.natappfree.cc/";
 //  static const BaseUrl = "http://128.1.61.216:82/";
 
   static const login = "api/login/login";

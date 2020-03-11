@@ -12,9 +12,7 @@ import 'package:flutter_lisheng_entertainment/model/been/TrendCoordinateBeen.dar
 import 'package:flutter_lisheng_entertainment/view/common/CommonView.dart';
 import 'dart:ui' as ui;
 
-/**
- * 11 选 5 走势 图
- */
+
 class Trend11Choice5Controller extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
@@ -133,21 +131,6 @@ class _Trend11Choice5Controller extends BaseController<Trend11Choice5Controller>
     );
   }
 
-  Widget _cpList() {
-
-    return new CustomPaint(
-      painter: new LinePainter(trendPointList),
-      child: ListView.builder(
-        physics: new NeverScrollableScrollPhysics(),
-        itemBuilder: (c, i) => Container(
-          color: Colors.blue,
-          child: _trendContentView(ColorUtil.whiteColor, i,"12"),
-        ),
-        //itemExtent: 200.0,
-        itemCount: 10,
-      ),
-    );
-  }
 
   Widget _list() {
     return new CustomPaint(
@@ -307,19 +290,10 @@ class _Trend11Choice5Controller extends BaseController<Trend11Choice5Controller>
     );
   }
 
-  /**
-   * 走势类型选择弹窗
-   */
+
   _trendTypeChoiceDialog(BuildContext context) {
 
-//    showDialog<Null>(
-//      context: context,
-//      builder: (BuildContext context) {
-//        return new TrendTypeChoiceView();
-//      },
-//    ).then((val) {
-//      print(val);
-//    });
+
 
   }
 
@@ -368,13 +342,6 @@ class LinePainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     if (trendPointList.length >= 2) {
-
-//      _paint.color = Color(ColorUtil.butColor_EB303B);
-//      canvas.drawCircle(Offset(trendPointList[0].dx, trendPointList[0].dy), 10, _paint);
-//      paragraphBuilder.addText(trendPointList[0].indexNum);
-//      paragraph = paragraphBuilder.build()
-//        ..layout(ui.ParagraphConstraints(width: textWidth));
-//      canvas.drawParagraph(paragraph, Offset(trendPointList[0].dx - textWidth /2,trendPointList[0].dy - 5));
 
       for (int i = -1; i < trendPointList.length - 1; i++) {
 
