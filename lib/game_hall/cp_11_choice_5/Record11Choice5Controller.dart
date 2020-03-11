@@ -11,7 +11,10 @@ import 'package:flutter_lisheng_entertainment/view/common/CommonView.dart';
 
 /**
  * 11 选 5 记录界面
+ * 河内一分彩 记录界面
+ * 腾讯一分彩 记录界面
  */
+///
 class Record11Choice5Controller extends StatefulWidget {
   String colorVariety;
   Record11Choice5Controller(this.colorVariety);
@@ -60,7 +63,7 @@ class _Record11Choice5Controller extends BaseRefreshTabController<Record11Choice
   initTabData() {
     tabList = [
       new TabTitle('投注记录', 0),
-      new TabTitle('追号记录', 1),
+//      new TabTitle('追号记录', 1),
       new TabTitle('账变记录', 2),
     ];
   }
@@ -90,6 +93,7 @@ class _Record11Choice5Controller extends BaseRefreshTabController<Record11Choice
   Widget _tabPageChildView() {
 
     return TabBarView(
+        physics: new NeverScrollableScrollPhysics(),
         controller: this.mTabController,
         children:  _tabListItem());
 
@@ -99,7 +103,7 @@ class _Record11Choice5Controller extends BaseRefreshTabController<Record11Choice
     List<Widget> tabList = new List();
 
     tabList.add(_tabIndexView(0));
-    tabList.add(_tabIndexView(1));
+//    tabList.add(_tabIndexView(1));
     tabList.add(_tabIndexView(2));
     return tabList;
   }
