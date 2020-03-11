@@ -21,6 +21,8 @@ class Constant {
    * 玩法类 编号
    */
   ///
+  static const GAME_NUM_CHONGQING_1 = 1;//重庆时时彩
+
   static const GAME_NUM_VIETNAME_HANOI = 15;//河内一分彩
   static const GAME_NUM_VIETNAME_HANOI_6 = 6;//河内一分彩
   static const GAME_NUM_VIETNAME_HANOI_8 = 8;//河内5分彩

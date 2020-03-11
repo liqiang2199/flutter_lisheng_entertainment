@@ -73,6 +73,7 @@ class _LotteryNum11Choice5Controller extends BaseRefreshController<LotteryNum11C
       case "${Constant.GAME_NUM_ODD_INTEREST_5}":// 奇趣10分彩
 
       case "${Constant.GAME_NUM_LUCKY_AIRSHIP_13}":// 幸运飞艇
+      case "${Constant.GAME_NUM_CHONGQING_1}":// 重庆时时彩
         GameService.instance.oddInterest_kjlogList("$page", this, colorVariety);
         break;
       default:

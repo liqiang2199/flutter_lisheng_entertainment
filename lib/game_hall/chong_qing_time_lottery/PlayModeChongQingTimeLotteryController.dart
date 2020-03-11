@@ -54,7 +54,7 @@ class _PlayModeChongQingTimeLotteryController extends BaseController<PlayModeCho
     super.initState();
     Future.delayed(Duration(milliseconds: 1000)).then((e) {
 
-      GameService.instance.tencentGetPlay(this, _colorVarietyID);
+      GameService.instance.chongqingTimePlay(this, _colorVarietyID);
     });
   }
 
@@ -261,16 +261,8 @@ class _PlayModeChongQingTimeLotteryController extends BaseController<PlayModeCho
       return;
     }
 
-    if(_colorVarietyID == "${Constant.GAME_NUM_TENCENT}") {
-      _tencentOneLottery(data);
-    }
-
-    if(_colorVarietyID == "${Constant.GAME_NUM_5_TENCENT}") {
-      _tencentFiveLottery(data);
-    }
-
-    if(_colorVarietyID == "${Constant.GAME_NUM_10_TENCENT}") {
-      _tencent10Lottery(data);
+    if(_colorVarietyID == "${Constant.GAME_NUM_CHONGQING_1}") {
+      _chongqingTimeLottery(data);
     }
 
     choiceModeMap.forEach((choiceK, choiceV) {
@@ -290,18 +282,18 @@ class _PlayModeChongQingTimeLotteryController extends BaseController<PlayModeCho
       });
   }
 
-  /// 腾讯一分彩
-  _tencentOneLottery(Map<String, dynamic> data) {
-    Map<String, dynamic> dataThreeYards = data["280"];//五星
+  /// 重庆时时彩
+  _chongqingTimeLottery(Map<String, dynamic> data) {
+    Map<String, dynamic> dataThreeYards = data["1370"];//五星
     var threeYardsBeen = Play11Choice5DataThreeYardsBeen.fromJson(dataThreeYards);
     Map<String, dynamic> dataThreeYardsPlay = dataThreeYards["play"];
 
     List<Play11Choice5DataPlayBeen> dataFiveStarsPlayList = new List(); // 五星 列表
 
-    var dataTopThreePlayBeen = dataThreeYardsPlay["281"]["play"];///五星
+    var dataTopThreePlayBeen = dataThreeYardsPlay["1371"]["play"];///五星
 
     /// 五星 直选  282 284
-    Map<String, dynamic> dataFiveStarsPlayMapZ = dataTopThreePlayBeen["282"];//五星 复式
+    Map<String, dynamic> dataFiveStarsPlayMapZ = dataTopThreePlayBeen["1373"];//五星 复式
     var dataFiveStarsMapBeenZ = Play11Choice5DataPlayBeen.fromJson(dataFiveStarsPlayMapZ);
     dataFiveStarsMapBeenZ.playMode = 1;
     dataFiveStarsMapBeenZ.name = "直选复式";
@@ -310,7 +302,7 @@ class _PlayModeChongQingTimeLotteryController extends BaseController<PlayModeCho
     dataFiveStarsPlayList.add(dataFiveStarsMapBeenZ);
 
 
-    Map<String, dynamic> dataFiveStarsPlayMapD = dataTopThreePlayBeen["284"];//五星 单式
+    Map<String, dynamic> dataFiveStarsPlayMapD = dataTopThreePlayBeen["1374"];//五星 单式
     var dataFiveStarsMapBeenD = Play11Choice5DataPlayBeen.fromJson(dataFiveStarsPlayMapD);
     dataFiveStarsMapBeenD.playMode = 1;
     dataFiveStarsMapBeenD.name = "直选单式";
@@ -319,92 +311,133 @@ class _PlayModeChongQingTimeLotteryController extends BaseController<PlayModeCho
     dataFiveStarsPlayList.add(dataFiveStarsMapBeenD);
 
     /// 五星 组选
-    var dataTopThreePlayBeen285 = dataThreeYardsPlay["285"]["play"];//
+    var dataTopThreePlayBeen285 = dataThreeYardsPlay["1372"]["play"];//
 
-    for (int i = 286; i<= 290; i++) {
+    for (int i = 1375; i<= 1380; i++) {
       Map<String, dynamic> dataTopThreePlayMap = dataTopThreePlayBeen285["$i"];//五星 组选
       var topThreeMapBeen = Play11Choice5DataPlayBeen.fromJson(dataTopThreePlayMap);
       topThreeMapBeen.playMode = 1;
-      if (i == 286) {
-        topThreeMapBeen.groupSelectionNum = 3;
-        topThreeMapBeen.playModeSingleOrDouble = 2;
-      }
-      if (i == 287) {
-        topThreeMapBeen.groupSelectionNum = 0;
-        topThreeMapBeen.playModeSingleOrDouble = 1;
-      }
-      if (i == 288) {
+      if (i == 1375) {
         topThreeMapBeen.groupSelectionNum = 1;
         topThreeMapBeen.playModeSingleOrDouble = 2;
       }
-      if (i == 289) {
-        topThreeMapBeen.groupSelectionNum = 1;
+      if (i == 1376) {
+        topThreeMapBeen.groupSelectionNum = 2;
         topThreeMapBeen.playModeSingleOrDouble = 2;
       }
-      if (i == 290) {
-        topThreeMapBeen.groupSelectionNum = 1;
+      if (i == 1377) {
+        topThreeMapBeen.groupSelectionNum = 2;
+        topThreeMapBeen.playModeSingleOrDouble = 2;
+      }
+      if (i == 1378) {
+        topThreeMapBeen.groupSelectionNum = 2;
+        topThreeMapBeen.playModeSingleOrDouble = 2;
+      }
+      if (i == 1379) {
+        topThreeMapBeen.groupSelectionNum = 2;
+        topThreeMapBeen.playModeSingleOrDouble = 2;
+      }
+      if (i == 1380) {
+        topThreeMapBeen.groupSelectionNum = 2;
         topThreeMapBeen.playModeSingleOrDouble = 2;
       }
       dataFiveStarsPlayList.add(topThreeMapBeen);
     }
 
-    var dataTopThreePlayBeen292 = dataThreeYardsPlay["292"]["play"];//
-    //总和大小单双
-    Map<String, dynamic> dataFiveStarsPlayMapDXDS = dataTopThreePlayBeen292["293"];//五星 复式
-    var dataFiveStarsMapBeenDXDS = Play11Choice5DataPlayBeen.fromJson(dataFiveStarsPlayMapDXDS);
-    dataFiveStarsMapBeenDXDS.playMode = 1;
-    dataFiveStarsMapBeenDXDS.groupSelectionNum = 0;
-    dataFiveStarsMapBeenDXDS.playModeSingleOrDouble = 1;
-    dataFiveStarsPlayList.add(dataFiveStarsMapBeenDXDS);
-
     choiceModeMap[threeYardsBeen] = dataFiveStarsPlayList;
 
+    /// 前四
+    Map<String, dynamic> dataBeforeFour = data["1381"];//前四
+    var dataBeforeFourBeen = Play11Choice5DataThreeYardsBeen.fromJson(dataBeforeFour);
+    var dataBeforeFourBeen1381 = dataBeforeFour["play"];//
+    List<Play11Choice5DataPlayBeen> dataBeforeFourPlayList = new List(); // 前四 列表
+
+    var dataTopThreePlayBeen1382 = dataBeforeFourBeen1381["1382"]["play"];//
+    Map<String, dynamic> dataBeforeFourPlayMapF1384 = dataTopThreePlayBeen1382["1384"];//五星 复式
+    var dataBeforeFourMapBeenF = Play11Choice5DataPlayBeen.fromJson(dataBeforeFourPlayMapF1384);
+    dataBeforeFourMapBeenF.playMode = 2;
+    dataBeforeFourMapBeenF.groupSelectionNum = 0;
+    dataBeforeFourMapBeenF.name = "直选复式";
+    dataBeforeFourMapBeenF.playModeSingleOrDouble = 1;
+    dataBeforeFourPlayList.add(dataBeforeFourMapBeenF);
+
+    Map<String, dynamic> dataBeforeFourPlayMapD1385 = dataTopThreePlayBeen1382["1385"];//五星 复式
+    var dataBeforeFourMapBeenD = Play11Choice5DataPlayBeen.fromJson(dataBeforeFourPlayMapD1385);
+    dataBeforeFourMapBeenD.playMode = 2;
+    dataBeforeFourMapBeenD.name = "直选单式";
+    dataBeforeFourMapBeenD.groupSelectionNum = 0;
+    dataBeforeFourMapBeenD.playModeSingleOrDouble = 1;
+    dataBeforeFourPlayList.add(dataBeforeFourMapBeenD);
+
+    /// 后四组选
+    var dataPlayBeen1383 = dataBeforeFourBeen1381["1383"]["play"];//
+
+    for (int i = 1386; i<= 1388; i++) {
+      Map<String, dynamic> dataTopThreePlayMap = dataPlayBeen1383["$i"];//三码
+      if (dataTopThreePlayMap == null || dataTopThreePlayMap.length <= 0) {
+        continue;
+      }
+      var topThreeMapBeen6 = Play11Choice5DataPlayBeen.fromJson(dataTopThreePlayMap);
+      topThreeMapBeen6.playMode = 2;
+      if (i == 1386) {
+        topThreeMapBeen6.groupSelectionNum = 1;
+        topThreeMapBeen6.playModeSingleOrDouble = 2;
+      }
+      if (i == 1387) {
+        topThreeMapBeen6.groupSelectionNum = 1;
+        topThreeMapBeen6.playModeSingleOrDouble = 2;
+      }
+      if (i == 1388) {
+        topThreeMapBeen6.groupSelectionNum = 1;
+        topThreeMapBeen6.playModeSingleOrDouble = 2;
+      }
+      dataBeforeFourPlayList.add(topThreeMapBeen6);
+    }
+
+    choiceModeMap[dataBeforeFourBeen] = dataBeforeFourPlayList;
+
     /// 后四
-    Map<String, dynamic> dataLaterFour = data["294"];//五星
+    Map<String, dynamic> dataLaterFour = data["1389"];//
     var laterFourBeen = Play11Choice5DataThreeYardsBeen.fromJson(dataLaterFour);
-    var dataLaterFourBeen294 = dataLaterFour["play"];//
+    var dataLaterFourBeen1389 = dataLaterFour["play"];//
     List<Play11Choice5DataPlayBeen> dataLaterFourPlayList = new List(); // 后四 列表
 
-    var dataTopThreePlayBeen295 = dataLaterFourBeen294["295"]["play"];//
-    Map<String, dynamic> dataLaterFourPlayMapF = dataTopThreePlayBeen295["297"];//五星 复式
+    var dataTopThreePlayBeen1390 = dataLaterFourBeen1389["1390"]["play"];//
+    Map<String, dynamic> dataLaterFourPlayMapF = dataTopThreePlayBeen1390["1392"];//五星 复式
     var dataLaterFourMapBeenF = Play11Choice5DataPlayBeen.fromJson(dataLaterFourPlayMapF);
-    dataLaterFourMapBeenF.playMode = 2;
+    dataLaterFourMapBeenF.playMode = 3;
     dataLaterFourMapBeenF.groupSelectionNum = 0;
     dataLaterFourMapBeenF.name = "直选复式";
     dataLaterFourMapBeenF.playModeSingleOrDouble = 1;
     dataLaterFourPlayList.add(dataLaterFourMapBeenF);
 
-    Map<String, dynamic> dataLaterFourPlayMapD = dataTopThreePlayBeen295["298"];//五星 复式
+    Map<String, dynamic> dataLaterFourPlayMapD = dataTopThreePlayBeen1390["1393"];//五星 复式
     var dataLaterFourMapBeenD = Play11Choice5DataPlayBeen.fromJson(dataLaterFourPlayMapD);
-    dataLaterFourMapBeenD.playMode = 2;
+    dataLaterFourMapBeenD.playMode = 3;
     dataLaterFourMapBeenD.name = "直选单式";
     dataLaterFourMapBeenD.groupSelectionNum = 0;
     dataLaterFourMapBeenD.playModeSingleOrDouble = 1;
     dataLaterFourPlayList.add(dataLaterFourMapBeenD);
 
     /// 后四组选
-    var dataPlayBeen296 = dataLaterFourBeen294["296"]["play"];//
+    var dataPlayBeen1391 = dataLaterFourBeen1389["1391"]["play"];//
 
-    for (int i = 300; i<= 303; i++) {
-      Map<String, dynamic> dataTopThreePlayMap = dataPlayBeen296["$i"];//三码
+    for (int i = 1394; i<= 1396; i++) {
+      Map<String, dynamic> dataTopThreePlayMap = dataPlayBeen1391["$i"];//三码
       if (dataTopThreePlayMap == null || dataTopThreePlayMap.length <= 0) {
         continue;
       }
       var topThreeMapBeen6 = Play11Choice5DataPlayBeen.fromJson(dataTopThreePlayMap);
-      topThreeMapBeen6.playMode = 2;
-      if (i == 300) {
+      topThreeMapBeen6.playMode = 3;
+      if (i == 1394) {
         topThreeMapBeen6.groupSelectionNum = 1;
         topThreeMapBeen6.playModeSingleOrDouble = 2;
       }
-      if (i == 301) {
+      if (i == 1395) {
         topThreeMapBeen6.groupSelectionNum = 1;
         topThreeMapBeen6.playModeSingleOrDouble = 2;
       }
-      if (i == 302) {
-        topThreeMapBeen6.groupSelectionNum = 0;
-        topThreeMapBeen6.playModeSingleOrDouble = 1;
-      }
-      if (i == 303) {
+      if (i == 1396) {
         topThreeMapBeen6.groupSelectionNum = 1;
         topThreeMapBeen6.playModeSingleOrDouble = 2;
       }
@@ -415,138 +448,100 @@ class _PlayModeChongQingTimeLotteryController extends BaseController<PlayModeCho
 
 
     /// 前三
-    Map<String, dynamic> topThree = data["304"];//前三
+    Map<String, dynamic> topThree = data["1397"];//前三
     var topThreeBeen = Play11Choice5DataThreeYardsBeen.fromJson(topThree);
     Map<String, dynamic> dataTopThreePlay = topThree["play"];//前三
 
     List<Play11Choice5DataPlayBeen> topThreeList = new List();
 
-    Map<String, dynamic> topThree305 = dataTopThreePlay["305"]["play"];
+    Map<String, dynamic> topThree1398 = dataTopThreePlay["1398"]["play"];
 
-    for (int mi = 308; mi <= 311; mi++) {
-      Map<String, dynamic> middleThreeDataMap = topThree305["$mi"];//前三
+    for (int mi = 1400; mi <= 1401; mi++) {
+      Map<String, dynamic> middleThreeDataMap = topThree1398["$mi"];//前三
       var topThreePlayBeen = Play11Choice5DataPlayBeen.fromJson(middleThreeDataMap);
-      topThreePlayBeen.playMode = 3;
-      if (mi == 308) {
+      topThreePlayBeen.playMode = 4;
+      if (mi == 1400) {
         topThreePlayBeen.name = "直选复式";
         topThreePlayBeen.groupSelectionNum = 3;
         topThreePlayBeen.playModeSingleOrDouble = 2;
       }
 
-      if (mi == 309) {
+      if (mi == 1401) {
         topThreePlayBeen.name = "直选单式";
         topThreePlayBeen.groupSelectionNum = 0;
         topThreePlayBeen.playModeSingleOrDouble = 1;
       }
-
-      if (mi == 310) {
-        topThreePlayBeen.groupSelectionNum = 1;
-        topThreePlayBeen.playModeSingleOrDouble = 2;
-      }
-
-      if (mi == 311) {
-        topThreePlayBeen.groupSelectionNum = 1;
-        topThreePlayBeen.playModeSingleOrDouble = 2;
-      }
       topThreeList.add(topThreePlayBeen);
     }
 
-    var topThree306 = dataTopThreePlay["306"]["play"];//组选
+    var topThree1399 = dataTopThreePlay["1399"]["play"];//组选
 
-    for (int mi = 312; mi <= 314; mi++) {
-      Map<String, dynamic> middleThreeDataMap = topThree306["$mi"];//组选
+    for (int mi = 1402; mi <= 1404; mi++) {
+      Map<String, dynamic> middleThreeDataMap = topThree1399["$mi"];//组选
       var topThreePlayBeen = Play11Choice5DataPlayBeen.fromJson(middleThreeDataMap);
-      topThreePlayBeen.playMode = 3;
+      topThreePlayBeen.playMode = 4;
       topThreePlayBeen.groupSelectionNum = 1;
       topThreePlayBeen.playModeSingleOrDouble = 2;
 
       topThreeList.add(topThreePlayBeen);
     }
 
-    var middleThree22 = dataTopThreePlay["307"]["play"];//其他
-
-    Map<String, dynamic> middleThreeDataMap = middleThree22["315"];//尾选和值
-    var middleThreePlayBeen = Play11Choice5DataPlayBeen.fromJson(middleThreeDataMap);
-    middleThreePlayBeen.playMode = 3;
-    middleThreePlayBeen.groupSelectionNum = 1;
-    middleThreePlayBeen.playModeSingleOrDouble = 2;
-
-    topThreeList.add(middleThreePlayBeen);
 
     choiceModeMap[topThreeBeen] = topThreeList;
 
     /// 中三
-    Map<String, dynamic> middleThree = data["316"];//中三
+    Map<String, dynamic> middleThree = data["1405"];//中三
     var twoYardsBeen = Play11Choice5DataThreeYardsBeen.fromJson(middleThree);
     Map<String, dynamic> dataMiddleThreePlay = middleThree["play"];//中三
 
     List<Play11Choice5DataPlayBeen> middleThreeList = new List();
 
-    Map<String, dynamic> middleThree14 = dataMiddleThreePlay["317"]["play"];
+    Map<String, dynamic> middleThree1406 = dataMiddleThreePlay["1406"]["play"];
 
-    for (int mi = 320; mi <= 323; mi++) {
-      Map<String, dynamic> middleThreeDataMap = middleThree14["$mi"];//中三
+    for (int mi = 1408; mi <= 1409; mi++) {
+      Map<String, dynamic> middleThreeDataMap = middleThree1406["$mi"];//中三
       var middleThreePlayBeen = Play11Choice5DataPlayBeen.fromJson(middleThreeDataMap);
-      middleThreePlayBeen.playMode = 4;
-      if (mi == 320) {
+      middleThreePlayBeen.playMode = 5;
+      if (mi == 1408) {
         middleThreePlayBeen.name = "直选复式";
         middleThreePlayBeen.groupSelectionNum = 3;
         middleThreePlayBeen.playModeSingleOrDouble = 2;
       }
 
-      if (mi == 321) {
+      if (mi == 1409) {
         middleThreePlayBeen.name = "直选单式";
         middleThreePlayBeen.groupSelectionNum = 0;
         middleThreePlayBeen.playModeSingleOrDouble = 1;
       }
-
-      if (mi == 322) {
-        middleThreePlayBeen.groupSelectionNum = 1;
-        middleThreePlayBeen.playModeSingleOrDouble = 2;
-      }
-
-      if (mi == 323) {
-        middleThreePlayBeen.groupSelectionNum = 1;
-        middleThreePlayBeen.playModeSingleOrDouble = 2;
-      }
       middleThreeList.add(middleThreePlayBeen);
     }
 
-    var middleThree318 = dataMiddleThreePlay["318"]["play"];//组选
+    var middleThree318 = dataMiddleThreePlay["1407"]["play"];//组选
 
-    for (int mi = 324; mi <= 325; mi++) {
+    for (int mi = 1410; mi <= 1412; mi++) {
       Map<String, dynamic> middleThreeDataMap = middleThree318["$mi"];//组选
       var middleThreePlayBeen = Play11Choice5DataPlayBeen.fromJson(middleThreeDataMap);
-      middleThreePlayBeen.playMode = 4;
+      middleThreePlayBeen.playMode = 5;
       middleThreePlayBeen.groupSelectionNum = 1;
       middleThreePlayBeen.playModeSingleOrDouble = 2;
 
       middleThreeList.add(middleThreePlayBeen);
     }
 
-    var middleThree319 = dataMiddleThreePlay["319"]["play"];//组选
-
-    Map<String, dynamic> middleThreeDataMap326 = middleThree319["326"];// 和值尾数
-    var middleThreePlayBeenSum = Play11Choice5DataPlayBeen.fromJson(middleThreeDataMap326);
-    middleThreePlayBeenSum.playMode = 4;
-    middleThreePlayBeenSum.groupSelectionNum = 1;
-    middleThreePlayBeenSum.playModeSingleOrDouble = 2;
-
-    middleThreeList.add(middleThreePlayBeenSum);
 
     choiceModeMap[twoYardsBeen] = middleThreeList;
 
     /// 后三
-    Map<String, dynamic> dataLaterThree = data["327"];//后三
+    Map<String, dynamic> dataLaterThree = data["1413"];//后三
     List<Play11Choice5DataPlayBeen> dataLaterThreePlayList = new List();
 
     var dataLaterThreeBeen = Play11Choice5DataThreeYardsBeen.fromJson(dataLaterThree);
     Map<String, dynamic> dataLaterThreePlay = dataLaterThree["play"];//
 
-    Map<String, dynamic> dataLaterThreePlayBeen25Play = dataLaterThreePlay["328"]["play"];//后三 直选
+    Map<String, dynamic> dataLaterThreePlayBeen1414Play = dataLaterThreePlay["1414"]["play"];//后三 直选
 
     for (int lTi = 331; lTi <= 334; lTi++) {
-      Map<String, dynamic> dataLaterThreePlayBeenLTi = dataLaterThreePlayBeen25Play["$lTi"];
+      Map<String, dynamic> dataLaterThreePlayBeenLTi = dataLaterThreePlayBeen1414Play["$lTi"];
       var dataLaterThreePlayBeen = Play11Choice5DataPlayBeen.fromJson(dataLaterThreePlayBeenLTi);
       dataLaterThreePlayBeen.playMode = 5;
 
@@ -1142,1563 +1137,5 @@ class _PlayModeChongQingTimeLotteryController extends BaseController<PlayModeCho
     choiceModeMap[dataNewDragonTigerBeen] = dataNewDragonTigerBeenPlayList;
   }
 
-  /// 腾讯5分彩
-  _tencentFiveLottery(Map<String, dynamic> data) {
-    Map<String, dynamic> dataThreeYards = data["613"];//五星
-    var threeYardsBeen = Play11Choice5DataThreeYardsBeen.fromJson(dataThreeYards);
-    Map<String, dynamic> dataThreeYardsPlay = dataThreeYards["play"];
-
-    List<Play11Choice5DataPlayBeen> dataFiveStarsPlayList = new List(); // 五星 列表
-
-    var dataTopThreePlayBeen = dataThreeYardsPlay["614"]["play"];///五星
-
-    /// 五星 直选  282 284
-    Map<String, dynamic> dataFiveStarsPlayMapZ = dataTopThreePlayBeen["615"];//五星 复式
-    var dataFiveStarsMapBeenZ = Play11Choice5DataPlayBeen.fromJson(dataFiveStarsPlayMapZ);
-    dataFiveStarsMapBeenZ.playMode = 1;
-    dataFiveStarsMapBeenZ.name = "直选复式";
-    dataFiveStarsMapBeenZ.groupSelectionNum = 3;
-    dataFiveStarsMapBeenZ.playModeSingleOrDouble = 2;
-    dataFiveStarsPlayList.add(dataFiveStarsMapBeenZ);
-
-
-    Map<String, dynamic> dataFiveStarsPlayMapD = dataTopThreePlayBeen["616"];//五星 单式
-    var dataFiveStarsMapBeenD = Play11Choice5DataPlayBeen.fromJson(dataFiveStarsPlayMapD);
-    dataFiveStarsMapBeenD.playMode = 1;
-    dataFiveStarsMapBeenD.name = "直选单式";
-    dataFiveStarsMapBeenD.groupSelectionNum = 0;
-    dataFiveStarsMapBeenD.playModeSingleOrDouble = 1;
-    dataFiveStarsPlayList.add(dataFiveStarsMapBeenD);
-
-    /// 五星 组选
-    var dataTopThreePlayBeen285 = dataThreeYardsPlay["617"]["play"];//
-
-    for (int i = 618; i<= 622; i++) {
-      Map<String, dynamic> dataTopThreePlayMap = dataTopThreePlayBeen285["$i"];//五星 组选
-      var topThreeMapBeen = Play11Choice5DataPlayBeen.fromJson(dataTopThreePlayMap);
-      topThreeMapBeen.playMode = 1;
-      if (i == 618) {
-        topThreeMapBeen.groupSelectionNum = 3;
-        topThreeMapBeen.playModeSingleOrDouble = 2;
-      }
-      if (i == 619) {
-        topThreeMapBeen.groupSelectionNum = 0;
-        topThreeMapBeen.playModeSingleOrDouble = 1;
-      }
-      if (i == 620) {
-        topThreeMapBeen.groupSelectionNum = 1;
-        topThreeMapBeen.playModeSingleOrDouble = 2;
-      }
-      if (i == 621) {
-        topThreeMapBeen.groupSelectionNum = 1;
-        topThreeMapBeen.playModeSingleOrDouble = 2;
-      }
-      if (i == 622) {
-        topThreeMapBeen.groupSelectionNum = 1;
-        topThreeMapBeen.playModeSingleOrDouble = 2;
-      }
-      dataFiveStarsPlayList.add(topThreeMapBeen);
-    }
-
-    var dataTopThreePlayBeen292 = dataThreeYardsPlay["623"]["play"];//
-    //总和大小单双
-    Map<String, dynamic> dataFiveStarsPlayMapDXDS = dataTopThreePlayBeen292["624"];//五星 复式
-    var dataFiveStarsMapBeenDXDS = Play11Choice5DataPlayBeen.fromJson(dataFiveStarsPlayMapDXDS);
-    dataFiveStarsMapBeenDXDS.playMode = 1;
-    dataFiveStarsMapBeenDXDS.groupSelectionNum = 0;
-    dataFiveStarsMapBeenDXDS.playModeSingleOrDouble = 1;
-    dataFiveStarsPlayList.add(dataFiveStarsMapBeenDXDS);
-
-    choiceModeMap[threeYardsBeen] = dataFiveStarsPlayList;
-
-    /// 后四
-    Map<String, dynamic> dataLaterFour = data["625"];//五星
-    var laterFourBeen = Play11Choice5DataThreeYardsBeen.fromJson(dataLaterFour);
-    var dataLaterFourBeen294 = dataLaterFour["play"];//
-    List<Play11Choice5DataPlayBeen> dataLaterFourPlayList = new List(); // 后四 列表
-
-    var dataTopThreePlayBeen295 = dataLaterFourBeen294["626"]["play"];//
-    Map<String, dynamic> dataLaterFourPlayMapF = dataTopThreePlayBeen295["627"];//五星 复式
-    var dataLaterFourMapBeenF = Play11Choice5DataPlayBeen.fromJson(dataLaterFourPlayMapF);
-    dataLaterFourMapBeenF.playMode = 2;
-    dataLaterFourMapBeenF.groupSelectionNum = 0;
-    dataLaterFourMapBeenF.name = "直选复式";
-    dataLaterFourMapBeenF.playModeSingleOrDouble = 1;
-    dataLaterFourPlayList.add(dataLaterFourMapBeenF);
-
-    Map<String, dynamic> dataLaterFourPlayMapD = dataTopThreePlayBeen295["628"];//五星 复式
-    var dataLaterFourMapBeenD = Play11Choice5DataPlayBeen.fromJson(dataLaterFourPlayMapD);
-    dataLaterFourMapBeenD.playMode = 2;
-    dataLaterFourMapBeenD.name = "直选单式";
-    dataLaterFourMapBeenD.groupSelectionNum = 0;
-    dataLaterFourMapBeenD.playModeSingleOrDouble = 1;
-    dataLaterFourPlayList.add(dataLaterFourMapBeenD);
-
-    /// 后四组选
-    var dataPlayBeen296 = dataLaterFourBeen294["629"]["play"];//
-
-    for (int i = 630; i<= 633; i++) {
-      Map<String, dynamic> dataTopThreePlayMap = dataPlayBeen296["$i"];//三码
-      if (dataTopThreePlayMap == null || dataTopThreePlayMap.length <= 0) {
-        continue;
-      }
-      var topThreeMapBeen6 = Play11Choice5DataPlayBeen.fromJson(dataTopThreePlayMap);
-      topThreeMapBeen6.playMode = 2;
-      if (i == 630) {
-        topThreeMapBeen6.groupSelectionNum = 1;
-        topThreeMapBeen6.playModeSingleOrDouble = 2;
-      }
-      if (i == 631) {
-        topThreeMapBeen6.groupSelectionNum = 1;
-        topThreeMapBeen6.playModeSingleOrDouble = 2;
-      }
-      if (i == 632) {
-        topThreeMapBeen6.groupSelectionNum = 0;
-        topThreeMapBeen6.playModeSingleOrDouble = 1;
-      }
-      if (i == 633) {
-        topThreeMapBeen6.groupSelectionNum = 1;
-        topThreeMapBeen6.playModeSingleOrDouble = 2;
-      }
-      dataLaterFourPlayList.add(topThreeMapBeen6);
-    }
-
-    choiceModeMap[laterFourBeen] = dataLaterFourPlayList;
-
-
-    /// 前三
-    Map<String, dynamic> topThree = data["634"];//前三
-    var topThreeBeen = Play11Choice5DataThreeYardsBeen.fromJson(topThree);
-    Map<String, dynamic> dataTopThreePlay = topThree["play"];//前三
-
-    List<Play11Choice5DataPlayBeen> topThreeList = new List();
-
-    Map<String, dynamic> topThree305 = dataTopThreePlay["635"]["play"];
-
-    for (int mi = 636; mi <= 639; mi++) {
-      Map<String, dynamic> middleThreeDataMap = topThree305["$mi"];//前三
-      var topThreePlayBeen = Play11Choice5DataPlayBeen.fromJson(middleThreeDataMap);
-      topThreePlayBeen.playMode = 3;
-      if (mi == 636) {
-        topThreePlayBeen.name = "直选复式";
-        topThreePlayBeen.groupSelectionNum = 3;
-        topThreePlayBeen.playModeSingleOrDouble = 2;
-      }
-
-      if (mi == 637) {
-        topThreePlayBeen.name = "直选单式";
-        topThreePlayBeen.groupSelectionNum = 0;
-        topThreePlayBeen.playModeSingleOrDouble = 1;
-      }
-
-      if (mi == 638) {
-        topThreePlayBeen.groupSelectionNum = 1;
-        topThreePlayBeen.playModeSingleOrDouble = 2;
-      }
-
-      if (mi == 639) {
-        topThreePlayBeen.groupSelectionNum = 1;
-        topThreePlayBeen.playModeSingleOrDouble = 2;
-      }
-      topThreeList.add(topThreePlayBeen);
-    }
-
-    var topThree306 = dataTopThreePlay["640"]["play"];//组选
-
-    for (int mi = 641; mi <= 643; mi++) {
-      Map<String, dynamic> middleThreeDataMap = topThree306["$mi"];//组选
-      var topThreePlayBeen = Play11Choice5DataPlayBeen.fromJson(middleThreeDataMap);
-      topThreePlayBeen.playMode = 3;
-      topThreePlayBeen.groupSelectionNum = 1;
-      topThreePlayBeen.playModeSingleOrDouble = 2;
-
-      topThreeList.add(topThreePlayBeen);
-    }
-
-    var middleThree22 = dataTopThreePlay["644"]["play"];//其他
-
-    Map<String, dynamic> middleThreeDataMap = middleThree22["645"];//尾选和值
-    var middleThreePlayBeen = Play11Choice5DataPlayBeen.fromJson(middleThreeDataMap);
-    middleThreePlayBeen.playMode = 3;
-    middleThreePlayBeen.groupSelectionNum = 1;
-    middleThreePlayBeen.playModeSingleOrDouble = 2;
-
-    topThreeList.add(middleThreePlayBeen);
-
-    choiceModeMap[topThreeBeen] = topThreeList;
-
-    /// 中三
-    Map<String, dynamic> middleThree = data["646"];//中三
-    var twoYardsBeen = Play11Choice5DataThreeYardsBeen.fromJson(middleThree);
-    Map<String, dynamic> dataMiddleThreePlay = middleThree["play"];//中三
-
-    List<Play11Choice5DataPlayBeen> middleThreeList = new List();
-
-    Map<String, dynamic> middleThree14 = dataMiddleThreePlay["647"]["play"];
-
-    for (int mi = 648; mi <= 651; mi++) {
-      Map<String, dynamic> middleThreeDataMap = middleThree14["$mi"];//中三
-      var middleThreePlayBeen = Play11Choice5DataPlayBeen.fromJson(middleThreeDataMap);
-      middleThreePlayBeen.playMode = 4;
-      if (mi == 648) {
-        middleThreePlayBeen.name = "直选复式";
-        middleThreePlayBeen.groupSelectionNum = 3;
-        middleThreePlayBeen.playModeSingleOrDouble = 2;
-      }
-
-      if (mi == 649) {
-        middleThreePlayBeen.name = "直选单式";
-        middleThreePlayBeen.groupSelectionNum = 0;
-        middleThreePlayBeen.playModeSingleOrDouble = 1;
-      }
-
-      if (mi == 650) {
-        middleThreePlayBeen.groupSelectionNum = 1;
-        middleThreePlayBeen.playModeSingleOrDouble = 2;
-      }
-
-      if (mi == 651) {
-        middleThreePlayBeen.groupSelectionNum = 1;
-        middleThreePlayBeen.playModeSingleOrDouble = 2;
-      }
-      middleThreeList.add(middleThreePlayBeen);
-    }
-
-    var middleThree318 = dataMiddleThreePlay["652"]["play"];//组选
-
-    for (int mi = 653; mi <= 654; mi++) {
-      Map<String, dynamic> middleThreeDataMap = middleThree318["$mi"];//组选
-      var middleThreePlayBeen = Play11Choice5DataPlayBeen.fromJson(middleThreeDataMap);
-      middleThreePlayBeen.playMode = 4;
-      middleThreePlayBeen.groupSelectionNum = 1;
-      middleThreePlayBeen.playModeSingleOrDouble = 2;
-
-      middleThreeList.add(middleThreePlayBeen);
-    }
-
-    var middleThree319 = dataMiddleThreePlay["655"]["play"];//组选
-
-    Map<String, dynamic> middleThreeDataMap326 = middleThree319["656"];// 和值尾数
-    var middleThreePlayBeenSum = Play11Choice5DataPlayBeen.fromJson(middleThreeDataMap326);
-    middleThreePlayBeenSum.playMode = 4;
-    middleThreePlayBeenSum.groupSelectionNum = 1;
-    middleThreePlayBeenSum.playModeSingleOrDouble = 2;
-
-    middleThreeList.add(middleThreePlayBeenSum);
-
-    choiceModeMap[twoYardsBeen] = middleThreeList;
-
-    /// 后三
-    Map<String, dynamic> dataLaterThree = data["657"];//后三
-    List<Play11Choice5DataPlayBeen> dataLaterThreePlayList = new List();
-
-    var dataLaterThreeBeen = Play11Choice5DataThreeYardsBeen.fromJson(dataLaterThree);
-    Map<String, dynamic> dataLaterThreePlay = dataLaterThree["play"];//
-
-    Map<String, dynamic> dataLaterThreePlayBeen25Play = dataLaterThreePlay["658"]["play"];//后三 直选
-
-    for (int lTi = 659; lTi <= 662; lTi++) {
-      Map<String, dynamic> dataLaterThreePlayBeenLTi = dataLaterThreePlayBeen25Play["$lTi"];
-      var dataLaterThreePlayBeen = Play11Choice5DataPlayBeen.fromJson(dataLaterThreePlayBeenLTi);
-      dataLaterThreePlayBeen.playMode = 5;
-
-      if (lTi == 659) {
-        dataLaterThreePlayBeen.name = "直选复式";
-        dataLaterThreePlayBeen.groupSelectionNum = 3;
-        dataLaterThreePlayBeen.playModeSingleOrDouble = 2;
-      }
-      if (lTi == 660) {
-        dataLaterThreePlayBeen.name = "直选单式";
-        dataLaterThreePlayBeen.groupSelectionNum = 0;
-        dataLaterThreePlayBeen.playModeSingleOrDouble = 1;
-      }
-      if(lTi == 661) {
-        dataLaterThreePlayBeen.groupSelectionNum = 1;
-        dataLaterThreePlayBeen.playModeSingleOrDouble = 2;
-      }
-      if(lTi == 662) {
-        dataLaterThreePlayBeen.groupSelectionNum = 1;
-        dataLaterThreePlayBeen.playModeSingleOrDouble = 2;
-      }
-      dataLaterThreePlayList.add(dataLaterThreePlayBeen);
-    }
-
-    Map<String, dynamic> dataLaterThreePlayBeen26Play = dataLaterThreePlay["663"]["play"];//后三 组选
-
-    for (int lTi = 664; lTi <= 666; lTi++) {
-      Map<String, dynamic> dataLaterThreePlayBeenLTi = dataLaterThreePlayBeen26Play["$lTi"];
-      var dataLaterThreePlayBeen = Play11Choice5DataPlayBeen.fromJson(dataLaterThreePlayBeenLTi);
-      dataLaterThreePlayBeen.playMode = 5;
-      if (lTi == 664) {
-        dataLaterThreePlayBeen.groupSelectionNum = 3;
-        dataLaterThreePlayBeen.playModeSingleOrDouble = 2;
-      }
-      if (lTi == 665) {
-        dataLaterThreePlayBeen.groupSelectionNum = 0;
-        dataLaterThreePlayBeen.playModeSingleOrDouble = 1;
-      }
-      if(lTi == 666) {
-        dataLaterThreePlayBeen.groupSelectionNum = 1;
-        dataLaterThreePlayBeen.playModeSingleOrDouble = 2;
-      }
-      dataLaterThreePlayList.add(dataLaterThreePlayBeen);
-    }
-
-    Map<String, dynamic> dataLaterThreePlayBeen27Play = dataLaterThreePlay["667"]["play"];//后三 和值尾数
-
-    Map<String, dynamic> dataLaterThreePlayBeenLTi = dataLaterThreePlayBeen27Play["668"];
-    var dataLaterThreePlayBeen = Play11Choice5DataPlayBeen.fromJson(dataLaterThreePlayBeenLTi);
-    dataLaterThreePlayBeen.groupSelectionNum = 1;
-    dataLaterThreePlayBeen.playModeSingleOrDouble = 2;
-    dataLaterThreePlayBeen.playMode = 5;
-    dataLaterThreePlayList.add(dataLaterThreePlayBeen);
-
-    choiceModeMap[dataLaterThreeBeen] = dataLaterThreePlayList;
-
-    /// 前二
-    Map<String, dynamic> dataTopTwo = data["669"];//前二
-    var dataTopTwoBeen = Play11Choice5DataThreeYardsBeen.fromJson(dataTopTwo);
-    List<Play11Choice5DataPlayBeen> dataTopTwoPlayList = new List();
-
-    Map<String, dynamic> dataTopTwoPlay = dataTopTwo["play"];//
-    Map<String, dynamic> dataTopTwoPlay44 = dataTopTwoPlay["670"]["play"];//
-    /// 前二 直选
-    for(int two = 671; two <= 674; two++) {
-      Map<String, dynamic> dataTopTwoPlayTwoI = dataTopTwoPlay44["$two"];
-      var dataTopTwoBeenDirectly  = Play11Choice5DataPlayBeen.fromJson(dataTopTwoPlayTwoI);
-
-      dataTopTwoBeenDirectly.playMode = 6;
-
-      if (two == 671) {
-        dataTopTwoBeenDirectly.name = "直选复式";
-        dataTopTwoBeenDirectly.groupSelectionNum = 3;
-        dataTopTwoBeenDirectly.playModeSingleOrDouble = 2;
-      }
-
-      if (two == 672) {
-        dataTopTwoBeenDirectly.name = "直选单式";
-        dataTopTwoBeenDirectly.groupSelectionNum = 0;
-        dataTopTwoBeenDirectly.playModeSingleOrDouble = 1;
-      }
-
-      if (two == 673) {
-        dataTopTwoBeenDirectly.groupSelectionNum = 1;
-        dataTopTwoBeenDirectly.playModeSingleOrDouble = 2;
-      }
-
-      if (two == 674) {
-        dataTopTwoBeenDirectly.name = "直选跨度";
-        dataTopTwoBeenDirectly.groupSelectionNum = 1;
-        dataTopTwoBeenDirectly.playModeSingleOrDouble = 2;
-      }
-      dataTopTwoPlayList.add(dataTopTwoBeenDirectly);
-    }
-
-    Map<String, dynamic> dataLaterTwoPlay49 = dataTopTwoPlay["675"]["play"];//
-    /// 前二 组选
-    for(int two = 676; two <= 679; two++) {
-      Map<String, dynamic> dataTopTwoPlayTwoI = dataLaterTwoPlay49["$two"];
-      var dataTopTwoBeenGroup  = Play11Choice5DataPlayBeen.fromJson(dataTopTwoPlayTwoI);
-      dataTopTwoBeenGroup.playMode = 6;
-      if (two == 676) {
-        dataTopTwoBeenGroup.name = "组选复式";
-        dataTopTwoBeenGroup.groupSelectionNum = 3;
-        dataTopTwoBeenGroup.playModeSingleOrDouble = 2;
-      }
-
-      if (two == 677) {
-        dataTopTwoBeenGroup.name = "组选单式";
-        dataTopTwoBeenGroup.groupSelectionNum = 0;
-        dataTopTwoBeenGroup.playModeSingleOrDouble = 1;
-      }
-
-      if (two == 678) {
-        dataTopTwoBeenGroup.name = "组选和值";
-        dataTopTwoBeenGroup.groupSelectionNum = 1;
-        dataTopTwoBeenGroup.playModeSingleOrDouble = 2;
-      }
-
-      if (two == 679) {
-        dataTopTwoBeenGroup.name = "组选包胆";
-        dataTopTwoBeenGroup.groupSelectionNum = 1;
-        dataTopTwoBeenGroup.playModeSingleOrDouble = 2;
-      }
-      dataTopTwoPlayList.add(dataTopTwoBeenGroup);
-    }
-
-    choiceModeMap[dataTopTwoBeen] = dataTopTwoPlayList;
-
-    /// 后二
-    Map<String, dynamic> dataLaterTwo = data["680"];//后二
-    var dataLaterTwoBeen = Play11Choice5DataThreeYardsBeen.fromJson(dataLaterTwo);
-    List<Play11Choice5DataPlayBeen> dataLaterTwoPlayList = new List();
-
-    Map<String, dynamic> dataLaterTwoPlay = dataLaterTwo["play"];//
-    Map<String, dynamic> dataLaterTwoPlay38 = dataLaterTwoPlay["681"]["play"];//
-    /// 后二 直选
-    for(int two = 682; two <= 685; two++) {
-      Map<String, dynamic> dataLaterTwoPlayTwoI = dataLaterTwoPlay38["$two"];
-      var dataLaterTwoBeenDirectly  = Play11Choice5DataPlayBeen.fromJson(dataLaterTwoPlayTwoI);
-      dataLaterTwoBeenDirectly.playMode = 7;
-
-      if (two == 682) {
-        dataLaterTwoBeenDirectly.name = "直选复式";
-        dataLaterTwoBeenDirectly.groupSelectionNum = 3;
-        dataLaterTwoBeenDirectly.playModeSingleOrDouble = 2;
-      }
-
-      if (two == 683) {
-        dataLaterTwoBeenDirectly.name = "直选单式";
-        dataLaterTwoBeenDirectly.groupSelectionNum = 0;
-        dataLaterTwoBeenDirectly.playModeSingleOrDouble = 1;
-      }
-
-      if (two == 684) {
-        dataLaterTwoBeenDirectly.groupSelectionNum = 1;
-        dataLaterTwoBeenDirectly.playModeSingleOrDouble = 2;
-      }
-
-      if (two == 685) {
-        dataLaterTwoBeenDirectly.name = "直选跨度";
-        dataLaterTwoBeenDirectly.groupSelectionNum = 1;
-        dataLaterTwoBeenDirectly.playModeSingleOrDouble = 2;
-      }
-      dataLaterTwoPlayList.add(dataLaterTwoBeenDirectly);
-    }
-
-    Map<String, dynamic> dataLaterTwoPlay54 = dataLaterTwoPlay["686"]["play"];//
-    /// 后二 组选
-    for(int two = 687; two <= 690; two++) {
-      Map<String, dynamic> dataLaterTwoPlayTwoI = dataLaterTwoPlay54["$two"];
-      var dataLaterTwoBeenGroup  = Play11Choice5DataPlayBeen.fromJson(dataLaterTwoPlayTwoI);
-      dataLaterTwoBeenGroup.playMode = 7;
-
-      if (two == 687) {
-        dataLaterTwoBeenGroup.name = "组选复式";
-        dataLaterTwoBeenGroup.groupSelectionNum = 3;
-        dataLaterTwoBeenGroup.playModeSingleOrDouble = 2;
-      }
-
-      if (two == 688) {
-        dataLaterTwoBeenGroup.name = "组选单式";
-        dataLaterTwoBeenGroup.groupSelectionNum = 0;
-        dataLaterTwoBeenGroup.playModeSingleOrDouble = 1;
-      }
-      if (two == 689) {
-        dataLaterTwoBeenGroup.name = "组选和值";
-        dataLaterTwoBeenGroup.groupSelectionNum = 1;
-        dataLaterTwoBeenGroup.playModeSingleOrDouble = 2;
-      }
-      if (two == 690) {
-        dataLaterTwoBeenGroup.name = "组选包胆";
-        dataLaterTwoBeenGroup.groupSelectionNum = 1;
-        dataLaterTwoBeenGroup.playModeSingleOrDouble = 2;
-      }
-      dataLaterTwoPlayList.add(dataLaterTwoBeenGroup);
-    }
-
-    choiceModeMap[dataLaterTwoBeen] = dataLaterTwoPlayList;
-
-    /// 定位胆
-    Map<String, dynamic> dataPositioning = data["691"];//定位胆
-    var dataPositioningBeen = Play11Choice5DataThreeYardsBeen.fromJson(dataPositioning);
-    List<Play11Choice5DataPlayBeen> dataPositioningPlayList = new List();
-
-    Map<String, dynamic> dataPositioningPlay = dataPositioning["play"];//
-    Map<String, dynamic> dataPositioningPlay60 = dataPositioningPlay["692"]["play"];//
-
-    Map<String, dynamic> dataPositioningPlay61 = dataPositioningPlay60["693"];
-    var dataBeenPositioning  = Play11Choice5DataPlayBeen.fromJson(dataPositioningPlay61);
-    dataBeenPositioning.groupSelectionNum = 1;
-    dataBeenPositioning.playModeSingleOrDouble = 2;
-    dataBeenPositioning.playMode = 8;
-    dataPositioningPlayList.add(dataBeenPositioning);
-
-    choiceModeMap[dataPositioningBeen] = dataPositioningPlayList;
-
-    /// 不定胆
-    Map<String, dynamic> dataUncertainGallbladder = data["694"];//
-    var dataUncertainGallbladderBeen = Play11Choice5DataThreeYardsBeen.fromJson(dataUncertainGallbladder);
-    List<Play11Choice5DataPlayBeen> dataUncertainGallbladderPlayList = new List();
-
-    Map<String, dynamic> dataUncertainGallbladderPlay = dataUncertainGallbladder["play"];//
-
-    Map<String, dynamic> dataUncertainGallbladder63 = dataUncertainGallbladderPlay["695"]["play"];//五星不定胆
-    /// 不定胆 五星
-    for(int two = 696; two <= 697; two++) {
-      Map<String, dynamic> dataTopTwoPlayTwoI = dataUncertainGallbladder63["$two"];
-      var dataUncertainGallbladderBeenUnGa  = Play11Choice5DataPlayBeen.fromJson(dataTopTwoPlayTwoI);
-      dataUncertainGallbladderBeenUnGa.playMode = 9;
-      if (two == 696) {
-        dataUncertainGallbladderBeenUnGa.name = "五星二码不定位";
-
-      }
-
-      if (two == 697) {
-        dataUncertainGallbladderBeenUnGa.name = "五星三码不定位";
-
-      }
-      dataUncertainGallbladderBeenUnGa.groupSelectionNum = 1;
-      dataUncertainGallbladderBeenUnGa.playModeSingleOrDouble = 2;
-
-      dataUncertainGallbladderPlayList.add(dataUncertainGallbladderBeenUnGa);
-    }
-
-    Map<String, dynamic> dataUncertainGallbladder66 = dataUncertainGallbladderPlay["698"]["play"];//五星不定胆
-    /// 不定胆 前四
-    for(int two = 699; two <= 700; two++) {
-      Map<String, dynamic> dataTopTwoPlayTwoI = dataUncertainGallbladder66["$two"];
-      var dataUncertainGallbladderBeenUnGa  = Play11Choice5DataPlayBeen.fromJson(dataTopTwoPlayTwoI);
-      dataUncertainGallbladderBeenUnGa.playMode = 9;
-      if (two == 699) {
-        dataUncertainGallbladderBeenUnGa.name = "前四一码不定位";
-
-      }
-
-      if (two == 700) {
-        dataUncertainGallbladderBeenUnGa.name = "前四二码不定位";
-
-      }
-      dataUncertainGallbladderBeenUnGa.groupSelectionNum = 1;
-      dataUncertainGallbladderBeenUnGa.playModeSingleOrDouble = 2;
-
-      dataUncertainGallbladderPlayList.add(dataUncertainGallbladderBeenUnGa);
-    }
-
-    Map<String, dynamic> dataUncertainGallbladder69 = dataUncertainGallbladderPlay["701"]["play"];//五星不定胆
-    /// 不定胆 后四
-    for(int two = 702; two <= 703; two++) {
-      Map<String, dynamic> dataTopTwoPlayTwoI = dataUncertainGallbladder69["$two"];
-      var dataUncertainGallbladderBeenUnGa  = Play11Choice5DataPlayBeen.fromJson(dataTopTwoPlayTwoI);
-      dataUncertainGallbladderBeenUnGa.playMode = 9;
-      if (two == 702) {
-        dataUncertainGallbladderBeenUnGa.name = "后四一码不定位";
-
-      }
-
-      if (two == 703) {
-        dataUncertainGallbladderBeenUnGa.name = "后四二码不定位";
-
-      }
-      dataUncertainGallbladderBeenUnGa.groupSelectionNum = 1;
-      dataUncertainGallbladderBeenUnGa.playModeSingleOrDouble = 2;
-
-      dataUncertainGallbladderPlayList.add(dataUncertainGallbladderBeenUnGa);
-    }
-
-    Map<String, dynamic> dataUncertainGallbladder72 = dataUncertainGallbladderPlay["704"]["play"];//五星不定胆
-    /// 不定胆 一码不定位
-    for(int two = 705; two <= 706; two++) {
-      Map<String, dynamic> dataTopTwoPlayTwoI = dataUncertainGallbladder72["$two"];
-      var dataUncertainGallbladderBeenUnGa  = Play11Choice5DataPlayBeen.fromJson(dataTopTwoPlayTwoI);
-      dataUncertainGallbladderBeenUnGa.playMode = 9;
-      if (two == 705) {
-        dataUncertainGallbladderBeenUnGa.name = "后三一码不定位";
-
-      }
-
-      if (two == 706) {
-        dataUncertainGallbladderBeenUnGa.name = "前三一码不定位";
-
-      }
-      dataUncertainGallbladderBeenUnGa.groupSelectionNum = 1;
-      dataUncertainGallbladderBeenUnGa.playModeSingleOrDouble = 2;
-
-      dataUncertainGallbladderPlayList.add(dataUncertainGallbladderBeenUnGa);
-    }
-
-    Map<String, dynamic> dataUncertainGallbladder73 = dataUncertainGallbladderPlay["707"]["play"];//五星不定胆
-    /// 不定胆 二码不定位
-    for(int two = 708; two <= 709; two++) {
-      Map<String, dynamic> dataTopTwoPlayTwoI = dataUncertainGallbladder73["$two"];
-      var dataUncertainGallbladderBeenUnGa  = Play11Choice5DataPlayBeen.fromJson(dataTopTwoPlayTwoI);
-      dataUncertainGallbladderBeenUnGa.playMode = 9;
-      if (two == 708) {
-        dataUncertainGallbladderBeenUnGa.name = "后三二码不定位";
-      }
-
-      if (two == 709) {
-        dataUncertainGallbladderBeenUnGa.name = "前三二码不定位";
-      }
-      dataUncertainGallbladderBeenUnGa.groupSelectionNum = 1;
-      dataUncertainGallbladderBeenUnGa.playModeSingleOrDouble = 2;
-
-      dataUncertainGallbladderPlayList.add(dataUncertainGallbladderBeenUnGa);
-    }
-
-    choiceModeMap[dataUncertainGallbladderBeen] = dataUncertainGallbladderPlayList;
-
-
-    /// 任选
-    Map<String, dynamic> dataOptional = data["710"];//任选
-    var dataOptionalBeen = Play11Choice5DataThreeYardsBeen.fromJson(dataOptional);
-    List<Play11Choice5DataPlayBeen> dataOptionalBeenPlayList = new List();
-
-    Map<String, dynamic> dataOptionalPlay = dataOptional["play"];//
-
-    Map<String, dynamic> dataOptional79 = dataOptionalPlay["711"]["play"];//任二
-
-    for (int op = 712; op <= 714; op ++) {
-      Map<String, dynamic> dataOptionalPlayOP = dataOptional79["$op"];
-      var dataOptionalBeen  = Play11Choice5DataPlayBeen.fromJson(dataOptionalPlayOP);
-      dataOptionalBeen.playMode = 10;
-      if (op == 712) {
-        dataOptionalBeen.name = "任二复式";
-        dataOptionalBeen.groupSelectionNum = 5;
-        dataOptionalBeen.playModeSingleOrDouble = 2;
-      }
-
-      if (op == 713) {
-        dataOptionalBeen.name = "任二单式";
-        dataOptionalBeen.groupSelectionNum = 0;
-        dataOptionalBeen.playModeSingleOrDouble = 1;
-      }
-
-      if (op == 714) {
-        dataOptionalBeen.name = "任二组选";
-        dataOptionalBeen.groupSelectionNum = 1;
-        dataOptionalBeen.playModeSingleOrDouble = 2;
-      }
-      dataOptionalBeenPlayList.add(dataOptionalBeen);
-    }
-
-    /// 任三
-    Map<String, dynamic> dataOptional80 = dataOptionalPlay["715"]["play"];//任二
-
-    for (int op = 716; op <= 719; op ++) {
-      Map<String, dynamic> dataOptionalPlayOP = dataOptional80["$op"];
-      var dataOptionalBeen  = Play11Choice5DataPlayBeen.fromJson(dataOptionalPlayOP);
-      dataOptionalBeen.playMode = 10;
-      if (op == 716) {
-        dataOptionalBeen.name = "任三复式";
-        dataOptionalBeen.groupSelectionNum = 5;
-        dataOptionalBeen.playModeSingleOrDouble = 2;
-      }
-
-      if (op == 717) {
-        dataOptionalBeen.name = "任三单式";
-        dataOptionalBeen.groupSelectionNum = 0;
-        dataOptionalBeen.playModeSingleOrDouble = 1;
-      }
-
-      if (op == 718) {
-        dataOptionalBeen.name = "任三组三";
-        dataOptionalBeen.groupSelectionNum = 1;
-        dataOptionalBeen.playModeSingleOrDouble = 2;
-      }
-      if (op == 719) {
-        dataOptionalBeen.name = "任三组六";
-        dataOptionalBeen.groupSelectionNum = 1;
-        dataOptionalBeen.playModeSingleOrDouble = 2;
-      }
-      dataOptionalBeenPlayList.add(dataOptionalBeen);
-    }
-
-    if (dataOptionalPlay["381"] != null) {
-      /// 任四
-      Map<String, dynamic> dataOptional381 = dataOptionalPlay["381"]["play"];//任二
-
-      for (int op = 389; op <= 390; op ++) {
-        Map<String, dynamic> dataOptionalPlayOP = dataOptional381["$op"];
-        var dataOptionalBeen  = Play11Choice5DataPlayBeen.fromJson(dataOptionalPlayOP);
-        dataOptionalBeen.playMode = 10;
-        if (op == 389) {
-          dataOptionalBeen.name = "任四复式";
-          dataOptionalBeen.groupSelectionNum = 5;
-          dataOptionalBeen.playModeSingleOrDouble = 2;
-        }
-
-        if (op == 390) {
-          dataOptionalBeen.name = "任四单式";
-          dataOptionalBeen.groupSelectionNum = 0;
-          dataOptionalBeen.playModeSingleOrDouble = 1;
-        }
-
-        dataOptionalBeenPlayList.add(dataOptionalBeen);
-      }
-    }
-
-    choiceModeMap[dataOptionalBeen] = dataOptionalBeenPlayList;
-
-
-    /// 趣味
-    Map<String, dynamic> dataInterest = data["720"];//趣味
-    var dataInterestBeen = Play11Choice5DataThreeYardsBeen.fromJson(dataInterest);
-    List<Play11Choice5DataPlayBeen> dataInterestBeenPlayList = new List();
-
-    Map<String, dynamic> dataInterestPlay = dataInterest["play"];//
-
-    Map<String, dynamic> dataInterest89 = dataInterestPlay["721"]["play"];//
-
-    for (int op = 722; op <= 725; op ++) {
-      Map<String, dynamic> dataOptionalPlayOP = dataInterest89["$op"];
-      var dataInterestBeen  = Play11Choice5DataPlayBeen.fromJson(dataOptionalPlayOP);
-      dataInterestBeen.groupSelectionNum = 1;
-      dataInterestBeen.playModeSingleOrDouble = 2;
-      dataInterestBeen.playMode = 11;
-
-      dataInterestBeenPlayList.add(dataInterestBeen);
-    }
-
-    choiceModeMap[dataInterestBeen] = dataInterestBeenPlayList;
-
-    /// 龙虎
-    Map<String, dynamic> dataDragonTiger = data["726"];//
-    if (dataDragonTiger != null) {
-      var dataDragonTigerBeen = Play11Choice5DataThreeYardsBeen.fromJson(dataDragonTiger);
-      List<Play11Choice5DataPlayBeen> dataDragonTigerBeenPlayList = new List();
-
-      Map<String, dynamic> dataDragonTigerPlay = dataDragonTiger["play"];//
-
-      Map<String, dynamic> dataInterest398 = dataDragonTigerPlay["727"]["play"];//
-
-      for (int op = 728; op <= 764; op ++) {
-        if(op == 728 || op == 732 || op == 736 || op == 740 || op == 744 || op == 748 || op == 752
-            || op == 756 || op == 760 || op == 764) {
-
-          Map<String, dynamic> dataOptionalPlayOP = dataInterest398["$op"];
-          var dataInterestBeen  = Play11Choice5DataPlayBeen.fromJson(dataOptionalPlayOP);
-          dataInterestBeen.groupSelectionNum = 1;
-          dataInterestBeen.playModeSingleOrDouble = 2;
-          dataInterestBeen.playMode = 12;
-
-          if (op == 728) {
-            Map<String, dynamic> dataOptionalPlayOPPlay105 = dataOptionalPlayOP["play"]["729"];
-            var dataInterestBeen105  = Play11Choice5DataPlayBeen.fromJson(dataOptionalPlayOPPlay105);
-            dataInterestBeen.remark = dataInterestBeen105.remark;
-          }
-
-          if (op == 732) {
-            Map<String, dynamic> dataOptionalPlayOPPlay108 = dataOptionalPlayOP["play"]["733"];
-            var dataInterestBeen108  = Play11Choice5DataPlayBeen.fromJson(dataOptionalPlayOPPlay108);
-            dataInterestBeen.remark = dataInterestBeen108.remark;
-          }
-
-          if (op == 736) {
-            Map<String, dynamic> dataOptionalPlayOPPlay111 = dataOptionalPlayOP["play"]["737"];
-            var dataInterestBeen111  = Play11Choice5DataPlayBeen.fromJson(dataOptionalPlayOPPlay111);
-            dataInterestBeen.remark = dataInterestBeen111.remark;
-          }
-
-          if (op == 740) {
-            Map<String, dynamic> dataOptionalPlayOPPlay114 = dataOptionalPlayOP["play"]["741"];
-            var dataInterestBeen114  = Play11Choice5DataPlayBeen.fromJson(dataOptionalPlayOPPlay114);
-            dataInterestBeen.remark = dataInterestBeen114.remark;
-          }
-
-          if (op == 744) {
-            Map<String, dynamic> dataOptionalPlayOPPlay117 = dataOptionalPlayOP["play"]["745"];
-            var dataInterestBeen117  = Play11Choice5DataPlayBeen.fromJson(dataOptionalPlayOPPlay117);
-            dataInterestBeen.remark = dataInterestBeen117.remark;
-          }
-
-          if (op == 748) {
-            Map<String, dynamic> dataOptionalPlayOPPlay120 = dataOptionalPlayOP["play"]["749"];
-            var dataInterestBeen120  = Play11Choice5DataPlayBeen.fromJson(dataOptionalPlayOPPlay120);
-            dataInterestBeen.remark = dataInterestBeen120.remark;
-          }
-
-          if (op == 752) {
-            Map<String, dynamic> dataOptionalPlayOPPlay123 = dataOptionalPlayOP["play"]["753"];
-            var dataInterestBeen123  = Play11Choice5DataPlayBeen.fromJson(dataOptionalPlayOPPlay123);
-            dataInterestBeen.remark = dataInterestBeen123.remark;
-          }
-
-          if (op == 756) {
-            Map<String, dynamic> dataOptionalPlayOPPlay126 = dataOptionalPlayOP["play"]["757"];
-            var dataInterestBeen126  = Play11Choice5DataPlayBeen.fromJson(dataOptionalPlayOPPlay126);
-            dataInterestBeen.remark = dataInterestBeen126.remark;
-          }
-
-          if (op == 760) {
-            Map<String, dynamic> dataOptionalPlayOPPlay129 = dataOptionalPlayOP["play"]["761"];
-            var dataInterestBeen129  = Play11Choice5DataPlayBeen.fromJson(dataOptionalPlayOPPlay129);
-            dataInterestBeen.remark = dataInterestBeen129.remark;
-          }
-
-          if (op == 764) {
-            Map<String, dynamic> dataOptionalPlayOPPlay129 = dataOptionalPlayOP["play"]["765"];
-            var dataInterestBeen129  = Play11Choice5DataPlayBeen.fromJson(dataOptionalPlayOPPlay129);
-            dataInterestBeen.remark = dataInterestBeen129.remark;
-          }
-
-
-          dataDragonTigerBeenPlayList.add(dataInterestBeen);
-
-        }
-      }
-
-      choiceModeMap[dataDragonTigerBeen] = dataDragonTigerBeenPlayList;
-    }
-
-  }
-
-  /// 腾讯10分彩
-  _tencent10Lottery(Map<String, dynamic> data) {
-    Map<String, dynamic> dataThreeYards = data["768"];//五星
-    var threeYardsBeen = Play11Choice5DataThreeYardsBeen.fromJson(dataThreeYards);
-    Map<String, dynamic> dataThreeYardsPlay = dataThreeYards["play"];
-
-    List<Play11Choice5DataPlayBeen> dataFiveStarsPlayList = new List(); // 五星 列表
-
-    var dataTopThreePlayBeen = dataThreeYardsPlay["769"]["play"];///五星
-
-    /// 五星 直选  282 284
-    Map<String, dynamic> dataFiveStarsPlayMapZ = dataTopThreePlayBeen["770"];//五星 复式
-    var dataFiveStarsMapBeenZ = Play11Choice5DataPlayBeen.fromJson(dataFiveStarsPlayMapZ);
-    dataFiveStarsMapBeenZ.playMode = 1;
-    dataFiveStarsMapBeenZ.name = "直选复式";
-    dataFiveStarsMapBeenZ.groupSelectionNum = 3;
-    dataFiveStarsMapBeenZ.playModeSingleOrDouble = 2;
-    dataFiveStarsPlayList.add(dataFiveStarsMapBeenZ);
-
-
-    Map<String, dynamic> dataFiveStarsPlayMapD = dataTopThreePlayBeen["771"];//五星 单式
-    var dataFiveStarsMapBeenD = Play11Choice5DataPlayBeen.fromJson(dataFiveStarsPlayMapD);
-    dataFiveStarsMapBeenD.playMode = 1;
-    dataFiveStarsMapBeenD.name = "直选单式";
-    dataFiveStarsMapBeenD.groupSelectionNum = 0;
-    dataFiveStarsMapBeenD.playModeSingleOrDouble = 1;
-    dataFiveStarsPlayList.add(dataFiveStarsMapBeenD);
-
-    /// 五星 组选
-    var dataTopThreePlayBeen285 = dataThreeYardsPlay["772"]["play"];//
-
-    for (int i = 773; i<= 777; i++) {
-      Map<String, dynamic> dataTopThreePlayMap = dataTopThreePlayBeen285["$i"];//五星 组选
-      var topThreeMapBeen = Play11Choice5DataPlayBeen.fromJson(dataTopThreePlayMap);
-      topThreeMapBeen.playMode = 1;
-      if (i == 773) {
-        topThreeMapBeen.groupSelectionNum = 3;
-        topThreeMapBeen.playModeSingleOrDouble = 2;
-      }
-      if (i == 774) {
-        topThreeMapBeen.groupSelectionNum = 0;
-        topThreeMapBeen.playModeSingleOrDouble = 1;
-      }
-      if (i == 775) {
-        topThreeMapBeen.groupSelectionNum = 1;
-        topThreeMapBeen.playModeSingleOrDouble = 2;
-      }
-      if (i == 776) {
-        topThreeMapBeen.groupSelectionNum = 1;
-        topThreeMapBeen.playModeSingleOrDouble = 2;
-      }
-      if (i == 777) {
-        topThreeMapBeen.groupSelectionNum = 1;
-        topThreeMapBeen.playModeSingleOrDouble = 2;
-      }
-      dataFiveStarsPlayList.add(topThreeMapBeen);
-    }
-
-    var dataTopThreePlayBeen292 = dataThreeYardsPlay["778"]["play"];//
-    //总和大小单双
-    Map<String, dynamic> dataFiveStarsPlayMapDXDS = dataTopThreePlayBeen292["779"];//五星 复式
-    var dataFiveStarsMapBeenDXDS = Play11Choice5DataPlayBeen.fromJson(dataFiveStarsPlayMapDXDS);
-    dataFiveStarsMapBeenDXDS.playMode = 1;
-    dataFiveStarsMapBeenDXDS.groupSelectionNum = 0;
-    dataFiveStarsMapBeenDXDS.playModeSingleOrDouble = 1;
-    dataFiveStarsPlayList.add(dataFiveStarsMapBeenDXDS);
-
-    choiceModeMap[threeYardsBeen] = dataFiveStarsPlayList;
-
-    /// 后四
-    Map<String, dynamic> dataLaterFour = data["780"];//
-    var laterFourBeen = Play11Choice5DataThreeYardsBeen.fromJson(dataLaterFour);
-    var dataLaterFourBeen294 = dataLaterFour["play"];//
-    List<Play11Choice5DataPlayBeen> dataLaterFourPlayList = new List(); // 后四 列表
-
-    var dataTopThreePlayBeen295 = dataLaterFourBeen294["781"]["play"];//
-    Map<String, dynamic> dataLaterFourPlayMapF = dataTopThreePlayBeen295["782"];//五星 复式
-    var dataLaterFourMapBeenF = Play11Choice5DataPlayBeen.fromJson(dataLaterFourPlayMapF);
-    dataLaterFourMapBeenF.playMode = 2;
-    dataLaterFourMapBeenF.groupSelectionNum = 0;
-    dataLaterFourMapBeenF.name = "直选复式";
-    dataLaterFourMapBeenF.playModeSingleOrDouble = 1;
-    dataLaterFourPlayList.add(dataLaterFourMapBeenF);
-
-    Map<String, dynamic> dataLaterFourPlayMapD = dataTopThreePlayBeen295["783"];//五星 复式
-    var dataLaterFourMapBeenD = Play11Choice5DataPlayBeen.fromJson(dataLaterFourPlayMapD);
-    dataLaterFourMapBeenD.playMode = 2;
-    dataLaterFourMapBeenD.name = "直选单式";
-    dataLaterFourMapBeenD.groupSelectionNum = 0;
-    dataLaterFourMapBeenD.playModeSingleOrDouble = 1;
-    dataLaterFourPlayList.add(dataLaterFourMapBeenD);
-
-    /// 后四组选
-    var dataPlayBeen296 = dataLaterFourBeen294["784"]["play"];//
-
-    for (int i = 785; i<= 788; i++) {
-      Map<String, dynamic> dataTopThreePlayMap = dataPlayBeen296["$i"];//三码
-      if (dataTopThreePlayMap == null || dataTopThreePlayMap.length <= 0) {
-        continue;
-      }
-      var topThreeMapBeen6 = Play11Choice5DataPlayBeen.fromJson(dataTopThreePlayMap);
-      topThreeMapBeen6.playMode = 2;
-      if (i == 785) {
-        topThreeMapBeen6.groupSelectionNum = 1;
-        topThreeMapBeen6.playModeSingleOrDouble = 2;
-      }
-      if (i == 786) {
-        topThreeMapBeen6.groupSelectionNum = 1;
-        topThreeMapBeen6.playModeSingleOrDouble = 2;
-      }
-      if (i == 787) {
-        topThreeMapBeen6.groupSelectionNum = 0;
-        topThreeMapBeen6.playModeSingleOrDouble = 1;
-      }
-      if (i == 788) {
-        topThreeMapBeen6.groupSelectionNum = 1;
-        topThreeMapBeen6.playModeSingleOrDouble = 2;
-      }
-      dataLaterFourPlayList.add(topThreeMapBeen6);
-    }
-
-    choiceModeMap[laterFourBeen] = dataLaterFourPlayList;
-
-
-    /// 前三
-    Map<String, dynamic> topThree = data["789"];//前三
-    var topThreeBeen = Play11Choice5DataThreeYardsBeen.fromJson(topThree);
-    Map<String, dynamic> dataTopThreePlay = topThree["play"];//前三
-
-    List<Play11Choice5DataPlayBeen> topThreeList = new List();
-
-    Map<String, dynamic> topThree305 = dataTopThreePlay["790"]["play"];
-
-    for (int mi = 791; mi <= 794; mi++) {
-      Map<String, dynamic> middleThreeDataMap = topThree305["$mi"];//前三
-      var topThreePlayBeen = Play11Choice5DataPlayBeen.fromJson(middleThreeDataMap);
-      topThreePlayBeen.playMode = 3;
-      if (mi == 791) {
-        topThreePlayBeen.name = "直选复式";
-        topThreePlayBeen.groupSelectionNum = 3;
-        topThreePlayBeen.playModeSingleOrDouble = 2;
-      }
-
-      if (mi == 792) {
-        topThreePlayBeen.name = "直选单式";
-        topThreePlayBeen.groupSelectionNum = 0;
-        topThreePlayBeen.playModeSingleOrDouble = 1;
-      }
-
-      if (mi == 793) {
-        topThreePlayBeen.groupSelectionNum = 1;
-        topThreePlayBeen.playModeSingleOrDouble = 2;
-      }
-
-      if (mi == 794) {
-        topThreePlayBeen.groupSelectionNum = 1;
-        topThreePlayBeen.playModeSingleOrDouble = 2;
-      }
-      topThreeList.add(topThreePlayBeen);
-    }
-
-    var topThree306 = dataTopThreePlay["795"]["play"];//组选
-
-    for (int mi = 796; mi <= 798; mi++) {
-      Map<String, dynamic> middleThreeDataMap = topThree306["$mi"];//组选
-      var topThreePlayBeen = Play11Choice5DataPlayBeen.fromJson(middleThreeDataMap);
-      topThreePlayBeen.playMode = 3;
-      topThreePlayBeen.groupSelectionNum = 1;
-      topThreePlayBeen.playModeSingleOrDouble = 2;
-
-      topThreeList.add(topThreePlayBeen);
-    }
-
-    var middleThree22 = dataTopThreePlay["799"]["play"];//其他
-
-    Map<String, dynamic> middleThreeDataMap = middleThree22["800"];//尾选和值
-    var middleThreePlayBeen = Play11Choice5DataPlayBeen.fromJson(middleThreeDataMap);
-    middleThreePlayBeen.playMode = 3;
-    middleThreePlayBeen.groupSelectionNum = 1;
-    middleThreePlayBeen.playModeSingleOrDouble = 2;
-
-    topThreeList.add(middleThreePlayBeen);
-
-    choiceModeMap[topThreeBeen] = topThreeList;
-
-    /// 中三
-    Map<String, dynamic> middleThree = data["801"];//中三
-    var twoYardsBeen = Play11Choice5DataThreeYardsBeen.fromJson(middleThree);
-    Map<String, dynamic> dataMiddleThreePlay = middleThree["play"];//中三
-
-    List<Play11Choice5DataPlayBeen> middleThreeList = new List();
-
-    Map<String, dynamic> middleThree14 = dataMiddleThreePlay["802"]["play"];
-
-    for (int mi = 803; mi <= 806; mi++) {
-      Map<String, dynamic> middleThreeDataMap = middleThree14["$mi"];//中三
-      var middleThreePlayBeen = Play11Choice5DataPlayBeen.fromJson(middleThreeDataMap);
-      middleThreePlayBeen.playMode = 4;
-      if (mi == 803) {
-        middleThreePlayBeen.name = "直选复式";
-        middleThreePlayBeen.groupSelectionNum = 3;
-        middleThreePlayBeen.playModeSingleOrDouble = 2;
-      }
-
-      if (mi == 804) {
-        middleThreePlayBeen.name = "直选单式";
-        middleThreePlayBeen.groupSelectionNum = 0;
-        middleThreePlayBeen.playModeSingleOrDouble = 1;
-      }
-
-      if (mi == 805) {
-        middleThreePlayBeen.groupSelectionNum = 1;
-        middleThreePlayBeen.playModeSingleOrDouble = 2;
-      }
-
-      if (mi == 806) {
-        middleThreePlayBeen.groupSelectionNum = 1;
-        middleThreePlayBeen.playModeSingleOrDouble = 2;
-      }
-      middleThreeList.add(middleThreePlayBeen);
-    }
-
-    var middleThree318 = dataMiddleThreePlay["807"]["play"];//组选
-
-    for (int mi = 808; mi <= 809; mi++) {
-      Map<String, dynamic> middleThreeDataMap = middleThree318["$mi"];//组选
-      var middleThreePlayBeen = Play11Choice5DataPlayBeen.fromJson(middleThreeDataMap);
-      middleThreePlayBeen.playMode = 4;
-      middleThreePlayBeen.groupSelectionNum = 1;
-      middleThreePlayBeen.playModeSingleOrDouble = 2;
-
-      middleThreeList.add(middleThreePlayBeen);
-    }
-
-    var middleThree319 = dataMiddleThreePlay["810"]["play"];//组选
-
-    Map<String, dynamic> middleThreeDataMap326 = middleThree319["811"];// 和值尾数
-    var middleThreePlayBeenSum = Play11Choice5DataPlayBeen.fromJson(middleThreeDataMap326);
-    middleThreePlayBeenSum.playMode = 4;
-    middleThreePlayBeenSum.groupSelectionNum = 1;
-    middleThreePlayBeenSum.playModeSingleOrDouble = 2;
-
-    middleThreeList.add(middleThreePlayBeenSum);
-
-    choiceModeMap[twoYardsBeen] = middleThreeList;
-
-    /// 后三
-    Map<String, dynamic> dataLaterThree = data["812"];//后三
-    List<Play11Choice5DataPlayBeen> dataLaterThreePlayList = new List();
-
-    var dataLaterThreeBeen = Play11Choice5DataThreeYardsBeen.fromJson(dataLaterThree);
-    Map<String, dynamic> dataLaterThreePlay = dataLaterThree["play"];//
-
-    Map<String, dynamic> dataLaterThreePlayBeen25Play = dataLaterThreePlay["813"]["play"];//后三 直选
-
-    for (int lTi = 814; lTi <= 817; lTi++) {
-      Map<String, dynamic> dataLaterThreePlayBeenLTi = dataLaterThreePlayBeen25Play["$lTi"];
-      var dataLaterThreePlayBeen = Play11Choice5DataPlayBeen.fromJson(dataLaterThreePlayBeenLTi);
-      dataLaterThreePlayBeen.playMode = 5;
-
-      if (lTi == 814) {
-        dataLaterThreePlayBeen.name = "直选复式";
-        dataLaterThreePlayBeen.groupSelectionNum = 3;
-        dataLaterThreePlayBeen.playModeSingleOrDouble = 2;
-      }
-      if (lTi == 815) {
-        dataLaterThreePlayBeen.name = "直选单式";
-        dataLaterThreePlayBeen.groupSelectionNum = 0;
-        dataLaterThreePlayBeen.playModeSingleOrDouble = 1;
-      }
-      if(lTi == 816) {
-        dataLaterThreePlayBeen.groupSelectionNum = 1;
-        dataLaterThreePlayBeen.playModeSingleOrDouble = 2;
-      }
-      if(lTi == 817) {
-        dataLaterThreePlayBeen.groupSelectionNum = 1;
-        dataLaterThreePlayBeen.playModeSingleOrDouble = 2;
-      }
-      dataLaterThreePlayList.add(dataLaterThreePlayBeen);
-    }
-
-    Map<String, dynamic> dataLaterThreePlayBeen26Play = dataLaterThreePlay["818"]["play"];//后三 组选
-
-    for (int lTi = 819; lTi <= 821; lTi++) {
-      Map<String, dynamic> dataLaterThreePlayBeenLTi = dataLaterThreePlayBeen26Play["$lTi"];
-      var dataLaterThreePlayBeen = Play11Choice5DataPlayBeen.fromJson(dataLaterThreePlayBeenLTi);
-      dataLaterThreePlayBeen.playMode = 5;
-      if (lTi == 819) {
-        dataLaterThreePlayBeen.groupSelectionNum = 3;
-        dataLaterThreePlayBeen.playModeSingleOrDouble = 2;
-      }
-      if (lTi == 820) {
-        dataLaterThreePlayBeen.groupSelectionNum = 0;
-        dataLaterThreePlayBeen.playModeSingleOrDouble = 1;
-      }
-      if(lTi == 821) {
-        dataLaterThreePlayBeen.groupSelectionNum = 1;
-        dataLaterThreePlayBeen.playModeSingleOrDouble = 2;
-      }
-      dataLaterThreePlayList.add(dataLaterThreePlayBeen);
-    }
-
-    Map<String, dynamic> dataLaterThreePlayBeen27Play = dataLaterThreePlay["822"]["play"];//后三 和值尾数
-
-    Map<String, dynamic> dataLaterThreePlayBeenLTi = dataLaterThreePlayBeen27Play["823"];
-    var dataLaterThreePlayBeen = Play11Choice5DataPlayBeen.fromJson(dataLaterThreePlayBeenLTi);
-    dataLaterThreePlayBeen.groupSelectionNum = 1;
-    dataLaterThreePlayBeen.playModeSingleOrDouble = 2;
-    dataLaterThreePlayBeen.playMode = 5;
-    dataLaterThreePlayList.add(dataLaterThreePlayBeen);
-
-    choiceModeMap[dataLaterThreeBeen] = dataLaterThreePlayList;
-
-    /// 前二
-    Map<String, dynamic> dataTopTwo = data["824"];//前二
-    var dataTopTwoBeen = Play11Choice5DataThreeYardsBeen.fromJson(dataTopTwo);
-    List<Play11Choice5DataPlayBeen> dataTopTwoPlayList = new List();
-
-    Map<String, dynamic> dataTopTwoPlay = dataTopTwo["play"];//
-    Map<String, dynamic> dataTopTwoPlay44 = dataTopTwoPlay["825"]["play"];//
-    /// 前二 直选
-    for(int two = 826; two <= 829; two++) {
-      Map<String, dynamic> dataTopTwoPlayTwoI = dataTopTwoPlay44["$two"];
-      var dataTopTwoBeenDirectly  = Play11Choice5DataPlayBeen.fromJson(dataTopTwoPlayTwoI);
-
-      dataTopTwoBeenDirectly.playMode = 6;
-
-      if (two == 826) {
-        dataTopTwoBeenDirectly.name = "直选复式";
-        dataTopTwoBeenDirectly.groupSelectionNum = 3;
-        dataTopTwoBeenDirectly.playModeSingleOrDouble = 2;
-      }
-
-      if (two == 827) {
-        dataTopTwoBeenDirectly.name = "直选单式";
-        dataTopTwoBeenDirectly.groupSelectionNum = 0;
-        dataTopTwoBeenDirectly.playModeSingleOrDouble = 1;
-      }
-
-      if (two == 828) {
-        dataTopTwoBeenDirectly.groupSelectionNum = 1;
-        dataTopTwoBeenDirectly.playModeSingleOrDouble = 2;
-      }
-
-      if (two == 829) {
-        dataTopTwoBeenDirectly.name = "直选跨度";
-        dataTopTwoBeenDirectly.groupSelectionNum = 1;
-        dataTopTwoBeenDirectly.playModeSingleOrDouble = 2;
-      }
-      dataTopTwoPlayList.add(dataTopTwoBeenDirectly);
-    }
-
-    Map<String, dynamic> dataLaterTwoPlay49 = dataTopTwoPlay["830"]["play"];//
-    /// 前二 组选
-    for(int two = 831; two <= 834; two++) {
-      Map<String, dynamic> dataTopTwoPlayTwoI = dataLaterTwoPlay49["$two"];
-      var dataTopTwoBeenGroup  = Play11Choice5DataPlayBeen.fromJson(dataTopTwoPlayTwoI);
-      dataTopTwoBeenGroup.playMode = 6;
-      if (two == 831) {
-        dataTopTwoBeenGroup.name = "组选复式";
-        dataTopTwoBeenGroup.groupSelectionNum = 3;
-        dataTopTwoBeenGroup.playModeSingleOrDouble = 2;
-      }
-
-      if (two == 832) {
-        dataTopTwoBeenGroup.name = "组选单式";
-        dataTopTwoBeenGroup.groupSelectionNum = 0;
-        dataTopTwoBeenGroup.playModeSingleOrDouble = 1;
-      }
-
-      if (two == 833) {
-        dataTopTwoBeenGroup.name = "组选和值";
-        dataTopTwoBeenGroup.groupSelectionNum = 1;
-        dataTopTwoBeenGroup.playModeSingleOrDouble = 2;
-      }
-
-      if (two == 834) {
-        dataTopTwoBeenGroup.name = "组选包胆";
-        dataTopTwoBeenGroup.groupSelectionNum = 1;
-        dataTopTwoBeenGroup.playModeSingleOrDouble = 2;
-      }
-      dataTopTwoPlayList.add(dataTopTwoBeenGroup);
-    }
-
-    choiceModeMap[dataTopTwoBeen] = dataTopTwoPlayList;
-
-    /// 后二
-    Map<String, dynamic> dataLaterTwo = data["835"];//后二
-    var dataLaterTwoBeen = Play11Choice5DataThreeYardsBeen.fromJson(dataLaterTwo);
-    List<Play11Choice5DataPlayBeen> dataLaterTwoPlayList = new List();
-
-    Map<String, dynamic> dataLaterTwoPlay = dataLaterTwo["play"];//
-    Map<String, dynamic> dataLaterTwoPlay38 = dataLaterTwoPlay["836"]["play"];//
-    /// 后二 直选
-    for(int two = 837; two <= 840; two++) {
-      Map<String, dynamic> dataLaterTwoPlayTwoI = dataLaterTwoPlay38["$two"];
-      var dataLaterTwoBeenDirectly  = Play11Choice5DataPlayBeen.fromJson(dataLaterTwoPlayTwoI);
-      dataLaterTwoBeenDirectly.playMode = 7;
-
-      if (two == 837) {
-        dataLaterTwoBeenDirectly.name = "直选复式";
-        dataLaterTwoBeenDirectly.groupSelectionNum = 3;
-        dataLaterTwoBeenDirectly.playModeSingleOrDouble = 2;
-      }
-
-      if (two == 838) {
-        dataLaterTwoBeenDirectly.name = "直选单式";
-        dataLaterTwoBeenDirectly.groupSelectionNum = 0;
-        dataLaterTwoBeenDirectly.playModeSingleOrDouble = 1;
-      }
-
-      if (two == 839) {
-        dataLaterTwoBeenDirectly.groupSelectionNum = 1;
-        dataLaterTwoBeenDirectly.playModeSingleOrDouble = 2;
-      }
-
-      if (two == 840) {
-        dataLaterTwoBeenDirectly.name = "直选跨度";
-        dataLaterTwoBeenDirectly.groupSelectionNum = 1;
-        dataLaterTwoBeenDirectly.playModeSingleOrDouble = 2;
-      }
-      dataLaterTwoPlayList.add(dataLaterTwoBeenDirectly);
-    }
-
-    Map<String, dynamic> dataLaterTwoPlay54 = dataLaterTwoPlay["841"]["play"];//
-    /// 后二 组选
-    for(int two = 842; two <= 845; two++) {
-      Map<String, dynamic> dataLaterTwoPlayTwoI = dataLaterTwoPlay54["$two"];
-      var dataLaterTwoBeenGroup  = Play11Choice5DataPlayBeen.fromJson(dataLaterTwoPlayTwoI);
-      dataLaterTwoBeenGroup.playMode = 7;
-
-      if (two == 842) {
-        dataLaterTwoBeenGroup.name = "组选复式";
-        dataLaterTwoBeenGroup.groupSelectionNum = 3;
-        dataLaterTwoBeenGroup.playModeSingleOrDouble = 2;
-      }
-
-      if (two == 843) {
-        dataLaterTwoBeenGroup.name = "组选单式";
-        dataLaterTwoBeenGroup.groupSelectionNum = 0;
-        dataLaterTwoBeenGroup.playModeSingleOrDouble = 1;
-      }
-      if (two == 844) {
-        dataLaterTwoBeenGroup.name = "组选和值";
-        dataLaterTwoBeenGroup.groupSelectionNum = 1;
-        dataLaterTwoBeenGroup.playModeSingleOrDouble = 2;
-      }
-      if (two == 845) {
-        dataLaterTwoBeenGroup.name = "组选包胆";
-        dataLaterTwoBeenGroup.groupSelectionNum = 1;
-        dataLaterTwoBeenGroup.playModeSingleOrDouble = 2;
-      }
-      dataLaterTwoPlayList.add(dataLaterTwoBeenGroup);
-    }
-
-    choiceModeMap[dataLaterTwoBeen] = dataLaterTwoPlayList;
-
-    /// 定位胆
-    Map<String, dynamic> dataPositioning = data["846"];//定位胆
-    var dataPositioningBeen = Play11Choice5DataThreeYardsBeen.fromJson(dataPositioning);
-    List<Play11Choice5DataPlayBeen> dataPositioningPlayList = new List();
-
-    Map<String, dynamic> dataPositioningPlay = dataPositioning["play"];//
-    Map<String, dynamic> dataPositioningPlay60 = dataPositioningPlay["847"]["play"];//
-
-    Map<String, dynamic> dataPositioningPlay61 = dataPositioningPlay60["848"];
-    var dataBeenPositioning  = Play11Choice5DataPlayBeen.fromJson(dataPositioningPlay61);
-    dataBeenPositioning.groupSelectionNum = 1;
-    dataBeenPositioning.playModeSingleOrDouble = 2;
-    dataBeenPositioning.playMode = 8;
-    dataPositioningPlayList.add(dataBeenPositioning);
-
-    choiceModeMap[dataPositioningBeen] = dataPositioningPlayList;
-
-    /// 不定胆
-    Map<String, dynamic> dataUncertainGallbladder = data["849"];//
-    var dataUncertainGallbladderBeen = Play11Choice5DataThreeYardsBeen.fromJson(dataUncertainGallbladder);
-    List<Play11Choice5DataPlayBeen> dataUncertainGallbladderPlayList = new List();
-
-    Map<String, dynamic> dataUncertainGallbladderPlay = dataUncertainGallbladder["play"];//
-
-    Map<String, dynamic> dataUncertainGallbladder63 = dataUncertainGallbladderPlay["850"]["play"];//五星不定胆
-    /// 不定胆 五星
-    for(int two = 851; two <= 852; two++) {
-      Map<String, dynamic> dataTopTwoPlayTwoI = dataUncertainGallbladder63["$two"];
-      var dataUncertainGallbladderBeenUnGa  = Play11Choice5DataPlayBeen.fromJson(dataTopTwoPlayTwoI);
-      dataUncertainGallbladderBeenUnGa.playMode = 9;
-      if (two == 851) {
-        dataUncertainGallbladderBeenUnGa.name = "五星二码不定位";
-
-      }
-
-      if (two == 852) {
-        dataUncertainGallbladderBeenUnGa.name = "五星三码不定位";
-
-      }
-      dataUncertainGallbladderBeenUnGa.groupSelectionNum = 1;
-      dataUncertainGallbladderBeenUnGa.playModeSingleOrDouble = 2;
-
-      dataUncertainGallbladderPlayList.add(dataUncertainGallbladderBeenUnGa);
-    }
-
-    Map<String, dynamic> dataUncertainGallbladder66 = dataUncertainGallbladderPlay["853"]["play"];//五星不定胆
-    /// 不定胆 前四
-    for(int two = 854; two <= 855; two++) {
-      Map<String, dynamic> dataTopTwoPlayTwoI = dataUncertainGallbladder66["$two"];
-      var dataUncertainGallbladderBeenUnGa  = Play11Choice5DataPlayBeen.fromJson(dataTopTwoPlayTwoI);
-      dataUncertainGallbladderBeenUnGa.playMode = 9;
-      if (two == 854) {
-        dataUncertainGallbladderBeenUnGa.name = "前四一码不定位";
-
-      }
-
-      if (two == 855) {
-        dataUncertainGallbladderBeenUnGa.name = "前四二码不定位";
-
-      }
-      dataUncertainGallbladderBeenUnGa.groupSelectionNum = 1;
-      dataUncertainGallbladderBeenUnGa.playModeSingleOrDouble = 2;
-
-      dataUncertainGallbladderPlayList.add(dataUncertainGallbladderBeenUnGa);
-    }
-
-    Map<String, dynamic> dataUncertainGallbladder69 = dataUncertainGallbladderPlay["856"]["play"];//五星不定胆
-    /// 不定胆 后四
-    for(int two = 857; two <= 858; two++) {
-      Map<String, dynamic> dataTopTwoPlayTwoI = dataUncertainGallbladder69["$two"];
-      var dataUncertainGallbladderBeenUnGa  = Play11Choice5DataPlayBeen.fromJson(dataTopTwoPlayTwoI);
-      dataUncertainGallbladderBeenUnGa.playMode = 9;
-      if (two == 857) {
-        dataUncertainGallbladderBeenUnGa.name = "后四一码不定位";
-
-      }
-
-      if (two == 858) {
-        dataUncertainGallbladderBeenUnGa.name = "后四二码不定位";
-
-      }
-      dataUncertainGallbladderBeenUnGa.groupSelectionNum = 1;
-      dataUncertainGallbladderBeenUnGa.playModeSingleOrDouble = 2;
-
-      dataUncertainGallbladderPlayList.add(dataUncertainGallbladderBeenUnGa);
-    }
-
-    Map<String, dynamic> dataUncertainGallbladder72 = dataUncertainGallbladderPlay["859"]["play"];//五星不定胆
-    /// 不定胆 一码不定位
-    for(int two = 860; two <= 861; two++) {
-      Map<String, dynamic> dataTopTwoPlayTwoI = dataUncertainGallbladder72["$two"];
-      var dataUncertainGallbladderBeenUnGa  = Play11Choice5DataPlayBeen.fromJson(dataTopTwoPlayTwoI);
-      dataUncertainGallbladderBeenUnGa.playMode = 9;
-      if (two == 860) {
-        dataUncertainGallbladderBeenUnGa.name = "后三一码不定位";
-
-      }
-
-      if (two == 861) {
-        dataUncertainGallbladderBeenUnGa.name = "前三一码不定位";
-
-      }
-      dataUncertainGallbladderBeenUnGa.groupSelectionNum = 1;
-      dataUncertainGallbladderBeenUnGa.playModeSingleOrDouble = 2;
-
-      dataUncertainGallbladderPlayList.add(dataUncertainGallbladderBeenUnGa);
-    }
-
-    Map<String, dynamic> dataUncertainGallbladder73 = dataUncertainGallbladderPlay["862"]["play"];//五星不定胆
-    /// 不定胆 二码不定位
-    for(int two = 863; two <= 864; two++) {
-      Map<String, dynamic> dataTopTwoPlayTwoI = dataUncertainGallbladder73["$two"];
-      var dataUncertainGallbladderBeenUnGa  = Play11Choice5DataPlayBeen.fromJson(dataTopTwoPlayTwoI);
-      dataUncertainGallbladderBeenUnGa.playMode = 9;
-      if (two == 863) {
-        dataUncertainGallbladderBeenUnGa.name = "后三二码不定位";
-      }
-
-      if (two == 864) {
-        dataUncertainGallbladderBeenUnGa.name = "前三二码不定位";
-      }
-      dataUncertainGallbladderBeenUnGa.groupSelectionNum = 1;
-      dataUncertainGallbladderBeenUnGa.playModeSingleOrDouble = 2;
-
-      dataUncertainGallbladderPlayList.add(dataUncertainGallbladderBeenUnGa);
-    }
-
-    choiceModeMap[dataUncertainGallbladderBeen] = dataUncertainGallbladderPlayList;
-
-
-    /// 任选
-    Map<String, dynamic> dataOptional = data["865"];//任选
-    var dataOptionalBeen = Play11Choice5DataThreeYardsBeen.fromJson(dataOptional);
-    List<Play11Choice5DataPlayBeen> dataOptionalBeenPlayList = new List();
-
-    Map<String, dynamic> dataOptionalPlay = dataOptional["play"];//
-
-    Map<String, dynamic> dataOptional79 = dataOptionalPlay["866"]["play"];//任二
-
-    for (int op = 867; op <= 869; op ++) {
-      Map<String, dynamic> dataOptionalPlayOP = dataOptional79["$op"];
-      var dataOptionalBeen  = Play11Choice5DataPlayBeen.fromJson(dataOptionalPlayOP);
-      dataOptionalBeen.playMode = 10;
-      if (op == 867) {
-        dataOptionalBeen.name = "任二复式";
-        dataOptionalBeen.groupSelectionNum = 5;
-        dataOptionalBeen.playModeSingleOrDouble = 2;
-      }
-
-      if (op == 868) {
-        dataOptionalBeen.name = "任二单式";
-        dataOptionalBeen.groupSelectionNum = 0;
-        dataOptionalBeen.playModeSingleOrDouble = 1;
-      }
-
-      if (op == 869) {
-        dataOptionalBeen.name = "任二组选";
-        dataOptionalBeen.groupSelectionNum = 1;
-        dataOptionalBeen.playModeSingleOrDouble = 2;
-      }
-      dataOptionalBeenPlayList.add(dataOptionalBeen);
-    }
-
-    /// 任三
-    Map<String, dynamic> dataOptional80 = dataOptionalPlay["870"]["play"];//任二
-
-    for (int op = 871; op <= 874; op ++) {
-      Map<String, dynamic> dataOptionalPlayOP = dataOptional80["$op"];
-      var dataOptionalBeen  = Play11Choice5DataPlayBeen.fromJson(dataOptionalPlayOP);
-      dataOptionalBeen.playMode = 10;
-      if (op == 871) {
-        dataOptionalBeen.name = "任三复式";
-        dataOptionalBeen.groupSelectionNum = 5;
-        dataOptionalBeen.playModeSingleOrDouble = 2;
-      }
-
-      if (op == 872) {
-        dataOptionalBeen.name = "任三单式";
-        dataOptionalBeen.groupSelectionNum = 0;
-        dataOptionalBeen.playModeSingleOrDouble = 1;
-      }
-
-      if (op == 873) {
-        dataOptionalBeen.name = "任三组三";
-        dataOptionalBeen.groupSelectionNum = 1;
-        dataOptionalBeen.playModeSingleOrDouble = 2;
-      }
-      if (op == 874) {
-        dataOptionalBeen.name = "任三组六";
-        dataOptionalBeen.groupSelectionNum = 1;
-        dataOptionalBeen.playModeSingleOrDouble = 2;
-      }
-      dataOptionalBeenPlayList.add(dataOptionalBeen);
-    }
-
-
-    choiceModeMap[dataOptionalBeen] = dataOptionalBeenPlayList;
-
-
-    /// 趣味
-    Map<String, dynamic> dataInterest = data["875"];//趣味
-    var dataInterestBeen = Play11Choice5DataThreeYardsBeen.fromJson(dataInterest);
-    List<Play11Choice5DataPlayBeen> dataInterestBeenPlayList = new List();
-
-    Map<String, dynamic> dataInterestPlay = dataInterest["play"];//
-
-    Map<String, dynamic> dataInterest89 = dataInterestPlay["876"]["play"];//
-
-    for (int op = 877; op <= 880; op ++) {
-      Map<String, dynamic> dataOptionalPlayOP = dataInterest89["$op"];
-      var dataInterestBeen  = Play11Choice5DataPlayBeen.fromJson(dataOptionalPlayOP);
-      dataInterestBeen.groupSelectionNum = 1;
-      dataInterestBeen.playModeSingleOrDouble = 2;
-      dataInterestBeen.playMode = 11;
-
-      dataInterestBeenPlayList.add(dataInterestBeen);
-    }
-
-    choiceModeMap[dataInterestBeen] = dataInterestBeenPlayList;
-
-    /// 龙虎
-    Map<String, dynamic> dataDragonTiger = data["881"];//
-    if (dataDragonTiger != null) {
-      var dataDragonTigerBeen = Play11Choice5DataThreeYardsBeen.fromJson(dataDragonTiger);
-      List<Play11Choice5DataPlayBeen> dataDragonTigerBeenPlayList = new List();
-
-      Map<String, dynamic> dataDragonTigerPlay = dataDragonTiger["play"];//
-
-      Map<String, dynamic> dataInterest398 = dataDragonTigerPlay["882"]["play"];//
-
-      for (int op = 883; op <= 919; op ++) {
-        if(op == 883 || op == 887 || op == 891 || op == 895 || op == 899 || op == 903 || op == 907
-            || op == 911 || op == 915 || op == 919) {
-
-          Map<String, dynamic> dataOptionalPlayOP = dataInterest398["$op"];
-          var dataInterestBeen  = Play11Choice5DataPlayBeen.fromJson(dataOptionalPlayOP);
-          dataInterestBeen.groupSelectionNum = 1;
-          dataInterestBeen.playModeSingleOrDouble = 2;
-          dataInterestBeen.playMode = 12;
-
-          if (op == 883) {
-            Map<String, dynamic> dataOptionalPlayOPPlay105 = dataOptionalPlayOP["play"]["884"];
-            var dataInterestBeen105  = Play11Choice5DataPlayBeen.fromJson(dataOptionalPlayOPPlay105);
-            dataInterestBeen.remark = dataInterestBeen105.remark;
-          }
-
-          if (op == 887) {
-            Map<String, dynamic> dataOptionalPlayOPPlay108 = dataOptionalPlayOP["play"]["888"];
-            var dataInterestBeen108  = Play11Choice5DataPlayBeen.fromJson(dataOptionalPlayOPPlay108);
-            dataInterestBeen.remark = dataInterestBeen108.remark;
-          }
-
-          if (op == 891) {
-            Map<String, dynamic> dataOptionalPlayOPPlay111 = dataOptionalPlayOP["play"]["892"];
-            var dataInterestBeen111  = Play11Choice5DataPlayBeen.fromJson(dataOptionalPlayOPPlay111);
-            dataInterestBeen.remark = dataInterestBeen111.remark;
-          }
-
-          if (op == 895) {
-            Map<String, dynamic> dataOptionalPlayOPPlay114 = dataOptionalPlayOP["play"]["896"];
-            var dataInterestBeen114  = Play11Choice5DataPlayBeen.fromJson(dataOptionalPlayOPPlay114);
-            dataInterestBeen.remark = dataInterestBeen114.remark;
-          }
-
-          if (op == 899) {
-            Map<String, dynamic> dataOptionalPlayOPPlay117 = dataOptionalPlayOP["play"]["900"];
-            var dataInterestBeen117  = Play11Choice5DataPlayBeen.fromJson(dataOptionalPlayOPPlay117);
-            dataInterestBeen.remark = dataInterestBeen117.remark;
-          }
-
-          if (op == 903) {
-            Map<String, dynamic> dataOptionalPlayOPPlay120 = dataOptionalPlayOP["play"]["904"];
-            var dataInterestBeen120  = Play11Choice5DataPlayBeen.fromJson(dataOptionalPlayOPPlay120);
-            dataInterestBeen.remark = dataInterestBeen120.remark;
-          }
-
-          if (op == 907) {
-            Map<String, dynamic> dataOptionalPlayOPPlay123 = dataOptionalPlayOP["play"]["908"];
-            var dataInterestBeen123  = Play11Choice5DataPlayBeen.fromJson(dataOptionalPlayOPPlay123);
-            dataInterestBeen.remark = dataInterestBeen123.remark;
-          }
-
-          if (op == 911) {
-            Map<String, dynamic> dataOptionalPlayOPPlay126 = dataOptionalPlayOP["play"]["912"];
-            var dataInterestBeen126  = Play11Choice5DataPlayBeen.fromJson(dataOptionalPlayOPPlay126);
-            dataInterestBeen.remark = dataInterestBeen126.remark;
-          }
-
-          if (op == 915) {
-            Map<String, dynamic> dataOptionalPlayOPPlay129 = dataOptionalPlayOP["play"]["916"];
-            var dataInterestBeen129  = Play11Choice5DataPlayBeen.fromJson(dataOptionalPlayOPPlay129);
-            dataInterestBeen.remark = dataInterestBeen129.remark;
-          }
-
-          if (op == 919) {
-            Map<String, dynamic> dataOptionalPlayOPPlay129 = dataOptionalPlayOP["play"]["920"];
-            var dataInterestBeen129  = Play11Choice5DataPlayBeen.fromJson(dataOptionalPlayOPPlay129);
-            dataInterestBeen.remark = dataInterestBeen129.remark;
-          }
-
-
-          dataDragonTigerBeenPlayList.add(dataInterestBeen);
-
-        }
-      }
-
-      choiceModeMap[dataDragonTigerBeen] = dataDragonTigerBeenPlayList;
-    }
-
-  }
 
 }

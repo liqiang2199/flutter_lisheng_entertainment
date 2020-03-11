@@ -132,7 +132,10 @@ class GameService {
     if (colorVariety == "${Constant.GAME_NUM_LUCKY_AIRSHIP_13}") {
       apiService.luckyAirshipKjLog(openLotteryListHttpBeen);
     }
-
+    //重庆时时彩
+    if (colorVariety == "${Constant.GAME_NUM_CHONGQING_1}") {
+      apiService.chongQingTimeKjLog(openLotteryListHttpBeen);
+    }
   }
 
 
@@ -219,6 +222,17 @@ class GameService {
     apiService.setHandler(playMode11Choice5Handler);
     if (colorVarietyID == "${Constant.GAME_NUM_LUCKY_AIRSHIP_13}") {
       apiService.luckyAirshipGetPlay(baseTokenHttpBeen);
+    }
+
+  }
+
+  /// 重庆时时彩 玩法获取
+  void chongqingTimePlay( PlayMode11Choice5Handler playMode11Choice5Handler, String colorVarietyID) {
+    BaseTokenHttpBeen baseTokenHttpBeen = new BaseTokenHttpBeen(SpUtil.getString(Constant.TOKEN));
+    ApiService apiService = RetrofitManager.instance.createApiService();
+    apiService.setHandler(playMode11Choice5Handler);
+    if (colorVarietyID == "${Constant.GAME_NUM_CHONGQING_1}") {
+      apiService.chongQingTimeGetPlay(baseTokenHttpBeen);
     }
 
   }
