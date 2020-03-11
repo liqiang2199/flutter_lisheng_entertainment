@@ -27,8 +27,6 @@ import 'package:flutter_lisheng_entertainment/game_hall/lucky_airship_lottery/lu
 import 'package:flutter_lisheng_entertainment/game_hall/lucky_airship_lottery/lucky_airship_util/LuckyAirshipPlayModelChoiceUtils.dart';
 import 'package:flutter_lisheng_entertainment/game_hall/net/lucky_airship/LuckyAirshipHandler.dart';
 import 'package:flutter_lisheng_entertainment/game_hall/net/lucky_airship/LuckyAirshipService.dart';
-import 'package:flutter_lisheng_entertainment/game_hall/tencent_cent_lottery/tencent_cent_util/TencentPlayModelChoiceUtils.dart';
-import 'package:flutter_lisheng_entertainment/game_hall/vietnam_hanoi_one_lottery/hanoi_view/OptionalGroupFormView.dart';
 import 'package:flutter_lisheng_entertainment/model/json/gd_11_5/CalculationBettingNumDataBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/json/gd_11_5/OpenLotteryListDataBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/json/gd_11_5/OpenLotteryListTwoDataListBeen.dart';
@@ -335,15 +333,6 @@ class _LuckyAirshipBettingView extends BaseController<LuckyAirshipBettingView> w
         //45 + 24 + 40 + 40 + 15 + 1 = 165(单个)
         _numTypeChoiceView(),
 
-//        /// 奖金调节
-//        BonusAdjustmentView(
-//          key: adjustmentKey,
-//          adjustmentInterface: this,
-//          multipleNum: bettingMultipleNum,
-//          segmentedIndex: _segmentedIndex,
-//          sliderValue: this.sliderValue,
-//          focusNode: _focusNode,
-//        ),
         new Visibility(
             visible: isScreenVisibility,
             child: new Container(
@@ -661,7 +650,7 @@ class _LuckyAirshipBettingView extends BaseController<LuckyAirshipBettingView> w
 
     } else {
       /// 单式
-      var randomBase = TencentPlayModelChoiceUtils.getInstance().getGamePlayModelSingleRandomBase(currentPlayBeen);
+      var randomBase = LuckyAirshipPlayModelChoiceUtils.getInstance().getGamePlayModelSingleRandomBaseLength(currentPlayBeen);
       listView.add(BettingNumSingleFormEditView(
         editContent: editContentSingle,
         contentHandle: this,
@@ -682,8 +671,13 @@ class _LuckyAirshipBettingView extends BaseController<LuckyAirshipBettingView> w
     _typeIndexList.clear();
     choiceCpNumList.clear();//清空这次选中的数字列表
     cpNumStr.clear();
-    for (int cp = 0; cp < 10; cp++) {
-      cpNumStr.add("$cp");
+    for (int cp = 1; cp <= 10; cp++) {
+      if (cp < 10) {
+        cpNumStr.add("0$cp");
+      } else {
+        cpNumStr.add("$cp");
+      }
+
     }
     for(int i = 0; i < _choiceTypeGroupNum; i++) {
 
@@ -969,7 +963,7 @@ class _LuckyAirshipBettingView extends BaseController<LuckyAirshipBettingView> w
     this.editContentSingle = strContent;
     if (!TextUtil.isEmpty(strContent)) {
       choiceCpNumList.clear();
-      var randomBase = TencentPlayModelChoiceUtils.getInstance().getGamePlayModelSingleRandomBase(currentPlayBeen);
+      var randomBase = LuckyAirshipPlayModelChoiceUtils.getInstance().getGamePlayModelSingleRandomBaseLength(currentPlayBeen);
       var splitSingleNumStr = editContentSingle.split(",");
       List<String> strNumList = new List();
       for (int sp = 0; sp < splitSingleNumStr.length; sp++) {

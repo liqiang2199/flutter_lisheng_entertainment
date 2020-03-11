@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_lisheng_entertainment/Util/Constant.dart';
 import 'package:flutter_lisheng_entertainment/game_hall/net/lucky_airship/LuckyAirshipHandler.dart';
 import 'package:flutter_lisheng_entertainment/game_hall/net/lucky_airship/LuckyAirshipService.dart';
-import 'package:flutter_lisheng_entertainment/game_hall/net/tencent_game/TencentCentService.dart';
-import 'package:flutter_lisheng_entertainment/game_hall/net/tencent_game/TencentCnetBettingHandler.dart';
 import 'package:flutter_lisheng_entertainment/model/json/gd_11_5/Play11Choice5DataPlayBeen.dart';
 
 import 'LuckyAirshipPlayModelChoiceInterface.dart';
@@ -194,6 +192,17 @@ class LuckyAirshipPlayModelChoiceUtils {
     int basNum = 1;
     switch(playBeen.id) {
       case 128:// 前二单式
+        basNum = 2;
+        break;
+    }
+    return basNum;
+
+  }
+
+  int getGamePlayModelSingleRandomBaseLength(Play11Choice5DataPlayBeen playBeen) {
+    int basNum = 1;
+    switch(playBeen.id) {
+      case 128:// 前二单式
         basNum = 4;
         break;
     }
@@ -201,24 +210,7 @@ class LuckyAirshipPlayModelChoiceUtils {
 
   }
 
-//  /// 玩法类型随机基数 (单式 可输入号码)
-//  int getGamePlayModelSingleRandomTotalNumBase(Play11Choice5DataPlayBeen playBeen) {
-//    int basNum = 1;
-//    switch(playBeen.id) {
-//      case 297:// 后四 直选单式
-//      case 628:// 后四 直选单式 5分彩
-//        basNum = 4;
-//        break;
-//      case 792:// 前三 直选单式
-//      case 804:// 中三 直选单式
-//      case 815:// 后三 直选单式
-//      case 872:// 任选 三 单式
-//        basNum = 3;
-//        break;
-//    }
-//    return basNum;
-//
-//  }
+
 
   /**
    * playBeen 获取是哪种 玩法

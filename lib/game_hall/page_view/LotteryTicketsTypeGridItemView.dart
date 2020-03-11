@@ -119,6 +119,7 @@ class _LotteryTicketsTypeGridItemView extends BaseController<LotteryTicketsTypeG
               Navigator.pushNamed(context, RouteUtil.bettingController, arguments: {"ColorVarietyID": index});
               break;
             case Constant.GAME_NUM_VIETNAME_HANOI://越南 河内1分彩
+            case Constant.GAME_NUM_VIETNAME_HANOI_6://河内1分彩
             case Constant.GAME_NUM_VIETNAME_HANOI_8://河内5分彩
 
               Navigator.pushNamed(context, RouteUtil.vietnamHanoiOneLotteryController, arguments: {"ColorVarietyID": index});
