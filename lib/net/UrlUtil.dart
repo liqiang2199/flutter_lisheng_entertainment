@@ -1,6 +1,6 @@
 class UrlUtil {
 
-  static const BaseUrl = "http://3rqkk3.natappfree.cc/";
+  static const BaseUrl = "http://ij8gpe.natappfree.cc/";
 //  static const BaseUrl = "http://128.1.61.216:82/";
 
   static const login = "api/login/login";
@@ -79,6 +79,12 @@ class UrlUtil {
   static const withdraw = "api/user/withdraw";
   /// 个人报表
   static const userReport = "api/user/userReport";
+  /// 添加常用彩种
+  static const addUserLottery = "api/user/addUserLottery";
+  /// 获取常用彩种
+  static const getUserLottery = "api/user/getUserLottery";
+  /// 删除常用彩种
+  static const delUserLottery = "api/user/delUserLottery";
 
   /**
    * 彩票种类
