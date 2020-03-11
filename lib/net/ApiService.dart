@@ -526,6 +526,29 @@ abstract class ApiService<T> {
   void oddInterest10OrderAdd(@Body() OddInterestHttpBeen baseTokenHttpBeen);
 
   /**
+   * 重庆时时彩
+   */
+  /// 重庆时时彩 开奖记录
+  @POST(UrlUtil.chongQingTimeKjLog)
+  void chongQingTimeKjLog(@Body() OpenLotteryListHttpBeen openAccountHttpBeen);
+
+  /// 重庆时时彩 玩法获取
+  @POST(UrlUtil.chongQingTimeGetPlay)
+  void chongQingTimeGetPlay(@Body() BaseTokenHttpBeen baseTokenHttpBeen);
+
+  /// 重庆时时彩 开奖时间
+  @POST(UrlUtil.chongQingTimeGetKjtime)
+  void chongQingTimeGetKjtime(@Body() BaseTokenHttpBeen baseTokenHttpBeen);
+
+  /// 重庆时时彩 计算注数
+  @POST(UrlUtil.chongQingTimeGdBets)
+  void chongQingTimeGdBets(@Body() OddInterestHttpBeen baseTokenHttpBeen);
+
+  /// 重庆时时彩 下注接口
+  @POST(UrlUtil.chongQingTimeOrderAdd)
+  void chongQingTimeOrderAdd(@Body() OddInterestHttpBeen baseTokenHttpBeen);
+
+  /**
    * 幸运飞艇
    */
   /// 幸运飞艇 开奖记录
@@ -2467,6 +2490,102 @@ class _ApiService<T> implements ApiService<T> {
     ArgumentError.checkNotNull(_baseHandler, '_baseHandler为空');
     responseResult(baseTokenHttpBeen.toJson(), UrlUtil.oddInterest10OrderAdd).then((onValue) {
       OddInterestHandler linkManagerHandler = _baseHandler as OddInterestHandler;
+      var jsonBeen = JsonBeen.fromJson(onValue);
+      if (jsonBeen.code == 1) {
+        var bettingNum = CalculationBettingNumBeen.fromJson(onValue);
+
+        if (bettingNum.code == 1) {
+          linkManagerHandler.bettingSuccessResult();
+        } else {
+          linkManagerHandler.showToast(bettingNum.msg);
+        }
+      } else {
+        linkManagerHandler.showToast(jsonBeen.msg);
+      }
+    });
+  }
+
+  /**
+   * 重庆时时彩
+   */
+  /// 重庆时时彩 开奖记录
+  void chongQingTimeKjLog(OpenLotteryListHttpBeen openAccountHttpBeen) {
+    ArgumentError.checkNotNull(openAccountHttpBeen, '参数为空');
+    ArgumentError.checkNotNull(_baseHandler, '_baseHandler为空');
+    responseResult(openAccountHttpBeen.toJson(), UrlUtil.chongQingTimeKjLog).then((onValue) {
+      var bettingNum = OpenLotteryListDataBeen.fromJson(onValue);
+
+      if (_baseHandler is LotteryNum11Choice5Handler) {
+        LotteryNum11Choice5Handler bettingRecordListHandler = _baseHandler as LotteryNum11Choice5Handler;
+
+        if (bettingNum.code == 1) {
+          bettingRecordListHandler.setOpenLotteryListData(bettingNum);
+        } else {
+          bettingRecordListHandler.showToast(bettingNum.msg);
+        }
+      }
+
+      if (_baseHandler is LuckyAirshipHandler) {
+        LuckyAirshipHandler bettingRecordListHandler = _baseHandler as LuckyAirshipHandler;
+
+        if (bettingNum.code == 1) {
+          bettingRecordListHandler.setAccountChangeRecord(bettingNum);
+        } else {
+          bettingRecordListHandler.showToast(bettingNum.msg);
+        }
+      }
+
+
+
+    });
+  }
+
+  /// 重庆时时彩 玩法获取
+  void chongQingTimeGetPlay( BaseTokenHttpBeen baseTokenHttpBeen) {
+    ArgumentError.checkNotNull(baseTokenHttpBeen, '参数为空');
+    ArgumentError.checkNotNull(_baseHandler, '_baseHandler为空');
+    responseResult(baseTokenHttpBeen.toJson(), UrlUtil.chongQingTimeGetPlay).then((onValue) {
+      PlayMode11Choice5Handler linkManagerHandler = _baseHandler as PlayMode11Choice5Handler;
+      linkManagerHandler.playModeMapValue(onValue);
+    });
+  }
+
+  /// 重庆时时彩 开奖时间
+  void chongQingTimeGetKjtime(BaseTokenHttpBeen baseTokenHttpBeen) {
+    ArgumentError.checkNotNull(baseTokenHttpBeen, '参数为空');
+    ArgumentError.checkNotNull(_baseHandler, '_baseHandler为空');
+    responseResult(baseTokenHttpBeen.toJson(), UrlUtil.chongQingTimeGetKjtime).then((onValue) {
+      LuckyAirshipHandler linkManagerHandler = _baseHandler as LuckyAirshipHandler;
+      var bettingNum = VietnamHanoiLotteryTimeBeen.fromJson(onValue);
+      if (bettingNum.code == 1) {
+        linkManagerHandler.openVietnamHanoiLotteryTime(bettingNum.data.kj_time, bettingNum.data.qishu);
+      } else {
+        linkManagerHandler.showToast(bettingNum.msg);
+      }
+    });
+  }
+
+  /// 重庆时时彩 计算注数
+  void chongQingTimeGdBets(OddInterestHttpBeen baseTokenHttpBeen) {
+    ArgumentError.checkNotNull(baseTokenHttpBeen, '参数为空');
+    ArgumentError.checkNotNull(_baseHandler, '_baseHandler为空');
+    responseResult(baseTokenHttpBeen.toJson(), UrlUtil.chongQingTimeGdBets).then((onValue) {
+      LuckyAirshipHandler linkManagerHandler = _baseHandler as LuckyAirshipHandler;
+      var bettingNum = CalculationBettingNumBeen.fromJson(onValue);
+      if (bettingNum.code == 1) {
+        linkManagerHandler.getCalculationBettingNumData(bettingNum.data);
+      } else {
+        linkManagerHandler.showToast(bettingNum.msg);
+      }
+    });
+  }
+
+  /// 重庆时时彩 下注接口
+  void chongQingTimeOrderAdd(OddInterestHttpBeen baseTokenHttpBeen) {
+    ArgumentError.checkNotNull(baseTokenHttpBeen, '参数为空');
+    ArgumentError.checkNotNull(_baseHandler, '_baseHandler为空');
+    responseResult(baseTokenHttpBeen.toJson(), UrlUtil.chongQingTimeOrderAdd).then((onValue) {
+      LuckyAirshipHandler linkManagerHandler = _baseHandler as LuckyAirshipHandler;
       var jsonBeen = JsonBeen.fromJson(onValue);
       if (jsonBeen.code == 1) {
         var bettingNum = CalculationBettingNumBeen.fromJson(onValue);
