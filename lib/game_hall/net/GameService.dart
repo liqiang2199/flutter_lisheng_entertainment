@@ -218,7 +218,7 @@ class GameService {
     ApiService apiService = RetrofitManager.instance.createApiService();
     apiService.setHandler(playMode11Choice5Handler);
     if (colorVarietyID == "${Constant.GAME_NUM_LUCKY_AIRSHIP_13}") {
-      apiService.tencent5GetPlay(baseTokenHttpBeen);
+      apiService.luckyAirshipGetPlay(baseTokenHttpBeen);
     }
 
   }
