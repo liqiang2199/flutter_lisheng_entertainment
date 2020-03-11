@@ -22,6 +22,7 @@ class Constant {
    */
   ///
   static const GAME_NUM_VIETNAME_HANOI = 15;//河内一分彩
+  static const GAME_NUM_VIETNAME_HANOI_6 = 6;//河内一分彩
   static const GAME_NUM_VIETNAME_HANOI_8 = 8;//河内5分彩
   static const GAME_NUM_TENCENT = 7;//腾讯分分彩
   static const GAME_NUM_5_TENCENT = 16;//腾讯5分彩

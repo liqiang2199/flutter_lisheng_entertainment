@@ -601,6 +601,7 @@ class HanoiPlayModelChoiceUtils {
       case 157://前三/前三其他 /和值尾数（计算注数）
       case 162:
       case 163:
+      case 165://中三/中三组选/和值尾数（计算注数）
       case 166:
       case 168://中三/中三组选/和值尾数（计算注数）
       case 175:

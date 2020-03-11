@@ -15,7 +15,7 @@ GetBettingRecordDataListBeen _$GetBettingRecordDataListBeenFromJson(
     ..paly_id = json['paly_id'] as int
     ..multiple = json['multiple'] as int
     ..ordercode = json['ordercode'] as String
-    ..jg_money = json['jg_money'] as String
+    ..jg_money = "${json['jg_money']}"
     ..pre_draw_issue = json['pre_draw_issue'] as String
     ..xz_money = json['xz_money'] as String
     ..kj_time = json['kj_time'] as String
