@@ -23,6 +23,7 @@ import 'package:flutter_lisheng_entertainment/game_hall/net/PlayMode11Choice5Han
 import 'package:flutter_lisheng_entertainment/game_hall/net/TrendHanoiOneLotteryHandler.dart';
 import 'package:flutter_lisheng_entertainment/game_hall/net/game_gd_11_5/CalculationBettingNumHandler.dart';
 import 'package:flutter_lisheng_entertainment/game_hall/net/game_gd_11_5/LotteryNum11Choice5Handler.dart';
+import 'package:flutter_lisheng_entertainment/game_hall/net/lucky_airship/LuckyAirshipHandler.dart';
 import 'package:flutter_lisheng_entertainment/game_hall/net/odd_interest/OddInterestHandler.dart';
 import 'package:flutter_lisheng_entertainment/game_hall/net/tencent_game/TencentCnetBettingHandler.dart';
 import 'package:flutter_lisheng_entertainment/game_hall/net/vietnam_hanoi/VietnamHanoiBettingHandler.dart';
@@ -48,6 +49,7 @@ import 'package:flutter_lisheng_entertainment/model/http/bank/BindBankHttpBeen.d
 import 'package:flutter_lisheng_entertainment/model/http/game/OpenLotteryListHttpBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/http/gd_11_5/CalculationBettingNumHttpBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/http/gd_11_5/CpOpenLotteryInfoHttp.dart';
+import 'package:flutter_lisheng_entertainment/model/http/lucky_airship/LuckyAirshipHttpBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/http/odd_interest/OddInterestHttpBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/http/order/DelOrderHttpBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/http/order/OrderOnceHttpBeen.dart';
@@ -540,11 +542,11 @@ abstract class ApiService<T> {
 
   /// 幸运飞艇 计算注数
   @POST(UrlUtil.luckyAirshipGdBets)
-  void luckyAirshipGdBets(@Body() OddInterestHttpBeen baseTokenHttpBeen);
+  void luckyAirshipGdBets(@Body() LuckyAirshipHttpBeen baseTokenHttpBeen);
 
   /// 幸运飞艇 下注接口
   @POST(UrlUtil.luckyAirshipOrderAdd)
-  void luckyAirshipOrderAdd(@Body() OddInterestHttpBeen baseTokenHttpBeen);
+  void luckyAirshipOrderAdd(@Body() LuckyAirshipHttpBeen baseTokenHttpBeen);
 
 
   /**
@@ -2500,8 +2502,8 @@ class _ApiService<T> implements ApiService<T> {
         }
       }
 
-      if (_baseHandler is OddInterestHandler) {
-        OddInterestHandler bettingRecordListHandler = _baseHandler as OddInterestHandler;
+      if (_baseHandler is LuckyAirshipHandler) {
+        LuckyAirshipHandler bettingRecordListHandler = _baseHandler as LuckyAirshipHandler;
 
         if (bettingNum.code == 1) {
           bettingRecordListHandler.setAccountChangeRecord(bettingNum);
@@ -2530,7 +2532,7 @@ class _ApiService<T> implements ApiService<T> {
     ArgumentError.checkNotNull(baseTokenHttpBeen, '参数为空');
     ArgumentError.checkNotNull(_baseHandler, '_baseHandler为空');
     responseResult(baseTokenHttpBeen.toJson(), UrlUtil.luckyAirshipGetKjtime).then((onValue) {
-      OddInterestHandler linkManagerHandler = _baseHandler as OddInterestHandler;
+      LuckyAirshipHandler linkManagerHandler = _baseHandler as LuckyAirshipHandler;
       var bettingNum = VietnamHanoiLotteryTimeBeen.fromJson(onValue);
       if (bettingNum.code == 1) {
         linkManagerHandler.openVietnamHanoiLotteryTime(bettingNum.data.kj_time, bettingNum.data.qishu);
@@ -2541,11 +2543,11 @@ class _ApiService<T> implements ApiService<T> {
   }
 
   /// 幸运飞艇 计算注数
-  void luckyAirshipGdBets(OddInterestHttpBeen baseTokenHttpBeen) {
+  void luckyAirshipGdBets(LuckyAirshipHttpBeen baseTokenHttpBeen) {
     ArgumentError.checkNotNull(baseTokenHttpBeen, '参数为空');
     ArgumentError.checkNotNull(_baseHandler, '_baseHandler为空');
     responseResult(baseTokenHttpBeen.toJson(), UrlUtil.luckyAirshipGdBets).then((onValue) {
-      OddInterestHandler linkManagerHandler = _baseHandler as OddInterestHandler;
+      LuckyAirshipHandler linkManagerHandler = _baseHandler as LuckyAirshipHandler;
       var bettingNum = CalculationBettingNumBeen.fromJson(onValue);
       if (bettingNum.code == 1) {
         linkManagerHandler.getCalculationBettingNumData(bettingNum.data);
@@ -2556,11 +2558,11 @@ class _ApiService<T> implements ApiService<T> {
   }
 
   /// 幸运飞艇 下注接口
-  void luckyAirshipOrderAdd(OddInterestHttpBeen baseTokenHttpBeen) {
+  void luckyAirshipOrderAdd(LuckyAirshipHttpBeen baseTokenHttpBeen) {
     ArgumentError.checkNotNull(baseTokenHttpBeen, '参数为空');
     ArgumentError.checkNotNull(_baseHandler, '_baseHandler为空');
     responseResult(baseTokenHttpBeen.toJson(), UrlUtil.luckyAirshipOrderAdd).then((onValue) {
-      OddInterestHandler linkManagerHandler = _baseHandler as OddInterestHandler;
+      LuckyAirshipHandler linkManagerHandler = _baseHandler as LuckyAirshipHandler;
       var jsonBeen = JsonBeen.fromJson(onValue);
       if (jsonBeen.code == 1) {
         var bettingNum = CalculationBettingNumBeen.fromJson(onValue);
