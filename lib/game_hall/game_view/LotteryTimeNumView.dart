@@ -357,7 +357,7 @@ class LotteryTimeNumChildView extends BaseController<LotteryTimeNumView> {
       height: 22.0,
       width: 22.0,
       alignment: Alignment.center,
-      margin: EdgeInsets.only(right: 10.0, top: 8.0),
+      margin: EdgeInsets.only(right: 5.0, top: 8.0),
       decoration: new BoxDecoration(
         shape: BoxShape.circle,
         color: Color(ColorUtil.textColor_48D1CC),
@@ -367,7 +367,7 @@ class LotteryTimeNumChildView extends BaseController<LotteryTimeNumView> {
       child: new Text(
         num,
         style: TextStyle(
-          fontSize: 14.0,
+          fontSize: 12.0,
           color: Colors.white,
         ),
         textAlign: TextAlign.center,
@@ -406,6 +406,7 @@ class LotteryTimeNumChildView extends BaseController<LotteryTimeNumView> {
   /**
    * 玩法说明弹窗
    */
+  ///
   _reMarkDialog(BuildContext context) {
     if(TextUtil.isEmpty(playRemark)) {
       return;

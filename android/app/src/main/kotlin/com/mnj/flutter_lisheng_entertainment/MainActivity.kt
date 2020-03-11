@@ -6,7 +6,7 @@ import android.view.ViewTreeObserver
 import android.view.WindowManager
 import androidx.annotation.NonNull;
 import com.tekartik.sqflite.SqflitePlugin
-import flutter.plugins.screen.screen.ScreenPlugin
+//import flutter.plugins.screen.screen.ScreenPlugin
 //import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.app.FlutterActivity
@@ -38,7 +38,7 @@ class MainActivity: FlutterActivity() {
         FluttertoastPlugin.registerWith(this.registrarFor("io.github.ponnamkarthik.toast.fluttertoast.FluttertoastPlugin"))
         PackageInfoPlugin.registerWith(this.registrarFor("io.flutter.plugins.packageinfo.PackageInfoPlugin"))
         PathProviderPlugin.registerWith(this.registrarFor("io.flutter.plugins.pathprovider.PathProviderPlugin"))
-        ScreenPlugin.registerWith(registrarFor("flutter.plugins.screen.screen.ScreenPlugin"))
+        //ScreenPlugin.registerWith(registrarFor("flutter.plugins.screen.screen.ScreenPlugin"))
         SharePlugin.registerWith(registrarFor("io.flutter.plugins.share.SharePlugin"))
         VideoPlayerPlugin.registerWith(registrarFor("io.flutter.plugins.videoplayer.VideoPlayerPlugin"))
         SqflitePlugin.registerWith(registrarFor("com.tekartik.sqflite.SqflitePlugin"))

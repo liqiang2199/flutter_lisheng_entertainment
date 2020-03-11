@@ -225,10 +225,10 @@ class _LotteryNum11Choice5Controller extends BaseRefreshController<LotteryNum11C
   Widget _cqNumView(String num) {
 
     return new Container(
-      height: 25.0,
-      width: 25.0,
+      height: 22.0,
+      width: 22.0,
       alignment: Alignment.center,
-      margin: EdgeInsets.only(right: 10.0, top: 15.0),
+      margin: EdgeInsets.only(right: 5.0, top: 15.0),
       decoration: new BoxDecoration(
         shape: BoxShape.circle,
         color: Color(ColorUtil.bgColor_E7242C),
@@ -238,7 +238,7 @@ class _LotteryNum11Choice5Controller extends BaseRefreshController<LotteryNum11C
       child: new Text(
         num,
         style: TextStyle(
-          fontSize: 14.0,
+          fontSize: 12.0,
           color: Colors.white,
         ),
         textAlign: TextAlign.center,

@@ -253,7 +253,7 @@ class _PlayModeLuckyAirshipLotteryController extends BaseController<PlayModeLuck
       return;
     }
 
-    if(_colorVarietyID == "${Constant.GAME_NUM_TENCENT}") {
+    if(_colorVarietyID == "${Constant.GAME_NUM_LUCKY_AIRSHIP_13}") {
       _luckyAirshipLottery(data);
     }
 
@@ -384,7 +384,7 @@ class _PlayModeLuckyAirshipLotteryController extends BaseController<PlayModeLuck
 
     /// 龙虎
     Map<String, dynamic> dataDragonTiger = data["1538"];//
-    var dataDragonTigerBeen = Play11Choice5DataThreeYardsBeen.fromJson(dataSingleDouble);
+    var dataDragonTigerBeen = Play11Choice5DataThreeYardsBeen.fromJson(dataDragonTiger);
     List<Play11Choice5DataPlayBeen> dataDragonTigerBeenPlayList = new List();
 
     Map<String, dynamic> dataDragonTigerBeenPlay = dataDragonTiger["play"];//

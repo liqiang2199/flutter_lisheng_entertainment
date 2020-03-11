@@ -7,39 +7,52 @@ import 'package:flutter/material.dart';
 import 'package:flutter_lisheng_entertainment/Util/ColorUtil.dart';
 import 'package:flutter_lisheng_entertainment/base/BaseController.dart';
 import 'package:flutter_lisheng_entertainment/game_hall/game_bridge/LuckyAirshipSecSumInterface.dart';
+import 'package:flutter_lisheng_entertainment/model/json/gd_11_5/Play11Choice5DataPlayBeen.dart';
 
 /// 龙  虎
 class LuckyAirshipDoubleSelecView extends StatefulWidget{
 
   final LuckyAirshipSecSumInterface dragonTigerSumInterface;
+  final String cpNumStrTitle;
+  Play11Choice5DataPlayBeen currentPlayBeen;
 
-  LuckyAirshipDoubleSelecView(Key key, this.dragonTigerSumInterface,): super(key: key);
+  LuckyAirshipDoubleSelecView(Key key, this.dragonTigerSumInterface, this.cpNumStrTitle, this.currentPlayBeen): super(key: key);
 
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
-    return LuckyAirshipDoubleSelecStateView(this.dragonTigerSumInterface);
+    return LuckyAirshipDoubleSelecStateView(this.dragonTigerSumInterface, this.cpNumStrTitle, this.currentPlayBeen);
   }
 
 }
 
 class LuckyAirshipDoubleSelecStateView extends BaseController<LuckyAirshipDoubleSelecView> {
 
-  List<bool> cpNumBool = [false, false, false];
+  List<bool> cpNumBool = [false, false];
   List<String> cpNumStr = ["龙", "虎"];//幸运飞艇 双选
   String cpNumStrTitle = "第一位";//幸运飞艇 双选
   int typeIndex;
   List<int> cpNumIndex = [-1, -1];
   List<String> choiceCpNumList = new List();//选中list 的集合
 
+  Play11Choice5DataPlayBeen currentPlayBeen;
   LuckyAirshipSecSumInterface dragonTigerSumInterface;
-  LuckyAirshipDoubleSelecStateView(this.dragonTigerSumInterface,);
+  LuckyAirshipDoubleSelecStateView(this.dragonTigerSumInterface, this.cpNumStrTitle, this.currentPlayBeen);
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    if (currentPlayBeen != null) {
+      setLuckyAirshipPlayModel(currentPlayBeen.id);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
 
 
-    return new Column(
+    return new Row(
       children: <Widget>[
         _chooseTitle(cpNumStrTitle),
         _gridList(),
@@ -77,21 +90,23 @@ class LuckyAirshipDoubleSelecStateView extends BaseController<LuckyAirshipDouble
 
   Widget _gridList() {
 
-    return new Container(
-      alignment: Alignment.center,
-      margin: EdgeInsets.only(bottom: 15.0),
-      child: new GridView.count(
-        physics: new NeverScrollableScrollPhysics(),
-        crossAxisCount: 3,
-        //padding: const EdgeInsets.all(8.0),
-        primary: false,
-        mainAxisSpacing: 0.0,//竖向间距
-        crossAxisSpacing: 0.0,//横向间距
-        childAspectRatio: 1.9,
-        children: _gridListItemView(),
-        shrinkWrap: true,
+    return new Expanded(
+        child: new Container(
+          alignment: Alignment.center,
+          margin: EdgeInsets.only(bottom: 15.0, top: 15.0),
+          child: new GridView.count(
+            physics: new NeverScrollableScrollPhysics(),
+            crossAxisCount: 2,
+            //padding: const EdgeInsets.all(8.0),
+            primary: false,
+            mainAxisSpacing: 0.0,//竖向间距
+            crossAxisSpacing: 0.0,//横向间距
+            childAspectRatio: 2.5,
+            children: _gridListItemView(),
+            shrinkWrap: true,
 
-      ),
+          ),
+        )
     );
   }
 
@@ -121,19 +136,21 @@ class LuckyAirshipDoubleSelecStateView extends BaseController<LuckyAirshipDouble
 
     return new GestureDetector(
       onTap: () {
-        if (cpNumBool[index]) {
-          cpNumBool[index] = !cpNumBool[index];
-          cpNumIndex[index] = cpNumIndex[index] == 0 ? -1 : 0;
-        } else {
-          for (int i = 0; i < cpNumBool.length; i++) {
-            cpNumBool[i] = false;
-          }
-          for (int i = 0; i < cpNumIndex.length; i++) {
-            cpNumIndex[i] = -1;
-          }
-          cpNumBool[index] = true;
-          cpNumIndex[index] = 0;
-        }
+
+        cpNumBool[index] = !cpNumBool[index];
+        cpNumIndex[index] = cpNumIndex[index] == 0 ? -1 : 0;
+//        if (cpNumBool[index]) {
+//
+//        } else {
+//          for (int i = 0; i < cpNumBool.length; i++) {
+//            cpNumBool[i] = false;
+//          }
+//          for (int i = 0; i < cpNumIndex.length; i++) {
+//            cpNumIndex[i] = -1;
+//          }
+//          cpNumBool[index] = true;
+//          cpNumIndex[index] = 0;
+//        }
 
 
         if (mounted) {
@@ -146,8 +163,8 @@ class LuckyAirshipDoubleSelecStateView extends BaseController<LuckyAirshipDouble
         }
       },
       child: new Container(
-        height: 30.0,
-        width: 30.0,
+        height: 25.0,
+        width: 25.0,
         alignment: Alignment.center,
         margin: EdgeInsets.only(top: 10.0),
         decoration: new BoxDecoration(
@@ -174,7 +191,7 @@ class LuckyAirshipDoubleSelecStateView extends BaseController<LuckyAirshipDouble
   /// DragonTigerChoiceInterface
   /// 随机 龙虎 单双  大小
   randomLuckyAirshipChoiceNum() {
-    int index = Random().nextInt(3);
+    int index = Random().nextInt(2);
     for (int i = 0; i < cpNumBool.length; i++) {
       cpNumBool[i] = false;
     }
@@ -188,7 +205,7 @@ class LuckyAirshipDoubleSelecStateView extends BaseController<LuckyAirshipDouble
 
   /// 清空
   cleanLuckyAirshipChoiceNum() {
-    for (int i = 0; i < 3; i++) {
+    for (int i = 0; i < 2; i++) {
       cpNumBool[i] = false;
     }
 
@@ -207,6 +224,32 @@ class LuckyAirshipDoubleSelecStateView extends BaseController<LuckyAirshipDouble
       }
     }
     return this.choiceCpNumList;
+  }
+
+  setLuckyAirshipPlayModel(int id) {
+    if(id == 142 || id == 1535 || id == 1540) {
+      cpNumStrTitle = "第一位";
+    }
+    if(id == 143 || id == 1536 || id == 1541) {
+      cpNumStrTitle = "第二位";
+    }
+    if(id == 144 || id == 1537 || id == 1542) {
+      cpNumStrTitle = "第三位";
+    }
+
+    if(id == 142 || id == 143 || id == 144) {
+      cpNumStr = ["大", "小"];
+    }
+    if(id == 1535 || id == 1536 || id == 1537) {
+      cpNumStr = ["单", "双"];
+    }
+    if(id == 1540 || id == 1541 || id == 1542) {
+      cpNumStr = ["龙", "虎"];
+    }
+    if (mounted)
+      setState(() {
+
+      });
   }
 
 

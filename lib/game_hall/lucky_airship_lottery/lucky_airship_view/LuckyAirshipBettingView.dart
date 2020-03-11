@@ -8,7 +8,6 @@ import 'package:flutter_lisheng_entertainment/Util/ColorUtil.dart';
 import 'package:flutter_lisheng_entertainment/Util/Constant.dart';
 import 'package:flutter_lisheng_entertainment/Util/DateUtils.dart';
 import 'package:flutter_lisheng_entertainment/Util/ImageUtil.dart';
-import 'package:flutter_lisheng_entertainment/Util/RouteUtil.dart';
 import 'package:flutter_lisheng_entertainment/Util/SpaceViewUtil.dart';
 import 'package:flutter_lisheng_entertainment/base/BaseController.dart';
 import 'package:flutter_lisheng_entertainment/game_hall/cp_find_view/Choose11And5View.dart';
@@ -17,30 +16,19 @@ import 'package:flutter_lisheng_entertainment/game_hall/game_bridge/BonusAdjustm
 import 'package:flutter_lisheng_entertainment/game_hall/game_bridge/Choose11And5EditContentHandle.dart';
 import 'package:flutter_lisheng_entertainment/game_hall/game_bridge/Choose11And5Interface.dart';
 import 'package:flutter_lisheng_entertainment/game_hall/game_bridge/LuckyAirshipSecSumInterface.dart';
-import 'package:flutter_lisheng_entertainment/game_hall/game_bridge/OptionalGroupFormInterface.dart';
-import 'package:flutter_lisheng_entertainment/game_hall/game_bridge/OptionalSingleFormInterface.dart';
 import 'package:flutter_lisheng_entertainment/game_hall/game_view/BettingNumAndOperationView.dart';
 import 'package:flutter_lisheng_entertainment/game_hall/game_view/BettingNumSingleFormEditView.dart';
 import 'package:flutter_lisheng_entertainment/game_hall/game_view/BonusAdjustmentView.dart';
-import 'package:flutter_lisheng_entertainment/game_hall/game_view/DragonTigerSumView.dart';
 import 'package:flutter_lisheng_entertainment/game_hall/game_view/LotteryNumListView.dart';
 import 'package:flutter_lisheng_entertainment/game_hall/game_view/LotteryTimeNumView.dart';
 import 'package:flutter_lisheng_entertainment/game_hall/game_view/LuckyAirshipDoubleSelecView.dart';
-import 'package:flutter_lisheng_entertainment/game_hall/game_view/SizeSingleAndDoubleView.dart';
 import 'package:flutter_lisheng_entertainment/game_hall/lucky_airship_lottery/PlayModeLuckyAirshipLotteryController.dart';
 import 'package:flutter_lisheng_entertainment/game_hall/lucky_airship_lottery/lucky_airship_util/LuckyAirshipPlayModelChoiceInterface.dart';
 import 'package:flutter_lisheng_entertainment/game_hall/lucky_airship_lottery/lucky_airship_util/LuckyAirshipPlayModelChoiceUtils.dart';
 import 'package:flutter_lisheng_entertainment/game_hall/net/lucky_airship/LuckyAirshipHandler.dart';
 import 'package:flutter_lisheng_entertainment/game_hall/net/lucky_airship/LuckyAirshipService.dart';
-import 'package:flutter_lisheng_entertainment/game_hall/net/tencent_game/TencentCentService.dart';
-import 'package:flutter_lisheng_entertainment/game_hall/net/tencent_game/TencentCnetBettingHandler.dart';
-import 'package:flutter_lisheng_entertainment/game_hall/tencent_cent_lottery/PlayModeTencentCentLotteryController.dart';
-import 'package:flutter_lisheng_entertainment/game_hall/tencent_cent_lottery/tencent_cent_util/SizeSingleAndDoubleInterface.dart';
-import 'package:flutter_lisheng_entertainment/game_hall/tencent_cent_lottery/tencent_cent_util/TencentPlayModelChoiceInterface.dart';
 import 'package:flutter_lisheng_entertainment/game_hall/tencent_cent_lottery/tencent_cent_util/TencentPlayModelChoiceUtils.dart';
-import 'package:flutter_lisheng_entertainment/game_hall/vietnam_hanoi_one_lottery/hanoi_util/DragonTigerSumInterface.dart';
 import 'package:flutter_lisheng_entertainment/game_hall/vietnam_hanoi_one_lottery/hanoi_view/OptionalGroupFormView.dart';
-import 'package:flutter_lisheng_entertainment/game_hall/vietnam_hanoi_one_lottery/hanoi_view/OptionalSingleFormView.dart';
 import 'package:flutter_lisheng_entertainment/model/json/gd_11_5/CalculationBettingNumDataBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/json/gd_11_5/OpenLotteryListDataBeen.dart';
 import 'package:flutter_lisheng_entertainment/model/json/gd_11_5/OpenLotteryListTwoDataListBeen.dart';
@@ -93,7 +81,6 @@ class _LuckyAirshipBettingView extends BaseController<LuckyAirshipBettingView> w
   List<List<int>> groupCpNumList = new List();/// 选择彩票集合
   List<List<String>> choiceCpNumList = new List();//选中彩票的集合
   Play11Choice5DataPlayBeen currentPlayBeen;/// 当前玩法Been
-  List<String> groupBitsList = new List();/// 组选时 万,千,百,十,个
 
   bool isClickType = false;//是否点击类型
   int _choiceTypeGroupNum = 3;//选号组数多少
@@ -126,6 +113,7 @@ class _LuckyAirshipBettingView extends BaseController<LuckyAirshipBettingView> w
   bool _isDragonTiger = false;
   bool _isContainsRepeat = false;
   bool isCurrentOptionalCp = false;/// 当前是否是任选
+  String _cpChoiceTitle = "";
   ///
   bool isOpeningLottery = false;//是否正在开奖
   bool _isFiveStarsTotalNum = false;
@@ -134,7 +122,6 @@ class _LuckyAirshipBettingView extends BaseController<LuckyAirshipBettingView> w
   GlobalKey<LotteryTimeNumChildView> textKey = GlobalKey();//开奖时间
   GlobalKey<LuckyAirshipDoubleSelecStateView> dragonTigerStateKey = GlobalKey();//龙虎
   GlobalKey<BonusAdjustmentStateView> adjustmentKey = GlobalKey();//奖金调节
-  GlobalKey<OptionalGroupFormStateView> optionalGroupFormKey = GlobalKey();//任选组选
   GlobalKey<BettingNumAndOperationStateView> numAndOperationStateViewKey = GlobalKey();//注数显示
   GlobalKey<LotteryNumListStateView> lotteryNumListStateViewKey = GlobalKey();//开奖号码
   /// 彩票列表 选号 key
@@ -167,6 +154,7 @@ class _LuckyAirshipBettingView extends BaseController<LuckyAirshipBettingView> w
         playMoneyAward = playModeBeenList[0].money_award;
         playModeBeenList[0].isChoiceType = true;
         _getPlayModeChoiceNumList(playModeBeenList[0]);
+        _cpChoiceTitle = LuckyAirshipPlayModelChoiceUtils.getInstance().getBigAndSmallPlayModelTitleName(playModeBeenList[0]);
       }
     } else {
       playModeBeenList.clear();
@@ -387,13 +375,6 @@ class _LuckyAirshipBettingView extends BaseController<LuckyAirshipBettingView> w
         switch(index) {
           case 1:
           //玩法选择
-//          Navigator.push(context, MaterialPageRoute(builder: (context) {
-//            return PlayModeTencentCentLotteryController(value: '我是FirstPage带来的数据');
-//          }));
-//            Navigator.pushNamed(context,
-//              RouteUtil.playModeTencentCentLotteryController,
-//              arguments: {"playModeBeenList": playModeBeenList, "ColorVarietyID": colorVariety},
-//            )
           Navigator.push(context, MaterialPageRoute(builder: (context) {
             return PlayModeLuckyAirshipLotteryController(playModeBeenList: playModeBeenList, colorVarietyID: colorVariety,);
           }))
@@ -409,6 +390,7 @@ class _LuckyAirshipBettingView extends BaseController<LuckyAirshipBettingView> w
                   playRemark = playModeBeenList[0].remark;
                   playModeBeenList[0].isChoiceType = true;
                   playMoneyAward = playModeBeenList[0].money_award;
+                  _cpChoiceTitle = LuckyAirshipPlayModelChoiceUtils.getInstance().getBigAndSmallPlayModelTitleName(playModeBeenList[0]);
                   _getPlayModeChoiceNumList(playModeBeenList[0]);
                   _initGroupCpNum();
                 }
@@ -429,6 +411,7 @@ class _LuckyAirshipBettingView extends BaseController<LuckyAirshipBettingView> w
                   playModeBeenList[0].isChoiceType = true;
                   playMoneyAward = playModeBeenList[0].money_award;
                   _getPlayModeChoiceNumList(playModeBeenList[0]);
+                  _cpChoiceTitle = LuckyAirshipPlayModelChoiceUtils.getInstance().getBigAndSmallPlayModelTitleName(playModeBeenList[0]);
                   _initGroupCpNum();
                 }
 
@@ -614,36 +597,15 @@ class _LuckyAirshipBettingView extends BaseController<LuckyAirshipBettingView> w
           if (_isDragonTiger) {
             if (dragonTigerStateKey != null && dragonTigerStateKey.currentState != null) {
               dragonTigerStateKey.currentState.cleanLuckyAirshipChoiceNum();
+              dragonTigerStateKey.currentState.setLuckyAirshipPlayModel(currentPlayBeen.id);
             }
           }
-
-
 
           if (_isSingle && !isCurrentOptionalCp) {
             // 是单式  非任选单式
             editContent11Choose5Handle("");
           }
-          if (isCurrentOptionalCp) {
-            //是任选
-            if (_isSingle) {
-              // 任选单选
-              calculationBettingNumBeen = new CalculationBettingNumDataBeen(new List(),0,"0.00","0.00","0.00");
-              numAndOperationStateViewKey.currentState.setCalculationBettingNumData(calculationBettingNumBeen);
-              //singleFormStateKey.currentState.cleanEditText();
-            } else {
-              if (_choiceTypeGroupNum > 1) {
-                for (int i = 0; i < listCpNumKey.length; i++) {
-                  GlobalKey<Choose11And5StateView> chooseCpNumKey = listCpNumKey[i];
-                  chooseCpNumKey.currentState.cleanChoiceState();
 
-                }
-              } else {
-                //组选
-                optionalGroupFormKey.currentState.cleanOptionalGroupNum();
-              }
-            }
-
-          }
 
         },color: Color(ColorUtil.whiteColor),
           child: new Text(name
@@ -682,8 +644,9 @@ class _LuckyAirshipBettingView extends BaseController<LuckyAirshipBettingView> w
     if (!_isSingle) {
 
       if (_isDragonTiger) {
-        // 新龙虎
-        listView.add(LuckyAirshipDoubleSelecView(dragonTigerStateKey, this));
+        // 龙虎  大小  单双
+        listView.add(LuckyAirshipDoubleSelecView(dragonTigerStateKey, this, _cpChoiceTitle, currentPlayBeen));
+
       } else {
 
         // 非 龙虎  大小  单双
@@ -805,7 +768,6 @@ class _LuckyAirshipBettingView extends BaseController<LuckyAirshipBettingView> w
         if (_isDragonTiger) {
           // 龙虎
           dragonTigerStateKey.currentState.randomLuckyAirshipChoiceNum();
-          _sendBettingDragonTiger(2000, false, 0);
         } else {
 
           for (int i = 0; i < listCpNumKey.length; i++) {
@@ -827,9 +789,9 @@ class _LuckyAirshipBettingView extends BaseController<LuckyAirshipBettingView> w
                 curve: Curves.ease
             );
           }
-          _sendBettingNumRequest(1500, false, 0);
-        }
 
+        }
+        _sendBettingNumRequest(1500, false, 0);
 
       });
 
@@ -843,23 +805,11 @@ class _LuckyAirshipBettingView extends BaseController<LuckyAirshipBettingView> w
     if (_isSingle) {
       return;
     }
-    bool getNumBool = false;
     choiceCpNumList.clear();
-    if (isCurrentOptionalCp) {
 
-      if(_choiceTypeGroupNum > 1) {
-        getNumBool = true;
-      } else {
-        if (optionalGroupFormKey != null && optionalGroupFormKey.currentState != null) {
-          choiceCpNumList.add(optionalGroupFormKey.currentState.getOptionalGroupCpNumList());
-        }
-      }
-
+    if (_isDragonTiger) {
+      choiceCpNumList.add(dragonTigerStateKey.currentState.choiceCpNumList);
     } else {
-      getNumBool = true;
-    }
-
-    if (getNumBool) {
       for (int i = 0; i < listCpNumKey.length; i++) {
         GlobalKey<Choose11And5StateView> chooseCpNumKey = listCpNumKey[i];
         if (chooseCpNumKey != null) {
@@ -869,6 +819,7 @@ class _LuckyAirshipBettingView extends BaseController<LuckyAirshipBettingView> w
       }
     }
 
+
   }
 
   /// 发送注数请求
@@ -876,23 +827,10 @@ class _LuckyAirshipBettingView extends BaseController<LuckyAirshipBettingView> w
     Future.delayed(Duration(milliseconds: milliseconds)).then((e) {
       _getChoiceCpNumList();
       LuckyAirshipPlayModelChoiceUtils.getInstance().getGameHttpBettingNum(context,currentPlayBeen,
-          choiceCpNumList, groupBitsList, this, isBetting, multiple, colorVariety);
+          choiceCpNumList, this, isBetting, multiple, colorVariety);
     });
   }
 
-  /// 虎 龙 和
-  _sendBettingDragonTiger(int milliseconds, bool isBetting, int multiple) {
-    groupBitsList.clear();
-    if (_isDragonTiger) {
-      groupBitsList = dragonTigerStateKey.currentState.getRandomLuckyAirshipList();
-    }
-    Future.delayed(Duration(milliseconds: milliseconds)).then((e) {
-
-//      LuckyAirshipPlayModelChoiceUtils.getInstance().getGameHttpBettingNumDragonTiger(context
-//          ,currentPlayBeen, groupBitsList, this, isBetting, multiple, colorVariety);
-
-    });
-  }
 
   /// 单式随机获取获取
   _randomSingleFormEditGetCpNum(int num) {
@@ -930,11 +868,7 @@ class _LuckyAirshipBettingView extends BaseController<LuckyAirshipBettingView> w
   @override
   void butImmediateBet() {
     //立即投注
-    if (_isDragonTiger) {
-      _sendBettingDragonTiger(100, true, bettingMultipleNum);
-    } else {
-      _sendBettingNumRequest(100, true, bettingMultipleNum);
-    }
+    _sendBettingNumRequest(100, true, bettingMultipleNum);
   }
 
   @override
@@ -981,16 +915,10 @@ class _LuckyAirshipBettingView extends BaseController<LuckyAirshipBettingView> w
     }
     isClickType = false;
     _typeIndexList[viewOnClickIndex] = 5;
-    if (isCurrentOptionalCp && _choiceTypeGroupNum == 1) {
-      optionalGroupFormKey.currentState.optionalGroupCpNumViewListTypeIndexRefresh(groupCpNum
-          , _typeIndexList[viewOnClickIndex], isClickType, viewOnClickIndex);
-    } else {
-      GlobalKey<Choose11And5StateView> cpNumKey = listCpNumKey[viewOnClickIndex];
-      if(cpNumKey != null) {
-        cpNumKey.currentState.chooseCpNumViewListTypeIndexRefresh(groupCpNum,
-            _typeIndexList[viewOnClickIndex], isClickType, viewOnClickIndex);
-      }
-
+    GlobalKey<Choose11And5StateView> cpNumKey = listCpNumKey[viewOnClickIndex];
+    if(cpNumKey != null) {
+      cpNumKey.currentState.chooseCpNumViewListTypeIndexRefresh(groupCpNum,
+          _typeIndexList[viewOnClickIndex], isClickType, viewOnClickIndex);
     }
 
     _sendBettingNumRequest(300, false, 0);
@@ -1002,24 +930,17 @@ class _LuckyAirshipBettingView extends BaseController<LuckyAirshipBettingView> w
 
     List<int> cpNumList = groupCpNumList[viewOnClickIndex];
     //cpNumList[index] = cpNumList[index] == 0 ? -1 : 0;
-    if (isCurrentOptionalCp && _choiceTypeGroupNum == 1) {
-      optionalGroupFormKey.currentState.optionalGroupCpNumViewListRefresh(cpNumList, isClickType, index );
-    } else {
-
-      GlobalKey<Choose11And5StateView> cpNumKey = listCpNumKey[viewOnClickIndex];
-      if (cpNumKey != null && cpNumKey.currentState != null) {
-        if(currentPlayBeen.id == 690 || currentPlayBeen.id == 349 || currentPlayBeen.id == 679 ||
-            currentPlayBeen.id == 834 || currentPlayBeen.id == 845 ) {
-          // 包胆 只能选择一个
-          cpNumKey.currentState.chooseCpNumViewListPlayBraveryRefresh(currentPlayBeen.id, cpNumList, isClickType, index);
-        } else {
-          cpNumKey.currentState.chooseCpNumViewListRefresh(cpNumList, isClickType, index);
-        }
-
+    GlobalKey<Choose11And5StateView> cpNumKey = listCpNumKey[viewOnClickIndex];
+    if (cpNumKey != null && cpNumKey.currentState != null) {
+      if(currentPlayBeen.id == 690 || currentPlayBeen.id == 349 || currentPlayBeen.id == 679 ||
+          currentPlayBeen.id == 834 || currentPlayBeen.id == 845 ) {
+        // 包胆 只能选择一个
+        cpNumKey.currentState.chooseCpNumViewListPlayBraveryRefresh(currentPlayBeen.id, cpNumList, isClickType, index);
+      } else {
+        cpNumKey.currentState.chooseCpNumViewListRefresh(cpNumList, isClickType, index);
       }
 
     }
-
 
     _sendBettingNumRequest(300, false, 0);
   }
@@ -1031,14 +952,9 @@ class _LuckyAirshipBettingView extends BaseController<LuckyAirshipBettingView> w
     //刷新界面
     _typeIndexList[viewOnClickIndex] = index;
 
-    if (isCurrentOptionalCp && _choiceTypeGroupNum == 1) {
-      optionalGroupFormKey.currentState.optionalGroupCpNumViewListTypeIndexList(_typeIndexList[viewOnClickIndex], isClickType);
-    } else {
-      GlobalKey<Choose11And5StateView> cpNumKey = listCpNumKey[viewOnClickIndex];
-      if(cpNumKey != null) {
-        cpNumKey.currentState.chooseCpNumViewListTypeIndexList(_typeIndexList[viewOnClickIndex], isClickType);
-      }
-
+    GlobalKey<Choose11And5StateView> cpNumKey = listCpNumKey[viewOnClickIndex];
+    if(cpNumKey != null) {
+      cpNumKey.currentState.chooseCpNumViewListTypeIndexList(_typeIndexList[viewOnClickIndex], isClickType);
     }
 
     _sendBettingNumRequest(300, false, 0);
@@ -1101,6 +1017,7 @@ class _LuckyAirshipBettingView extends BaseController<LuckyAirshipBettingView> w
       String cpChoiceTitle, bool isGroupSumNum, bool isDragonTiger,
       List<String> groupTitleList) {
     _isSingle = isSingle;
+    _cpChoiceTitle = cpChoiceTitle;
 
     _choiceTypeGroupNum = cpChoiceNum;
     //_groupTitleList = groupTitleList;
@@ -1108,7 +1025,6 @@ class _LuckyAirshipBettingView extends BaseController<LuckyAirshipBettingView> w
     groupTitleList.forEach((value){
       _groupTitleList.add(value);
     });
-
     _isDragonTiger = isDragonTiger;
     listCpNumKey.clear();
     if (cpChoiceNum > 0) {
@@ -1150,7 +1066,7 @@ class _LuckyAirshipBettingView extends BaseController<LuckyAirshipBettingView> w
 
   }
 
-  /// 清空新龙虎 状态
+  /// 清空龙虎 状态
   @override
   void cleanDragonTigerStatus(bool result) {
     numAndOperationStateViewKey.currentState.cleanDragonTigerStatusText();
@@ -1224,15 +1140,10 @@ class _LuckyAirshipBettingView extends BaseController<LuckyAirshipBettingView> w
 
       if (isCurrentOptionalCp) {
         //是任选
-        if (_choiceTypeGroupNum > 1) {
-          for (int i = 0; i < listCpNumKey.length; i++) {
-            GlobalKey<Choose11And5StateView> chooseCpNumKey = listCpNumKey[i];
-            chooseCpNumKey.currentState.cleanChoiceState();
+        for (int i = 0; i < listCpNumKey.length; i++) {
+          GlobalKey<Choose11And5StateView> chooseCpNumKey = listCpNumKey[i];
+          chooseCpNumKey.currentState.cleanChoiceState();
 
-          }
-        } else {
-          //组选
-          optionalGroupFormKey.currentState.cleanOptionalGroupNum();
         }
       } else {
 
@@ -1257,11 +1168,6 @@ class _LuckyAirshipBettingView extends BaseController<LuckyAirshipBettingView> w
   @override
   // TODO: implement wantKeepAlive
   bool get wantKeepAlive => true;
-
-  @override
-  void setDragonTigerSumHandler(List<String> choiceCpNumList) {
-    _sendBettingDragonTiger(1000, false, 0);
-  }
 
   /**
    * LotteryNum11Choice5Handler 获取历史开奖列表
@@ -1290,7 +1196,7 @@ class _LuckyAirshipBettingView extends BaseController<LuckyAirshipBettingView> w
   ///
   @override
   void setLuckyAirshipSecSumHandler(List<String> choiceCpNumList) {
-
+    _sendBettingNumRequest(200, false, 0);
   }
 
 }
