@@ -119,8 +119,32 @@ class _GameBettingRecordView extends BaseRefreshController<GameBettingRecordView
         bettingNumList.write("${param.five_num}");
         bettingNumList.write("/");
       }
+      if(!TextUtil.isEmpty(param.six_num)) {
+        bettingNumList.write("${param.six_num}");
+        bettingNumList.write("/");
+      }
+      if(!TextUtil.isEmpty(param.seven_num)) {
+        bettingNumList.write("${param.seven_num}");
+        bettingNumList.write("/");
+      }
+      if(!TextUtil.isEmpty(param.eight_num)) {
+        bettingNumList.write("${param.eight_num}");
+        bettingNumList.write("/");
+      }
+      if(!TextUtil.isEmpty(param.nine_num)) {
+        bettingNumList.write("${param.nine_num}");
+        bettingNumList.write("/");
+      }
+      if(!TextUtil.isEmpty(param.ten_num)) {
+        bettingNumList.write("${param.ten_num}");
+        bettingNumList.write("/");
+      }
       if(!TextUtil.isEmpty(param.data_num)) {
         bettingNumList.write("${param.data_num}");
+        bettingNumList.write("");
+      }
+      if(!TextUtil.isEmpty(param.num_type)) {
+        bettingNumList.write("${param.num_type}");
         bettingNumList.write("");
       }
     }
@@ -249,7 +273,6 @@ class _GameBettingRecordView extends BaseRefreshController<GameBettingRecordView
         },color: Color(ColorUtil.whiteColor),
           child: new Text("复制期号"
             , style: TextStyle(fontSize: 12.0,color: Color(ColorUtil.butColor)),),
-          //shape:new RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)) ,
           shape: new RoundedRectangleBorder(side: new BorderSide(
             //设置 界面效果
             color: Color(ColorUtil.butColor),
