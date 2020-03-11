@@ -243,6 +243,20 @@ class UrlUtil {
   static const oddInterest10OrderAdd = "api/Qqsfc/orderAdd";
 
   /**
+   * 重庆时时彩
+   */
+  /// 开奖记录
+  static const chongQingTimeKjLog = "api/Cqssc/kjLog";
+  /// 玩法获取
+  static const chongQingTimeGetPlay = "api/Cqssc/getPlay";
+  /// 开奖时间
+  static const chongQingTimeGetKjtime = "api/Cqssc/getKjtime";
+  /// 计算注数
+  static const chongQingTimeGdBets = "api/Cqssc/gdBets";
+  /// 下注接口
+  static const chongQingTimeOrderAdd = "api/Cqssc/orderAdd";
+
+  /**
    * 幸运飞艇
    */
   /// 开奖记录
